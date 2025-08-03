@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      color: #ffffff;
+      background-color: #000000;
+      overflow-x: hidden;
+    }
+
+    /*CONTAINERS*/
+
+    /* Toolbar container */
+    .toolbarcontain {
+      background-color: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 20px;
+      box-sizing: border-box;
+      transition: top 0.3s ease; /* Added for smooth transition */
+    }
+    
+    .toolbar .cart-link {
+        position: relative;
+    }
+    
+    #cart-count {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        display: none; /* Hidden by default */
+    }
+
+    /* New class to hide the toolbar when scrolling down */
+    .toolbar-hidden {
+        top: -100px;
+    }
+
+    /* Build Your Monkey Section - Updated Styles */
+	.buildsection {
+	  height: 100vh;
+	  width: 100%;
+	  padding: 40px 80px; /* Increased side padding */
+	  box-sizing: border-box;
+	  display: flex;
+	  align-items: center; /* Vertically center content */
+	  justify-content: center; /* Horizontally center content */
+	  gap: 150px;
+	  flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+	  overflow: hidden; /* Prevents content from spilling out */
+      position: relative; /* --- NEW: Added for positioning the SVG line --- */
+	}
+
+    /* --- START: New styles for SVG line animation --- */
+    .line-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none; /* Allows clicks to pass through to content below */
+        z-index: 1; /* Position the line behind the content but above the background */
+    }
+
+    .animated-line {
+        fill: none;
+        stroke: #87baf5; /* A creative dark blueish color */
+        stroke-width: 10;
+        stroke-linecap: round; /* Makes the line ends rounded */
+        /* These properties are now set entirely by JavaScript to ensure accuracy */
+    }
+    /* --- END: New styles for SVG line animation --- */
+
+	.build-text {
+	  flex: 1;
+	  max-width: 500px;
+	  color: #333; /* Darker text for better contrast */
+	  text-align: left;
+      position: relative; /* --- NEW: Ensure content is above the line --- */
+      z-index: 2;
+	}
+
+	.build-text h1 {
+		font-size: 42px;
+		font-weight: bold;
+		margin-bottom: 15px;
+		text-transform: uppercase;
+		letter-spacing: 1.5px;
+	}
+
+	.build-text p {
+	  font-size: 18px;
+	  line-height: 1.6;
+	  margin-bottom: 20px;
+	}
+
+	.build-image {
+	  flex: 1;
+	  max-width: 450px;
+      position: relative; /* --- NEW: Ensure content is above the line --- */
+      z-index: 2;
+	}
+
+	.build-image img {
+	  width: 100%; /* Use width instead of max-width for consistency */
+	  height: auto;
+	  border-radius: 15px;
+	  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+	  transition: transform 0.4s ease;
+	}
+
+	.build-image img:hover {
+		transform: scale(1.05); /* Slight zoom on hover */
+	}
+
+	/* New Button Style */
+	.build-button {
+		display: inline-block;
+		margin-top: 15px;
+		padding: 15px 35px;
+		background-color: #000000;
+		color: #ffffff;
+		text-decoration: none;
+		font-size: 18px;
+		font-weight: bold;
+		border-radius: 5px;
+		transition: background-color 0.3s ease, transform 0.3s ease;
+		text-align: center;
+	}
+
+	.build-button:hover {
+		background-color: #333333; /* Slightly lighter black on hover */
+		transform: scale(1.05);
+	}
+
+    /* Toolbar links */
+    .toolbar a {
+      color: #ffffff;
+      text-align: center;
+      padding: 15px 20px;
+      text-decoration: none;
+      font-size: 20px;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effects */
+    .hovertext a:hover {
+      color: #cccccc;
+      transform: scale(1.3);
+    }
+
+    .hoverbackground a:hover {
+      transform: scale(1.3);
+    }
+
+    /* Left and right alignment */
+    .leftali, .rightali {
+      display: flex;
+      align-items: center;
+    }
+
+    /* front section */
+    .front {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .front-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('images/frontpagecowboymonkeys.png');
+      background-size: cover;
+      background-position: center;
+      transition: opacity 1s ease-in-out; /* Fade effect for background only */
+      z-index: 1;
+    }
+
+    .front-background.fading {
+      opacity: 0.3; /* Temporary opacity during transition */
+    }
+
+    .front h1 {
+      font-size: 56px;
+      font-weight: bold;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 2; /* Ensure text stays above background */
+    }
+
+    .front a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 30px 60px;
+      background-color: #ffffff;
+      color: #000000;
+      text-decoration: none;
+      font-size: 32px;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      position: relative;
+      z-index: 2; /* Ensure button stays above background */
+    }
+
+    .front a:hover {
+      background-color: #cccccc;
+      transform: scale(1.1);
+    }
+
+    /* --- START: Featured Items Section Styles --- */
+    .featuredsection {
+      height: 100vh;
+      width: 100%;
+      background: linear-gradient(to bottom, #f2e5d9, #d4a5a5);
+      color: black;
+      padding: 80px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-sizing: border-box;
+      position: relative; /* Needed for positioning the SVG */
+    }
+
+    .featuredsection h1 {
+        margin-bottom: 50px;
+        font-size: 42px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        position: relative; /* Ensure it's a positioning context for the SVG */
+    }
+
+    /* --- START: UPDATED styles for Featured Title SVG underline --- */
+    .title-underline-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible; /* Allow the path to draw outside the SVG bounds */
+    }
+
+    .title-underline-path {
+        fill: none;
+        stroke: #87baf5; /* MATCHED blue color */
+        stroke-width: 10;   /* MATCHED thickness */
+        stroke-linecap: round;
+    }
+    /* --- END: UPDATED styles for Featured Title SVG underline --- */
+
+    .featured-container {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 100px;
+      width: 100%;
+      max-width: 1200px;
+      flex-wrap: wrap;
+    }
+
+    .featured-card {
+      background-color: #ffffff;
+      color: #333;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .featured-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .featured-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .featured-card-info {
+      padding: 25px;
+      text-align: left;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .featured-card-info h3 {
+      margin: 0 0 10px 0;
+      font-size: 22px;
+    }
+
+    .featured-card-info p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+    /* --- END: Featured Items Section Styles --- */
+
+
+    /* Anime section */
+    .anime {
+	  background: linear-gradient(to top, #f2e5d9, #d4a5a5);
+	  height: 100vh; /* Full viewport height for visibility */
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    /* --- START: Footer Section Styles --- */
+    .footer-section {
+      background-color: #ffffff;
+      color: #333;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-container a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-container a:hover {
+      color: #000000;
+      text-decoration: underline;
+    }
+    /* --- END: Footer Section Styles --- */
+
+
+
+
+    /* Responsive design */
+    @media (max-width: 992px) {
+        .featured-container {
+            gap: 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+	
+	
+	
+	
+      .front h1 {
+        font-size: 48px;
+      }
+
+      .front a {
+        font-size: 32px;
+        padding: 25px 50px;
+      } 
+      
+      .featuredsection {
+        height: auto;
+        padding: 60px 20px;
+      }
+      .featured-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .featured-card {
+        width: 100%;
+        max-width: 400px;
+      }
+
+
+
+      .anime {
+          height: auto; /* Add this new rule to let the parent container grow */
+      }
+
+      .toolbar a {
+        font-size: 15px;
+        padding: 10px 5px;
+      }
+      
+      .buildsection {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+        height: auto; /* Add this line to let the section grow */
+		gap:30px;
+      }
+	  
+
+      .build-text {
+        text-align: center;
+        order: 1;
+
+      }
+
+
+      .build-image {
+        order: 2;
+        margin-bottom: 30px;
+      }
+	  
+	  
+	 
+
+    }
+  </style>
+	<link rel="icon" type="image/png" href="images/tabphoto.png">
+
+</head>
+<body>
+  <div class="toolbarcontain" id="home">
+    <div class="hovertext">
+      <div class="leftali">
+        <div class="toolbar">
+          <a href="#home">Home</a>
+          <a href="ShopPage.html#shop">Shop</a>
+          <a href="ShopPage.html#Build Your Monkey">Build</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="rightali">
+      <div class="hoverbackground">
+        <div class="toolbar">
+	
+			<a href="login.html" class="user-link">
+				<img src="images/Icons/User.png" alt="User" style="height:20px; vertical-align:middle;">
+			</a>
+		
+          <a href="cart.html" class="cart-link">
+            <img src="images/Icons/ShoppingBag.png" alt="Shopping Bag" style="height:20px; vertical-align:middle;">
+            <span id="cart-count">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="front">
+    <div class="front-background"></div>
+    <h1>Nobilis Crochet</h1>
+    <a href="ShopPage.html">Shop Now</a>
+  </div>
+ 
+  <div class="featuredsection" id="featured">
+    <h1>
+      Featured Items
+      <svg class="title-underline-svg">
+          <path class="title-underline-path" d=""></path>
+      </svg>
+    </h1>
+    <div class="featured-container">
+      <a href="product.html?productId=4" class="featured-card">
+        <img src="images/RealChrochet/strawberrycow/strawberrycow1.png" alt="Strawberry Cow">
+        <div class="featured-card-info">
+          <h3>Strawberry Cow</h3>
+          <p>A cute crocheted strawberry cow, perfect for your collection.</p>
+        </div>
+      </a>
+
+      <a href="product.html?productId=2" class="featured-card">
+        <img src="images/RealChrochet/bunny/bunny1.png" alt="Bunny">
+        <div class="featured-card-info">
+          <h3>Bunny</h3>
+          <p>A beautiful large bunny.</p>
+        </div>
+      </a>
+
+      <a href="product.html?productId=3" class="featured-card">
+        <img src="images/RealChrochet/monkey/monkey1.png" alt="Regular Monkey">
+        <div class="featured-card-info">
+          <h3>Welcome Monkey</h3>
+          <p>A welcoming monkey to greet your guests with charm.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+ 
+  <div class="anime" id="build">
+    <div class="buildsection">
+      <svg class="line-svg">
+          <path class="animated-line" d="" />
+      </svg>
+      <div class="build-image">
+		<img src="images/buildyourmonkey.png" alt="Custom crochet monkey" />
+	  </div>
+	  <div class="build-text">
+		<h1>Build Your Monkey</h1>
+		<p>
+		  Design a monkey that's truly one-of-a-kind! Our interactive tool lets you explore a wide range of options—from playful colors and unique patterns to personalized accessories.
+		</p>
+		<p>
+		  Once you've created your perfect companion, it will be custom-made and lovingly handcrafted with care and creativity.
+		</p>
+		<a href="ShopPage.html#Build Your Monkey" class="build-button">Build Me</a>
+	  </div>
+    </div>
+  </div>
+      
+  <div class="footer-section">
+      <div class="footer-container">
+	    <a href="aboutus.html">About Us</a>
+
+        <a href="privacypolicy.html">Privacy Policy</a>
+        <a href="contact.html">Contact Information</a>
+        <a href="returnpolicy.html">Refund Policy</a>
+        <a href="shippingpolicy.html">Shipping Policy</a>
+		
+      </div>
+  </div>
+
+<script src="cart.js"></script>
+<script>
+    // --- **NEW** SCRIPT TO CLEAR CART ON SUCCESSFUL PURCHASE ---
+
+
+    // Background image rotation for front section (Unchanged)
+    const frontBackground = document.querySelector('.front-background');
+    const images = [
+      'images/frontpagecowboymonkeys.png',
+      'images/frontpagemonkeyexpanded.png',
+      'images/frontpage.png'
+    ];
+    let currentImageIndex = 0;
+
+    function preloadImages() {
+      images.forEach(image => {
+        const img = new Image();
+        img.src = image;
+      });
+    }
+
+    function changeBackgroundImage() {
+      frontBackground.classList.add('fading');
+      setTimeout(() => {
+        frontBackground.style.backgroundImage = `url("${images[currentImageIndex]}")`;
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        setTimeout(() => {
+          frontBackground.classList.remove('fading');
+        }, 50);
+      }, 1000);
+    }
+    preloadImages();
+    changeBackgroundImage();
+    setInterval(changeBackgroundImage, 15000);
+
+    // Toolbar hiding on scroll (Unchanged)
+    let lastScrollTop = 0;
+    const toolbar = document.querySelector('.toolbarcontain');
+    window.addEventListener('scroll', function() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > lastScrollTop) {
+          toolbar.classList.add('toolbar-hidden');
+      } else {
+          toolbar.classList.remove('toolbar-hidden');
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    });
+
+    // --- START: REVISED JavaScript for DYNAMIC and RESPONSIVE SVG Line Animation ---
+    const buildSection = document.querySelector('.buildsection');
+    const linePath = document.querySelector('.animated-line');
+    const buildButton = document.querySelector('.build-button');
+    const buildImage = document.querySelector('.build-image');
+
+    // This function calculates and sets the SVG path dynamically
+    const updateLinePath = () => {
+        if (!buildSection || !linePath || !buildButton || !buildImage) {
+            return; // Exit if elements aren't on the page
+        }
+
+        const sectionRect = buildSection.getBoundingClientRect();
+        const buttonRect = buildButton.getBoundingClientRect();
+        const imageRect = buildImage.getBoundingClientRect();
+
+        // Calculate all coordinates relative to the buildSection container
+        const imageCenterY_rel = (imageRect.top - sectionRect.top) + (imageRect.height / 2);
+        const buttonCenterX_rel = (buttonRect.left - sectionRect.left) + (buttonRect.width / 2);
+        const buttonCenterY_rel = (buttonRect.top - sectionRect.top) + (buttonRect.height / 2);
+
+        // Define the radius for the circle around the button, adding some padding
+        const radiusX = buttonRect.width / 2 + 20; // 20px horizontal padding
+        const radiusY = buttonRect.height / 2 + 20; // 20px vertical padding
+
+        // Define key points for the path
+        const startX = -10;
+        const startY = imageCenterY_rel;
+
+        // The top-most point of the circle we want to draw around the button
+        const topOfCircleX = buttonCenterX_rel;
+        const topOfCircleY = buttonCenterY_rel - radiusY;
+        
+        // The bottom-most point of the circle
+        const bottomOfCircleX = buttonCenterX_rel;
+        const bottomOfCircleY = buttonCenterY_rel + radiusY;
+
+        // Bezier curve control points for a nice sweeping motion to the button
+        const cp1X = sectionRect.width * 0.3;
+        const cp1Y = imageCenterY_rel - 150;
+        const cp2X = buttonCenterX_rel - radiusX * 2;
+        const cp2Y = buttonCenterY_rel + radiusY * 2;
+        
+        // --- NEW: Define points for the graceful exit to the right ---
+        const endX = sectionRect.width + 10; // Go just off the right edge
+        const endY = imageCenterY_rel; // End at the same vertical level as the start for balance
+    
+        // Control points for the exit curve.
+        const cp3X = topOfCircleX + 150;
+        const cp3Y = topOfCircleY - 100;
+        const cp4X = endX * 0.8;
+        const cp4Y = endY + 150;
+
+        // Construct the dynamic path string:
+        // 1. M: Move to the starting point (off-screen left)
+        // 2. C: Draw a bezier curve to the top of the circle area
+        // 3. A: Draw the first half of the circle (an arc to the bottom)
+        // 4. A: Draw the second half of the circle (an arc back to the top)
+        // 5. C: Draw a final graceful bezier curve off the right of the screen
+        const pathData = `
+            M ${startX},${startY}
+            C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${topOfCircleX},${topOfCircleY}
+            A ${radiusX},${radiusY} 0 1,0 ${bottomOfCircleX},${bottomOfCircleY}
+            A ${radiusX},${radiusY} 0 1,0 ${topOfCircleX},${topOfCircleY}
+            C ${cp3X},${cp3Y} ${cp4X},${cp4Y} ${endX},${endY}
+        `;
+        
+        // Apply the new path data
+        linePath.setAttribute('d', pathData.trim());
+
+        // Re-initialize the line for animation by resetting its dash properties
+        const pathLength = linePath.getTotalLength();
+        linePath.style.strokeDasharray = pathLength;
+        linePath.style.strokeDashoffset = pathLength;
+    };
+
+    // Use IntersectionObserver to trigger the animation only when the section is visible
+    const intersectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // If section is visible, "draw" the line by animating the dash offset
+                linePath.style.transition = 'stroke-dashoffset 4s cubic-bezier(0.45, 0.05, 0.55, 0.95)'; /* Increased duration for longer path */
+                linePath.style.strokeDashoffset = '0';
+            } else {
+                // If section is not visible, reset the line for the next time it appears
+                linePath.style.transition = 'none'; // Remove transition for an instant reset
+                const pathLength = linePath.getTotalLength();
+                linePath.style.strokeDashoffset = pathLength;
+            }
+        });
+    }, {
+        threshold: 0.4 // Trigger when 40% of the section is visible
+    });
+
+    // Use ResizeObserver to update the path whenever the section's size changes (zoom or resize)
+    const resizeObserver = new ResizeObserver(() => {
+        // Recalculate the path to fit the new layout
+        updateLinePath();
+    });
+
+    // Start the observers
+    if (buildSection) {
+        // Calculate the initial path on page load
+        updateLinePath();
+        
+        // Watch for resizing/zooming
+        resizeObserver.observe(buildSection);
+
+        // Watch for scrolling into view
+        intersectionObserver.observe(buildSection);
+    }
+    // --- END: REVISED JavaScript for DYNAMIC and RESPONSIVE SVG Line Animation ---
+
+    // --- START: UPDATED JavaScript for Featured Items Title Underline ---
+    const featuredSection = document.querySelector('.featuredsection');
+    const titlePath = document.querySelector('.title-underline-path');
+    const featuredHeading = document.querySelector('.featuredsection h1');
+
+    const updateTitleLinePath = () => {
+        if (!featuredHeading || !titlePath) return;
+
+        const headingRect = featuredHeading.getBoundingClientRect();
+        
+        // Define all Y coordinates to be safely BELOW the text
+        const underlineY = headingRect.height + 15; // Position the main underline 15px below the text block
+        const loopRadius = 10;
+        // Position the top of the loop relative to the underline, ensuring it doesn't go above the text
+        const loopTopY = underlineY - (loopRadius * 1); 
+
+        // Define key X coordinates
+        const startX = -10;
+        const endX = headingRect.width ;
+        const loopCenterX = headingRect.width / 1;
+
+        // Define control points for the curves to make them smooth
+        const cp1X = loopCenterX * 0.6;
+        const cp1Y = underlineY - 30; // Control point to swoop up high
+        
+        const cp2X = loopCenterX;
+        const cp2Y = underlineY + 50; // Control point for after the loop
+
+        // Construct the path string
+        const pathData = `
+            M ${startX}, ${underlineY}
+            L 0, ${underlineY}
+            C ${cp1X}, ${cp1Y}, ${loopCenterX - loopRadius}, ${loopTopY}, ${loopCenterX}, ${loopTopY}
+            A ${underlineY}
+            L ${headingRect.width}, ${underlineY}
+            C ${endX}
+        `;
+        
+        titlePath.setAttribute('d', pathData.trim());
+
+        const pathLength = titlePath.getTotalLength();
+        titlePath.style.strokeDasharray = pathLength;
+        titlePath.style.strokeDashoffset = pathLength;
+    };
+
+    const titleIntersectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                titlePath.style.transition = 'stroke-dashoffset 2.5s ease-out';
+                titlePath.style.strokeDashoffset = '0';
+            } else {
+                titlePath.style.transition = 'none';
+                const pathLength = titlePath.getTotalLength();
+                titlePath.style.strokeDashoffset = pathLength;
+            }
+        });
+    }, {
+        threshold: 0.6 // Trigger when 60% of the section is visible
+    });
+
+    const titleResizeObserver = new ResizeObserver(() => {
+        updateTitleLinePath();
+    });
+
+    if (featuredSection) {
+        updateTitleLinePath();
+        titleResizeObserver.observe(featuredHeading);
+        titleIntersectionObserver.observe(featuredSection);
+    }
+    // --- END: UPDATED JavaScript for Featured Items Title Underline ---
+  </script>
+</body>
+</html>

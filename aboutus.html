@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #000000;
+            background: linear-gradient(to bottom, #f2e5d9, #d4a5a5);
+            overflow-x: hidden;
+        }
+
+        /* Toolbar container - Copied from your other pages for consistency */
+        .toolbarcontain {
+            background-color: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 20px;
+            box-sizing: border-box;
+        }
+
+        .toolbar a {
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 20px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .toolbar .cart-link {
+            position: relative;
+        }
+        
+        #cart-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            display: none; /* Hidden by default, shown by JS */
+        }
+
+        .hovertext a:hover {
+            color: #cccccc;
+            transform: scale(1.1);
+        }
+
+        .hoverbackground a:hover {
+            transform: scale(1.1);
+        }
+
+        .leftali, .rightali {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Main content section for the about page */
+        .about-section {
+            padding: 120px 40px 80px;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            padding: 50px;
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .about-text {
+            flex: 1.5;
+        }
+
+        .about-text h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #3e2723;
+        }
+        
+        .about-text p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Footer Section Styles */
+        .footer-section {
+          background-color: #ffffff;
+          color: #333;
+          padding: 40px 20px;
+          text-align: center;
+        }
+
+        .footer-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: center;
+          gap: 30px;
+          flex-wrap: wrap;
+        }
+
+        .footer-container a {
+          color: #333;
+          text-decoration: none;
+          font-size: 16px;
+          transition: color 0.3s ease;
+        }
+
+        .footer-container a:hover {
+          color: #000000;
+          text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .about-container {
+                flex-direction: column;
+                padding: 30px;
+                gap: 30px;
+            }
+			
+			  
+			  .toolbar a {
+				font-size: 15px;
+				padding: 10px 5px;
+			  }
+							
+			
+			
+			
+            .about-text h1 {
+                text-align: center;
+            }
+        }
+
+    </style>
+		<link rel="icon" type="image/png" href="images/tabphoto.png">
+
+</head>
+<body>
+
+    <!-- Toolbar -->
+    <div class="toolbarcontain" id="home">
+        <div class="hovertext">
+            <div class="leftali">
+                <div class="toolbar">
+                    <a href="index.html">Home</a>
+                    <a href="ShopPage.html#shop">Shop</a>
+                    <a href="ShopPage">Build</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="rightali">
+            <div class="hoverbackground">
+                <div class="toolbar">
+				
+				
+			
+					<a href="login.html" class="user-link">
+						<img src="images/Icons/User.png" alt="User" style="height:20px; vertical-align:middle;">
+					</a>				
+						
+				
+				
+								
+				
+				
+				
+                    <a href="cart.html" class="cart-link">
+                        <img src="images/icons/ShoppingBag.png" alt="Shopping Bag" style="height:20px; vertical-align:middle;">
+                        <span id="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-image">
+                <img src="images/aboutus.png" alt="About Nobilis Crochet" onerror="this.onerror=null;this.src='https://placehold.co/400x500/f2e5d9/3e2723?text=Our+Story';">
+            </div>
+            <div class="about-text">
+                <h1>Our Story</h1>
+                <p>
+                    Welcome to Nobilis Crochet, where every stitch tells a story. Our journey began with Yessi, who has been passionately crocheting for years, turning simple yarn into cherished companions. What started as a hobby has blossomed into a small business driven by love and dedication.
+                </p>
+                <p>
+                    Every item in our shop is 100% handmade with meticulous attention to detail. We believe in quality over quantity, which is why we use only high-quality yarn and soft, durable stuffing to ensure your crocheted friends are both beautiful and built to last.
+                </p>
+                <p>
+                    As the owners and creators, we handle everything from the first stitch to the final shipment. This hands-on approach guarantees that every product meets our high standards and is packaged with care before it makes its way to you. Thank you for supporting our craft!
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <div class="footer-section">
+      <div class="footer-container">
+        <a href="aboutus.html">About Us</a>  
+        <a href="privacypolicy.html">Privacy Policy</a>
+        <a href="contact.html">Contact Information</a>
+        <a href="returnpolicy.html">Refund Policy</a>
+        <a href="shippingpolicy.html">Shipping Policy</a>
+      </div>
+    </div>
+    
+    <script src="cart.js"></script>
+</body>
+</html>

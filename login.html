@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Register</title>
+    <style>
+		body {
+		  margin: 0;
+		  font-family: 'Helvetica', 'Arial', sans-serif;
+		  color: #ffffff;
+		  background-color: #000000;
+		  overflow-x: hidden;
+		}
+
+		/*CONTAINERS*/
+
+		/* Toolbar container */
+		.toolbarcontain {
+		  background-color: rgba(0, 0, 0, 0.6);
+		  position: fixed;
+		  top: 0;
+		  width: 100%;
+		  z-index: 1000;
+		  display: flex;
+		  justify-content: space-between;
+		  align-items: center;
+		  padding: 25px 20px;
+		  box-sizing: border-box;
+		  transition: top 0.3s ease; /* Added for smooth transition */
+		}
+			
+		.toolbar .cart-link {
+			position: relative;
+		}
+		
+		#cart-count {
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			background-color: red;
+			color: white;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: bold;
+			display: none; /* Hidden by default */
+		}
+
+		/* New class to hide the toolbar when scrolling down */
+		.toolbar-hidden {
+			top: -100px;
+		}
+
+		/* Toolbar links */
+		.toolbar a {
+		  color: #ffffff;
+		  text-align: center;
+		  padding: 15px 20px;
+		  text-decoration: none;
+		  font-size: 20px;
+		  transition: transform 0.3s ease, color 0.3s ease;
+		}
+
+		.hovertext a:hover {
+		  color: #cccccc;
+		  transform: scale(1.1);
+		}
+
+		.hoverbackground a:hover {
+		  transform: scale(1.1);
+		}
+
+		.leftali, .rightali {
+		  display: flex;
+		  align-items: center;
+		}
+		
+        body {
+            background: linear-gradient(to bottom, #f2e5d9, #d4a5a5);
+        }
+
+        /* Custom CSS to replace Tailwind styles */
+        
+        /* Container for the login form */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        /* Form card */
+        .form-card {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 28rem;
+            width: 100%;
+        }
+
+        /* Form title section */
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .form-subtitle {
+            color: #4b5563;
+            margin: 0;
+        }
+
+        .form-subtitle a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .form-subtitle a:hover {
+            text-decoration: underline;
+        }
+
+        /* Form inputs */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group.last {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            appearance: none;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            color: #374151;
+            line-height: 1.25;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+        }
+
+        /* Submit button */
+        .submit-button {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: #2563eb;
+        }
+
+        .submit-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .divider span {
+            color: #6b7280;
+        }
+
+        /* Social login buttons */
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .social-button {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .social-button img {
+            margin-right: 0.5rem;
+        }
+
+        /* Google button */
+        .social-button.google {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+        }
+
+        .social-button.google:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Facebook button */
+        .social-button.facebook {
+            background-color: #1e3a8a;
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Apple button */
+        .social-button.apple {
+            background-color: #000000;
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .social-button.apple:hover {
+            background-color: #1f2937;
+        }
+		
+		
+		
+			
+			
+		/* --- START: Footer Section Styles --- */
+		.footer-section {
+		  background-color: #ffffff;
+		  color: #333;
+		  padding: 40px 20px;
+		  text-align: center;
+		}
+
+		.footer-container {
+		  max-width: 1200px;
+		  margin: 0 auto;
+		  display: flex;
+		  justify-content: center;
+		  gap: 30px;
+		  flex-wrap: wrap;
+		}
+
+		.footer-container a {
+		  color: #333;
+		  text-decoration: none;
+		  font-size: 16px;
+		  transition: color 0.3s ease;
+		}
+
+		.footer-container a:hover {
+		  color: #000000;
+		  text-decoration: underline;
+		}
+		/* --- END: Footer Section Styles --- */
+
+
+
+
+		/* Responsive design */
+		@media (max-width: 992px) {
+			.featured-container {
+				gap: 30px;
+			}
+		}		
+			
+		
+		
+		
+		
+		
+		
+		
+    </style>
+	<link rel="icon" type="image/png" href="images/tabphoto.png">
+</head>
+<body>
+  <div class="toolbarcontain" id="home">
+    <div class="hovertext">
+      <div class="leftali">
+        <div class="toolbar">
+          <a href="index.html">Home</a>
+          <a href="ShopPage.html#shop">Shop</a>
+          <a href="ShopPage.html#Build Your Monkey">Build</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="rightali">
+      <div class="hoverbackground">
+        <div class="toolbar">
+			<a href="login.html" class="user-link">
+				<img src="images/Icons/User.png" alt="User" style="height:20px; vertical-align:middle;">
+			</a>
+          <a href="cart.html" class="cart-link">
+            <img src="images/Icons/ShoppingBag.png" alt="Shopping Bag" style="height:20px; vertical-align:middle;">
+            <span id="cart-count">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="login-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1 id="form-title" class="form-title">Sign In</h1>
+            <p id="register-link" class="form-subtitle">or <a href="#">Register</a></p>
+        </div>
+
+        <form id="email-form">
+            <div class="form-group">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+
+            <div class="form-group last">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="submit-button">
+                    Sign In
+                </button>
+            </div>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <div class="social-buttons">
+                <button type="button" id="google-signin" class="social-button google">
+                    <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google"/> Continue with Google
+                </button>
+                <button type="button" class="social-button facebook">
+                    <img src="https://img.icons8.com/color/16/000000/facebook-new.png" alt="Facebook"/> Continue with Facebook
+                </button>
+                <button type="button" class="social-button apple">
+                    <img src="https://img.icons8.com/ios-filled/16/ffffff/mac-os.png" alt="Apple"/> Continue with Apple
+                </button>
+            </div>
+        </form>
+    </div>
+  </div>
+  
+  
+  
+   <div class="footer-section">
+      <div class="footer-container">
+	    <a href="aboutus.html">About Us</a>
+
+        <a href="privacypolicy.html">Privacy Policy</a>
+        <a href="contact.html">Contact Information</a>
+        <a href="returnpolicy.html">Refund Policy</a>
+        <a href="shippingpolicy.html">Shipping Policy</a>
+		
+      </div>
+   </div>
+ 
+  
+  
+  
+  
+  
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- ADDED: The missing Firestore script -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- Your custom auth script -->
+    <script src="auth.js"></script>
+</body>
+</html>

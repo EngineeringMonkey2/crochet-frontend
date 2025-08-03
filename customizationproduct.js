@@ -1,0 +1,64 @@
+/**
+ * This script runs on the customizationproduct.html page.
+ * It reads the image URLs for each character part from the URL query parameters
+ * and sets the 'src' attribute for each corresponding image element on the page.
+ * It also handles adding the custom product to the cart.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Create a URLSearchParams object to easily access the query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // An array of the character part IDs to easily loop through them
+    const parts = [
+        'head', 'left-ear', 'right-ear', 'body', 
+        'left-arm', 'right-arm', 'legs', 'tail'
+    ];
+    
+    const customImages = {};
+
+    // Loop through each part ID to load images
+    parts.forEach(partId => {
+        const imageElement = document.getElementById(partId);
+        const imageUrl = urlParams.get(partId);
+
+        if (imageElement && imageUrl) {
+            const decodedUrl = decodeURIComponent(imageUrl);
+            imageElement.src = decodedUrl;
+            customImages[partId] = decodedUrl; // Store for cart
+        } else {
+            console.warn(`Could not find element or URL for part: ${partId}`);
+        }
+    });
+    
+    // --- Cart Logic ---
+    const addToCartBtn = document.querySelector('.add-to-cart');
+    const buyNowBtn = document.querySelector('.buy-now');
+
+    function handleAddToCart() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        
+        // Create a unique ID for this custom creation using a timestamp
+        const uniqueId = 'custom-' + Date.now();
+        
+        const item = {
+            id: uniqueId,
+            name: 'Custom Monkey',
+            price: '$64.99',
+            quantity: quantity,
+            images: customImages // Store the whole object of part images
+        };
+        
+        addToCart(item);
+        return item;
+    }
+    
+    addToCartBtn.addEventListener('click', () => {
+        const item = handleAddToCart();
+        showToast(`${item.quantity} x ${item.name} added to cart!`);
+    });
+    
+    buyNowBtn.addEventListener('click', () => {
+        handleAddToCart();
+        window.location.href = 'cart.html';
+    });
+});

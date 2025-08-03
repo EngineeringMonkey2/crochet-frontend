@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #000000;
+            background: linear-gradient(to bottom, #f2e5d9, #d4a5a5);
+            overflow-x: hidden;
+            -webkit-print-color-adjust: exact; /* Ensures background prints in Chrome */
+            print-color-adjust: exact;
+        }
+
+        /* Toolbar container */
+        .toolbarcontain {
+            background-color: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 20px;
+            box-sizing: border-box;
+        }
+
+        .toolbar a {
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 20px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .toolbar .cart-link {
+            position: relative;
+        }
+        
+        #cart-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .hovertext a:hover { color: #cccccc; transform: scale(1.1); }
+        .hoverbackground a:hover { transform: scale(1.1); }
+        .leftali, .rightali { display: flex; align-items: center; }
+
+        /* Main Receipt Section */
+        .receipt-section {
+            padding: 120px 20px 80px;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        /* New Action Buttons Container */
+        .action-container {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            text-align: right;
+        }
+
+        #download-pdf-btn {
+            background-color: #3e2723;
+            color: white;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #download-pdf-btn:hover {
+            background-color: #5d4037;
+        }
+        
+        #download-pdf-btn:disabled {
+            background-color: #9e9e9e;
+            cursor: not-allowed;
+        }
+
+        .receipt-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Explicitly center header elements to fix PDF rendering */
+        .receipt-header h1, .receipt-header p {
+            text-align: center;
+        }
+
+        .receipt-header h1 {
+            font-size: 32px;
+            color: #28a745;
+            margin: 0 0 10px 0;
+        }
+
+        .receipt-header p {
+            font-size: 16px;
+            color: #555;
+            margin: 0;
+        }
+        
+        .receipt-header .order-number {
+            font-size: 14px;
+            color: #777;
+            margin-top: 15px;
+        }
+
+        .order-details, .shipping-details, .tracking-details {
+            margin-bottom: 30px;
+        }
+
+        .order-details h2, .shipping-details h2, .tracking-details h2 {
+            font-size: 22px;
+            color: #3e2723;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        #order-items-container .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        #order-items-container .item:last-child {
+            border-bottom: none;
+        }
+
+        #order-items-container .item-name {
+            font-weight: bold;
+        }
+        
+        #order-items-container .item-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        #order-items-container .item-details ul {
+            padding-left: 20px;
+            margin: 5px 0 0 0;
+        }
+
+        .order-summary {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .summary-line.total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #3e2723;
+        }
+
+        #shipping-address, #tracking-info {
+            line-height: 1.6;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: #555;
+        }
+		
+		
+		
+			
+			
+		/* --- START: Footer Section Styles --- */
+		.footer-section {
+		  background-color: #ffffff;
+		  color: #333;
+		  padding: 40px 20px;
+		  text-align: center;
+		}
+
+		.footer-container {
+		  max-width: 1200px;
+		  margin: 0 auto;
+		  display: flex;
+		  justify-content: center;
+		  gap: 30px;
+		  flex-wrap: wrap;
+		}
+
+		.footer-container a {
+		  color: #333;
+		  text-decoration: none;
+		  font-size: 16px;
+		  transition: color 0.3s ease;
+		}
+
+		.footer-container a:hover {
+		  color: #000000;
+		  text-decoration: underline;
+		}
+		/* --- END: Footer Section Styles --- */		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+        
+        /* Hide toolbar and download button when printing */
+        @media print {
+          .toolbarcontain, .action-container {
+            display: none;
+          }
+          .receipt-section {
+            padding: 20px 0;
+          }
+          .receipt-container {
+            box-shadow: none;
+            border: 1px solid #ccc;
+          }
+		  
+
+		  
+        }
+		
+		
+		
+		
+        
+        @media (max-width: 768px) {
+
+			
+			  
+			  .toolbar a {
+				font-size: 15px;
+				padding: 10px 5px;
+			  }		
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+
+    </style>
+</head>
+<body>
+
+    <!-- Toolbar -->
+    <div class="toolbarcontain">
+        <div class="hovertext">
+            <div class="leftali">
+                <div class="toolbar">
+                    <a href="Index.html">Home</a>
+				    <a href="ShopPage.html#shop">Shop</a>
+				    <a href="ShopPage.html#Build Your Monkey">Build</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="rightali">
+            <div class="hoverbackground">
+                <div class="toolbar">
+				
+					<a href="login.html" class="user-link">
+						<img src="images/Icons/User.png" alt="User" style="height:20px; vertical-align:middle;">
+					</a>
+								
+						
+				
+				
+				
+                    <a href="cart.html" class="cart-link">
+                        <img src="images/icons/ShoppingBag.png" alt="Shopping Bag" style="height:20px; vertical-align:middle;">
+                        <span id="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="receipt-section">
+        <!-- Container for Download Button -->
+        <div class="action-container" id="action-container" style="display: none;">
+            <button id="download-pdf-btn">Download as PDF</button>
+        </div>
+
+        <div class="receipt-container" id="receipt-container">
+            <div class="loading-spinner">
+                <p>Loading your order details...</p>
+            </div>
+        </div>
+		
+	
+    </section>
+    
+	
+	
+	  <div class="footer-section">
+		  <div class="footer-container">
+			<a href="aboutus.html">About Us</a>
+
+			<a href="privacypolicy.html">Privacy Policy</a>
+			<a href="contact.html">Contact Information</a>
+			<a href="returnpolicy.html">Refund Policy</a>
+			<a href="shippingpolicy.html">Shipping Policy</a>
+			
+		  </div>
+	  </div>			
+	
+	
+	
+	
+	
+	
+    <script src="cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+            const receiptContainer = document.getElementById('receipt-container');
+            const actionContainer = document.getElementById('action-container');
+            const downloadBtn = document.getElementById('download-pdf-btn');
+            
+            let orderData = null; // To store order data for the PDF function
+
+            if (sessionId) {
+                // A session ID exists, so the purchase was likely successful.
+                // Clear the cart from the previous session.
+                clearCart();
+                updateCartIcon();
+                
+                try {
+                    // Fetch order details from our server endpoint
+                    const response = await fetch(`/order-details?session_id=${sessionId}`);
+                    if (!response.ok) {
+                        // If the server responded with an error, show it.
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to fetch order details.');
+                    }
+                    const order = await response.json();
+                    orderData = order; // Save order data
+
+                    // --- Render the receipt ---
+                    
+                    // Format shipping address
+                    const address = order.shipping_details.address;
+                    const shippingHtml = `
+                        ${order.shipping_details.name}<br>
+                        ${address.line1}${address.line2 ? '<br>' + address.line2 : ''}<br>
+                        ${address.city}, ${address.state} ${address.postal_code}<br>
+                        ${address.country}
+                    `;
+
+                    // Format order items, including custom details
+                    let itemsHtml = order.line_items.data.map(item => {
+                        let metadataHtml = '';
+                        // Check for and parse custom details metadata
+                        if (item.price.product.metadata && item.price.product.metadata.custom_details) {
+                             try {
+                                const customDetails = JSON.parse(item.price.product.metadata.custom_details);
+                                metadataHtml += '<div class="item-details">Custom Parts: <ul>';
+                                for (const part in customDetails) {
+                                    // Make part names more readable (e.g., "left-ear" -> "Left Ear")
+                                    const formattedPart = part.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                    metadataHtml += `<li><b>${formattedPart}:</b> ${customDetails[part]}</li>`;
+                                }
+                                metadataHtml += '</ul></div>';
+                             } catch(e) { console.error("Could not parse custom details JSON", e); }
+                        }
+                        return `
+                            <div class="item">
+                                <div>
+                                    <div class="item-name">${item.quantity} x ${item.description}</div>
+                                    ${metadataHtml}
+                                </div>
+                                <div class="item-price">$${(item.amount_total / 100).toFixed(2)}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Populate the container with all the order information
+                    receiptContainer.innerHTML = `
+                        <div class="receipt-header">
+                            <h1>Thank You for Your Order!</h1>
+                            <p>A confirmation email has been sent to you.</p>
+                            <p class="order-number"><strong>Order Number:</strong> #${order.id.slice(-8)}</p>
+                        </div>
+
+                        <div class="order-details">
+                            <h2>Order Summary</h2>
+                            <div id="order-items-container">${itemsHtml}</div>
+                            <div class="order-summary">
+                                <div class="summary-line">
+                                    <span>Subtotal</span>
+                                    <span>$${(order.amount_subtotal / 100).toFixed(2)}</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span>Shipping</span>
+                                    <span>$${(order.shipping_cost ? (order.shipping_cost.amount_total / 100).toFixed(2) : '0.00')}</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span>Taxes</span>
+                                    <span>$${(order.total_details.amount_tax / 100).toFixed(2)}</span>
+                                </div>
+                                <div class="summary-line total">
+                                    <span>Total</span>
+                                    <span>$${(order.amount_total / 100).toFixed(2)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="shipping-details">
+                            <h2>Shipping Address</h2>
+                            <div id="shipping-address">${shippingHtml}</div>
+                        </div>
+
+                        <div class="tracking-details">
+                            <h2>Tracking Information</h2>
+                            <p id="tracking-info">Your order is being prepared for shipment. A tracking number will be sent to your email once it's available.</p>
+                        </div>
+                    `;
+                    
+                    // Show the download button now that data is loaded
+                    actionContainer.style.display = 'block';
+
+                } catch (error) {
+                    receiptContainer.innerHTML = `<div class="receipt-header"><h1>Error</h1><p>Sorry, we could not retrieve your order details. Please check your email for the confirmation.</p></div>`;
+                    console.error('Error fetching receipt data:', error);
+                }
+            } else {
+                receiptContainer.innerHTML = `<div class="receipt-header"><h1>Invalid Page</h1><p>No order session found. <a href="ShopPage.html">Continue shopping</a>.</p></div>`;
+            }
+
+            // --- PDF Download Logic ---
+            downloadBtn.addEventListener('click', () => {
+                if (!orderData) {
+                    alert("Order data is not loaded yet.");
+                    return;
+                }
+                
+                downloadBtn.disabled = true;
+                downloadBtn.textContent = 'Generating...';
+
+                const receiptElement = document.getElementById('receipt-container');
+                const { jsPDF } = window.jspdf;
+
+                // Use html2canvas to capture the receipt container
+                html2canvas(receiptElement, { 
+                    scale: 2, // Higher scale for better resolution
+                    useCORS: true 
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    // Use A4 paper size (210mm wide) and portrait orientation
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                    
+                    // Add the image to the PDF, scaling it to fit the page width
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save(`order-receipt-${orderData.id.slice(-8)}.pdf`);
+                    
+                    downloadBtn.disabled = false;
+                    downloadBtn.textContent = 'Download as PDF';
+                }).catch(err => {
+                    console.error("Error generating PDF:", err);
+                    alert("Sorry, there was an error creating the PDF.");
+                    downloadBtn.disabled = false;
+                    downloadBtn.textContent = 'Download as PDF';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
