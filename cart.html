@@ -105,6 +105,74 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+        
+        /* FIX: Container for the full custom monkey image */
+        .custom-monkey-image-container {
+            position: relative;
+            width: 100px; /* Fixed width for the thumbnail */
+            height: 100px; /* Fixed height for the thumbnail */
+            margin-right: 20px;
+            overflow: hidden; /* Hide parts that go outside the container */
+        }
+        
+        /* FIX: Common style for all image parts of the character, scaled and positioned */
+        .custom-monkey-image-container .character-part {
+            position: absolute;
+            outline: none;
+            width: 200px; /* Base size for rendering head and face */
+            height: 300px; /* Base size for rendering head and face */
+            transform-origin: top left;
+        }
+        
+        /* FIX: CSS for the eyes and mouth of the custom monkey */
+        .custom-monkey-image-container .eye {
+            position: absolute;
+            width: 16px; /* Scaled down */
+            height: 12px; /* Scaled down */
+            background: white;
+            border-top: 5px solid white; /* Scaled down */
+            border-radius: 16.66px; /* Scaled down */
+            z-index: 16;
+        }
+        .custom-monkey-image-container #left-eye { top: 50px; left: 60px; } /* Scaled down positions */
+        .custom-monkey-image-container #right-eye { top: 50px; left: 20px; } /* Scaled down positions */
+
+        .custom-monkey-image-container .pupil {
+            position: absolute;
+            width: 15px; /* Scaled down */
+            height: 15px; /* Scaled down */
+            background: black;
+            border-radius: 50%;
+            left: 10%;
+            top: -20%;
+
+        }
+        .custom-monkey-image-container .pupilwhite {
+            position: absolute;
+            width: 3px; /* Scaled down */
+            height: 3px; /* Scaled down */
+            background: white;
+            border-radius: 50%;
+            left: 45%;
+            top: 20%;
+
+        }
+        .custom-monkey-image-container #mouth {
+            position: absolute;
+            z-index: 15;
+            width: 25px; /* Scaled down */
+            height: 8px; /* Scaled down */
+            background: black;
+            border: 1.66px solid #000; /* Scaled down */
+            border-radius: 0 0 40px 40px / 0 0 30px 30px; /* Scaled down */
+            top: 82px; left: 35px; /* Scaled down positions */
+        }
+        
+        /* FIX: Positioning rules for the head and ears to fit the thumbnail */
+        .custom-monkey-image-container .head-part { top: 0px; left: 5px; width: 90%; height: auto; z-index: 10; }
+        .custom-monkey-image-container .left-ear-part { top: 15px; left: 5px; width: 30px; height: auto; transform: rotate(25deg); z-index: 5; }
+        .custom-monkey-image-container .right-ear-part { top: 26px; left: 70px; width: 30px; height: auto; transform: rotate(-18deg); z-index: 5; }
+
 
         .cart-item img {
             width: 100px;
@@ -227,11 +295,7 @@
         }
 		
 		
-
-		  
-	   
-		/* --- START: Footer Section Styles --- */
-		.footer-section {
+        .footer-section {
 		  background-color: #ffffff;
 		  color: #333;
 		  padding: 40px 20px;
@@ -258,16 +322,7 @@
 		  color: #000000;
 		  text-decoration: underline;
 		}
-		/* --- END: Footer Section Styles --- */	  
-				
-			
 		
-		
-		
-		
-		
-		
-
         /* Empty Cart Message */
         #empty-cart-message {
             text-align: center;
@@ -378,13 +433,6 @@
   </div>
 
 
-
-
-
-
-
-
-
   
     <script src="cart.js"></script>
     <script>
@@ -415,15 +463,37 @@
                     const itemElement = document.createElement('div');
                     itemElement.className = 'cart-item';
                     
-                    // Determine image source
-                    let imgSrc = item.image || (item.images ? item.images.head : 'https://placehold.co/100x100/f2e5d9/333?text=Item');
-
                     const itemPrice = parseFloat(item.price.replace('$', ''));
                     const totalItemPrice = (itemPrice * item.quantity).toFixed(2);
                     subtotal += parseFloat(totalItemPrice);
+                    
+                    let itemImageHtml = '';
+                    if (item.images) {
+                        itemImageHtml = `
+                            <div class="custom-monkey-image-container">
+                                <!-- FIX: Re-ordering parts for correct layering and only showing head, ears, eyes, and mouth -->
+                                <img src="${item.images.head}" class="character-part head-part" alt="Custom Monkey Head">
+                                <img src="${item.images['left-ear']}" class="character-part left-ear-part" alt="Custom Monkey Left Ear">
+                                <img src="${item.images['right-ear']}" class="character-part right-ear-part" alt="Custom Monkey Right Ear">
+                                <div id="left-eye" class="eye">
+                                    <div class="pupil">
+                                        <div class="pupilwhite"></div>
+                                    </div>
+                                </div>
+                                <div id="right-eye" class="eye">
+                                    <div class="pupil">
+                                        <div class="pupilwhite"></div>
+                                    </div>
+                                </div>
+                                <div id="mouth"></div>
+                            </div>
+                        `;
+                    } else {
+                        itemImageHtml = `<img src="${item.image}" alt="${item.name}">`;
+                    }
 
                     itemElement.innerHTML = `
-                        <img src="${imgSrc}" alt="${item.name}">
+                        ${itemImageHtml}
                         <div class="item-details">
                             <h3>${item.name}</h3>
                             <p class="price">${item.price}</p>
@@ -442,7 +512,6 @@
                 });
 
                 // Render Summary
-                // NOTE: Tax will now be calculated by Stripe. We show an estimate here.
                 const estimatedTax = subtotal * 0.08;
                 const estimatedTotal = subtotal + estimatedTax;
 
@@ -464,11 +533,11 @@
                     </div>
                 `;
                 
-                // Add event listener to the newly created checkout button
                 const checkoutButton = document.querySelector('.checkout-button');
                 checkoutButton.addEventListener('click', handleCheckout);
             }
 
+            const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
             // --- STRIPE CHECKOUT HANDLER ---
             async function handleCheckout() {
                 const checkoutButton = document.querySelector('.checkout-button');
@@ -477,11 +546,29 @@
 
                 const cart = getCart();
                 
+                const finalLineItems = cart.map(item => {
+                    const metadata = item.images ? { custom_details: JSON.stringify(item.images) } : {};
+                    const image = item.images ? item.images.head : item.image;
+                    
+                    return {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: item.name,
+                                images: [image],
+                                metadata: metadata
+                            },
+                            unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100),
+                        },
+                        quantity: item.quantity,
+                    };
+                });
+
                 try {
-					const response = await fetch('https://crochet-backend-ho1l.onrender.com/create-checkout-session', {
+					const response = await fetch(`${backendUrl}/create-checkout-session`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ cart })
+						body: JSON.stringify({ cart: finalLineItems })
 					});
 
                     if (!response.ok) {
@@ -490,21 +577,19 @@
 
                     const session = await response.json();
                     
-                    // Redirect to Stripe's checkout page
                     window.location.href = session.url;
 
                 } catch (error) {
                     console.error('Checkout error:', error);
                     checkoutButton.disabled = false;
                     checkoutButton.textContent = 'Proceed to Checkout';
-                    // You could show an error message to the user here
                 }
             }
             
             window.removeItemFromCart = (index) => {
                 removeFromCart(index);
                 renderCart();
-                updateCartIcon(); // Also update the icon in the toolbar
+                updateCartIcon();
             };
 
             window.changeItemQuantity = (index, delta) => {
