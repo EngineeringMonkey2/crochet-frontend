@@ -105,6 +105,74 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+        
+        /* Container for the full custom monkey image */
+        .custom-monkey-image-container {
+            position: relative;
+            width: 100px; /* Fixed width for the thumbnail */
+            height: 100px; /* Fixed height for the thumbnail */
+            margin-right: 20px;
+            overflow: hidden; /* Hide parts that go outside the container */
+        }
+        
+        /* Common style for all image parts of the character, scaled and positioned */
+        .custom-monkey-image-container .character-part {
+            position: absolute;
+            outline: none;
+            width: 200px; /* Base size for rendering head and face */
+            height: 300px; /* Base size for rendering head and face */
+            transform-origin: top left;
+        }
+        
+        /* CSS for the eyes and mouth of the custom monkey */
+        .custom-monkey-image-container .eye {
+            position: absolute;
+            width: 16px; /* Scaled down */
+            height: 12px; /* Scaled down */
+            background: white;
+            border-top: 5px solid white; /* Scaled down */
+            border-radius: 16.66px; /* Scaled down */
+            z-index: 16;
+        }
+        .custom-monkey-image-container #left-eye { top: 50px; left: 60px; } /* Scaled down positions */
+        .custom-monkey-image-container #right-eye { top: 50px; left: 20px; } /* Scaled down positions */
+
+        .custom-monkey-image-container .pupil {
+            position: absolute;
+            width: 15px; /* Scaled down */
+            height: 15px; /* Scaled down */
+            background: black;
+            border-radius: 50%;
+            left: 10%;
+            top: -20%;
+
+        }
+        .custom-monkey-image-container .pupilwhite {
+            position: absolute;
+            width: 3px; /* Scaled down */
+            height: 3px; /* Scaled down */
+            background: white;
+            border-radius: 50%;
+            left: 45%;
+            top: 20%;
+
+        }
+        .custom-monkey-image-container #mouth {
+            position: absolute;
+            z-index: 15;
+            width: 25px; /* Scaled down */
+            height: 8px; /* Scaled down */
+            background: black;
+            border: 1.66px solid #000; /* Scaled down */
+            border-radius: 0 0 40px 40px / 0 0 30px 30px; /* Scaled down */
+            top: 82px; left: 35px; /* Scaled down positions */
+        }
+        
+        /* Positioning rules for the head and ears to fit the thumbnail */
+        .custom-monkey-image-container .head-part { top: 0px; left: 5px; width: 90%; height: auto; z-index: 10; }
+        .custom-monkey-image-container .left-ear-part { top: 15px; left: 5px; width: 30px; height: auto; transform: rotate(25deg); z-index: 5; }
+        .custom-monkey-image-container .right-ear-part { top: 26px; left: 70px; width: 30px; height: auto; transform: rotate(-18deg); z-index: 5; }
+
 
         .cart-item img {
             width: 100px;
@@ -227,11 +295,7 @@
         }
 		
 		
-
-		  
-	   
-		/* --- START: Footer Section Styles --- */
-		.footer-section {
+        .footer-section {
 		  background-color: #ffffff;
 		  color: #333;
 		  padding: 40px 20px;
@@ -258,16 +322,7 @@
 		  color: #000000;
 		  text-decoration: underline;
 		}
-		/* --- END: Footer Section Styles --- */	  
-				
-			
 		
-		
-		
-		
-		
-		
-
         /* Empty Cart Message */
         #empty-cart-message {
             text-align: center;
@@ -301,6 +356,15 @@
                 margin-left: 0;
                 margin-top: 15px;
             }
+			
+		  .toolbar a {
+			font-size: 15px;
+			padding: 10px 5px;
+		  }			
+			
+						
+			
+
         }
     </style>
 	<link rel="icon" type="image/png" href="images/tabphoto.png">
@@ -380,14 +444,14 @@
 
 
 
-
-
-
-
-
   
     <script src="cart.js"></script>
     <script>
+	
+	
+	
+	
+	
         document.addEventListener('DOMContentLoaded', () => {
             const itemsContainer = document.getElementById('cart-items-container');
             const summaryContainer = document.getElementById('cart-summary-container');
@@ -415,15 +479,33 @@
                     const itemElement = document.createElement('div');
                     itemElement.className = 'cart-item';
                     
-                    // Determine image source
-                    let imgSrc = item.image || (item.images ? item.images.head : 'https://placehold.co/100x100/f2e5d9/333?text=Item');
+                    let imageHtml;
+                    if (item.images) {
+                        // This is a custom monkey. Render all parts in a single container.
+                        imageHtml = `
+                            <div class="custom-monkey-image-container">
+                                <img id="head" class="character-part head-part" src="${item.images.head}" alt="Character Head">
+                                <img id="left-ear" class="character-part left-ear-part" src="${item.images['left-ear']}" alt="Left Ear">
+                                <img id="right-ear" class="character-part right-ear-part" src="${item.images['right-ear']}" alt="Right Ear">
+                                <!-- Add the face and eyes -->
+                                <div id="left-eye" class="eye"><div class="pupil"><div class="pupilwhite"></div></div></div>
+                                <div id="right-eye" class="eye"><div class="pupil"><div class="pupilwhite"></div></div></div>
+                                <div id="mouth"></div>
+                            </div>
+                        `;
+                    } else {
+                        // This is a regular product. Render a single image.
+                        const imgSrc = item.image || 'https://placehold.co/100x100/f2e5d9/333?text=Item';
+                        imageHtml = `<img src="${imgSrc}" alt="${item.name}">`;
+                    }
+                    
 
                     const itemPrice = parseFloat(item.price.replace('$', ''));
                     const totalItemPrice = (itemPrice * item.quantity).toFixed(2);
                     subtotal += parseFloat(totalItemPrice);
 
                     itemElement.innerHTML = `
-                        <img src="${imgSrc}" alt="${item.name}">
+                        ${imageHtml}
                         <div class="item-details">
                             <h3>${item.name}</h3>
                             <p class="price">${item.price}</p>
@@ -513,8 +595,27 @@
                 updateCartIcon();
             };
             
+			
+			
+			
+			
+			
+			
+			
+
             renderCart();
         });
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
     </script>
 
 </body>
