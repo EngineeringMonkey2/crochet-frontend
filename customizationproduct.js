@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'left-arm', 'right-arm', 'legs', 'tail'
     ];
     
+    // NEW: Add a list of parts for the eyes and mouth to save them to the customImages object
+    const nonImageParts = ['left-eye', 'right-eye', 'mouth'];
+    
     const customImages = {};
 
     // Loop through each part ID to load images
@@ -28,6 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.warn(`Could not find element or URL for part: ${partId}`);
         }
+    });
+    
+    // NEW: Loop through the non-image parts to add them to the metadata
+    nonImageParts.forEach(partId => {
+        // You'll need to capture the state of these non-image parts if they are customizable.
+        // For now, we'll assume they are static and can be represented by a placeholder or simple text.
+        customImages[partId] = document.getElementById(partId).style.backgroundImage || 'Static';
     });
     
     // --- Cart Logic ---
@@ -45,7 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Custom Monkey',
             price: '$64.99',
             quantity: quantity,
-            images: customImages // Store the whole object of part images
+            // FIX: Store the full customImages object, not just a single image
+            images: customImages, 
+            image: customImages['head'] // Keep a single image for the cart preview
         };
         
         addToCart(item);
