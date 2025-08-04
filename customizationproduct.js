@@ -34,9 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // NEW: Loop through the non-image parts to add them to the metadata
+    // We are simply saving a placeholder string for the non-image parts
     nonImageParts.forEach(partId => {
-        // You'll need to capture the state of these non-image parts if they are customizable.
-        // For now, we'll assume they are static and can be represented by a placeholder or simple text.
         customImages[partId] = document.getElementById(partId).style.backgroundImage || 'Static';
     });
     
