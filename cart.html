@@ -554,8 +554,39 @@
                 checkoutButton.textContent = 'Processing...';
 
                 const cart = getCart();
+				// --- STRIPE CHECKOUT HANDLER ---
+				async function handleCheckout() {
+					const checkoutButton = document.querySelector('.checkout-button');
+					checkoutButton.disabled = true;
+					checkoutButton.textContent = 'Processing...';
 
+					const cart = getCart();
+					
+					// Send the original cart data, not transformed finalLineItems
+					// Your backend will handle the transformation
+					try {
+						const response = await fetch(`${backendUrl}/create-checkout-session`, {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ cart: cart }) // Send original cart, not finalLineItems
+						});
 
+						if (!response.ok) {
+							const errorData = await response.json();
+							throw new Error(errorData.details || 'Server responded with an error.');
+						}
+
+						const session = await response.json();
+						
+						window.location.href = session.url;
+
+					} catch (error) {
+						console.error('Checkout error:', error);
+						alert('Checkout failed: ' + error.message);
+						checkoutButton.disabled = false;
+						checkoutButton.textContent = 'Proceed to Checkout';
+					}
+				}
 
 
 
