@@ -1,6 +1,6 @@
 // product-reviews.js (Rewritten for Render Backend)
 
-const backendUrl = 'https://crochet-backend.onrender.com';
+const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
     const reviewsContainer = document.getElementById('reviews-container');

@@ -2,7 +2,7 @@
 
 // Define the base URL of your live backend on Render.
 // You can find this URL on your Render dashboard for the web service.
-const backendUrl = 'https://crochet-backend.onrender.com'; 
+const backendUrl = 'https://crochet-backend-ho1l.onrender.com'; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const googleBtn = document.getElementById('google-signin');
@@ -40,3 +40,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make the function available globally so other scripts can use it.
     window.checkUserStatus = checkUserStatus;
 });
+

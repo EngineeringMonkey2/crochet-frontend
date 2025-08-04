@@ -1,7 +1,7 @@
 // account.js (Rewritten for Render Backend)
 
 // Define the base URL of your live backend on Render.
-const backendUrl = 'https://crochet-backend.onrender.com';
+const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const accountDetailsContainer = document.getElementById('account-details');
