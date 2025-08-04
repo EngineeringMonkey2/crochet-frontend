@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'left-arm', 'right-arm', 'legs', 'tail'
     ];
     
+    // NEW: Add a list of parts for the eyes and mouth to save them to the customImages object
+    const nonImageParts = ['left-eye', 'right-eye', 'mouth'];
+    
     const customImages = {};
 
     // Loop through each part ID to load images
@@ -30,10 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // NEW: Loop through the non-image parts to add them to the metadata
+    // We are simply saving a placeholder string for the non-image parts
+    nonImageParts.forEach(partId => {
+        // Here we capture a simple 'Static' value for the non-image parts, as they are not
+        // part of the dynamic image-changing logic. This ensures they are included in the metadata.
+        customImages[partId] = document.getElementById(partId).style.backgroundImage || 'Static';
+    });
+    
     // --- Cart Logic ---
     const addToCartBtn = document.querySelector('.add-to-cart');
     const buyNowBtn = document.querySelector('.buy-now');
 
+    /**
+     * Handles adding the custom monkey to the shopping cart.
+     * It creates a unique item object with all custom image URLs.
+     */
     function handleAddToCart() {
         const quantity = parseInt(document.getElementById('quantity').value);
         
@@ -45,20 +60,27 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Custom Monkey',
             price: '$64.99',
             quantity: quantity,
-            images: customImages, // Store the whole object of part images
-            image: customImages['head'] // Keep a fallback image for compatibility
+            // Store the full customImages object with all part URLs as metadata
+            images: customImages, 
+            // Use the head image as the main image for the cart preview thumbnail
+            image: customImages['head'] 
         };
         
+        // Add the new item to the cart using the global addToCart function from cart.js
         addToCart(item);
         return item;
     }
     
+    // Event listener for the "Add to Cart" button
     addToCartBtn.addEventListener('click', () => {
         const item = handleAddToCart();
+        // Show a temporary success message (toast notification)
         showToast(`${item.quantity} x ${item.name} added to cart!`);
     });
     
+    // Event listener for the "Buy Now" button
     buyNowBtn.addEventListener('click', () => {
+        // Add the item to the cart, then immediately redirect to the cart page
         handleAddToCart();
         window.location.href = 'cart.html';
     });

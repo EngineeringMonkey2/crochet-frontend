@@ -357,14 +357,14 @@
                 margin-top: 15px;
             }
 			
-				
 		  .toolbar a {
 			font-size: 15px;
 			padding: 10px 5px;
 		  }			
 			
+						
 			
-			
+
         }
     </style>
 	<link rel="icon" type="image/png" href="images/tabphoto.png">
@@ -445,157 +445,170 @@
   
     <script src="cart.js"></script>
     <script>
-		document.addEventListener('DOMContentLoaded', () => {
-			const itemsContainer = document.getElementById('cart-items-container');
-			const summaryContainer = document.getElementById('cart-summary-container');
-			const emptyMessage = document.getElementById('empty-cart-message');
+        document.addEventListener('DOMContentLoaded', () => {
+            const itemsContainer = document.getElementById('cart-items-container');
+            const summaryContainer = document.getElementById('cart-summary-container');
+            const emptyMessage = document.getElementById('empty-cart-message');
 
-			function renderCart() {
-				const cart = getCart();
-				itemsContainer.innerHTML = ''; // Clear current view
-				summaryContainer.innerHTML = '';
+            function renderCart() {
+                const cart = getCart();
+                itemsContainer.innerHTML = ''; // Clear current view
+                summaryContainer.innerHTML = '';
 
-				if (cart.length === 0) {
-					emptyMessage.style.display = 'block';
-					itemsContainer.style.display = 'none';
-					summaryContainer.style.display = 'none';
-					return;
-				}
-				
-				emptyMessage.style.display = 'none';
-				itemsContainer.style.display = 'block';
-				summaryContainer.style.display = 'block';
+                if (cart.length === 0) {
+                    emptyMessage.style.display = 'block';
+                    itemsContainer.style.display = 'none';
+                    summaryContainer.style.display = 'none';
+                    return;
+                }
+                
+                emptyMessage.style.display = 'none';
+                itemsContainer.style.display = 'block';
+                summaryContainer.style.display = 'block';
 
-				let subtotal = 0;
+                let subtotal = 0;
 
-				cart.forEach((item, index) => {
-					const itemElement = document.createElement('div');
-					itemElement.className = 'cart-item';
-					
-					const itemPrice = parseFloat(item.price.replace('$', ''));
-					const totalItemPrice = (itemPrice * item.quantity).toFixed(2);
-					subtotal += parseFloat(totalItemPrice);
-					
-					let itemImageHtml = '';
-					if (item.images) {
-						itemImageHtml = `
-							<div class="custom-monkey-image-container">
-								<!-- FIX: Re-ordering parts for correct layering and only showing head, ears, eyes, and mouth -->
-								<img src="${item.images.head}" class="character-part head-part" alt="Custom Monkey Head">
-								<img src="${item.images['left-ear']}" class="character-part left-ear-part" alt="Custom Monkey Left Ear">
-								<img src="${item.images['right-ear']}" class="character-part right-ear-part" alt="Custom Monkey Right Ear">
-								<div id="left-eye" class="eye">
-									<div class="pupil">
-										<div class="pupilwhite"></div>
-									</div>
-								</div>
-								<div id="right-eye" class="eye">
-									<div class="pupil">
-										<div class="pupilwhite"></div>
-									</div>
-								</div>
-								<div id="mouth"></div>
-							</div>
-						`;
-					} else {
-						itemImageHtml = `<img src="${item.image}" alt="${item.name}">`;
-					}
+                cart.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    
+                    const itemPrice = parseFloat(item.price.replace('$', ''));
+                    const totalItemPrice = (itemPrice * item.quantity).toFixed(2);
+                    subtotal += parseFloat(totalItemPrice);
+                    
+                    let itemImageHtml = '';
+                    if (item.images) {
+                        itemImageHtml = `
+                            <div class="custom-monkey-image-container">
+                                <img src="${item.images.head}" class="character-part head-part" alt="Custom Monkey Head">
+                                <img src="${item.images['left-ear']}" class="character-part left-ear-part" alt="Custom Monkey Left Ear">
+                                <img src="${item.images['right-ear']}" class="character-part right-ear-part" alt="Custom Monkey Right Ear">
+                                <div class="eye-container">
+                                    <div id="left-eye" class="eye">
+                                        <div class="pupil">
+                                            <div class="pupilwhite"></div>
+                                        </div>
+                                    </div>
+                                    <div id="right-eye" class="eye">
+                                        <div class="pupil">
+                                            <div class="pupilwhite"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="mouth" class="mouth"></div>
+                            </div>
+                        `;
+                    } else {
+                        itemImageHtml = `<img src="${item.image}" alt="${item.name}">`;
+                    }
 
-					itemElement.innerHTML = `
-						${itemImageHtml}
-						<div class="item-details">
-							<h3>${item.name}</h3>
-							<p class="price">${item.price}</p>
-							<div class="quantity-controls">
-								<button onclick="changeItemQuantity(${index}, -1)">-</button>
-								<span>${item.quantity}</span>
-								<button onclick="changeItemQuantity(${index}, 1)">+</button>
-							</div>
-							<button class="remove-item" onclick="removeItemFromCart(${index})">Remove</button>
-						</div>
-						<div class="item-total">
-							$${totalItemPrice}
-						</div>
-					`;
-					itemsContainer.appendChild(itemElement);
-				});
+                    itemElement.innerHTML = `
+                        ${itemImageHtml}
+                        <div class="item-details">
+                            <h3>${item.name}</h3>
+                            <p class="price">${item.price}</p>
+                            <div class="quantity-controls">
+                                <button onclick="changeItemQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="changeItemQuantity(${index}, 1)">+</button>
+                            </div>
+                            <button class="remove-item" onclick="removeItemFromCart(${index})">Remove</button>
+                        </div>
+                        <div class="item-total">
+                            $${totalItemPrice}
+                        </div>
+                    `;
+                    itemsContainer.appendChild(itemElement);
+                });
 
-				// Render Summary
-				const estimatedTax = subtotal * 0.08;
-				const estimatedTotal = subtotal + estimatedTax;
+                // Render Summary
+                const estimatedTax = subtotal * 0.08;
+                const estimatedTotal = subtotal + estimatedTax;
 
-				summaryContainer.innerHTML = `
-					<div class="cart-summary">
-						<div class="summary-line">
-							<span>Subtotal</span>
-							<span>$${subtotal.toFixed(2)}</span>
-						</div>
-						<div class="summary-line">
-							<span>Estimated Tax</span>
-							<span>$${estimatedTax.toFixed(2)}</span>
-						</div>
-						<div class="summary-line total">
-							<span>Estimated Total</span>
-							<span>$${estimatedTotal.toFixed(2)}</span>
-						</div>
-						<button class="checkout-button">Proceed to Checkout</button>
-					</div>
-				`;
-				
-				const checkoutButton = document.querySelector('.checkout-button');
-				checkoutButton.addEventListener('click', handleCheckout);
-			}
+                summaryContainer.innerHTML = `
+                    <div class="cart-summary">
+                        <div class="summary-line">
+                            <span>Subtotal</span>
+                            <span>$${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Estimated Tax</span>
+                            <span>$${estimatedTax.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-line total">
+                            <span>Estimated Total</span>
+                            <span>$${estimatedTotal.toFixed(2)}</span>
+                        </div>
+                        <button class="checkout-button">Proceed to Checkout</button>
+                    </div>
+                `;
+                
+                const checkoutButton = document.querySelector('.checkout-button');
+                checkoutButton.addEventListener('click', handleCheckout);
+            }
 
-			const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
-			
-			// --- STRIPE CHECKOUT HANDLER ---
-			async function handleCheckout() {
-				const checkoutButton = document.querySelector('.checkout-button');
-				checkoutButton.disabled = true;
-				checkoutButton.textContent = 'Processing...';
+            const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
+            // --- STRIPE CHECKOUT HANDLER ---
+            async function handleCheckout() {
+                const checkoutButton = document.querySelector('.checkout-button');
+                checkoutButton.disabled = true;
+                checkoutButton.textContent = 'Processing...';
 
-				const cart = getCart();
-				
-				// Send the original cart data, not transformed finalLineItems
-				// Your backend will handle the transformation
-				try {
+                const cart = getCart();
+                
+                const finalLineItems = cart.map(item => {
+                    const metadata = item.images ? { custom_details: JSON.stringify(item.images) } : {};
+                    const image = item.images ? item.images.head : item.image;
+                    
+                    return {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: item.name,
+                                images: [image],
+                                metadata: metadata
+                            },
+                            unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100),
+                        },
+                        quantity: item.quantity,
+                    };
+                });
+
+                try {
 					const response = await fetch(`${backendUrl}/create-checkout-session`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ cart: cart }) // Send original cart, not finalLineItems
+						body: JSON.stringify({ cart: finalLineItems })
 					});
 
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.details || 'Server responded with an error.');
-					}
+                    if (!response.ok) {
+                        throw new Error('Server responded with an error.');
+                    }
 
-					const session = await response.json();
-					
-					window.location.href = session.url;
+                    const session = await response.json();
+                    
+                    window.location.href = session.url;
 
-				} catch (error) {
-					console.error('Checkout error:', error);
-					alert('Checkout failed: ' + error.message);
-					checkoutButton.disabled = false;
-					checkoutButton.textContent = 'Proceed to Checkout';
-				}
-			}
-			
-			window.removeItemFromCart = (index) => {
-				removeFromCart(index);
-				renderCart();
-				updateCartIcon();
-			};
+                } catch (error) {
+                    console.error('Checkout error:', error);
+                    checkoutButton.disabled = false;
+                    checkoutButton.textContent = 'Proceed to Checkout';
+                }
+            }
+            
+            window.removeItemFromCart = (index) => {
+                removeFromCart(index);
+                renderCart();
+                updateCartIcon();
+            };
 
-			window.changeItemQuantity = (index, delta) => {
-				updateQuantity(index, delta);
-				renderCart();
-				updateCartIcon();
-			};
-			
-			renderCart();
-		});
+            window.changeItemQuantity = (index, delta) => {
+                updateQuantity(index, delta);
+                renderCart();
+                updateCartIcon();
+            };
+            
+            renderCart();
         });
     </script>
 
