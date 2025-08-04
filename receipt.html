@@ -270,8 +270,6 @@
             border: 1px solid #ccc;
           }
 		  
-
-		  
         }
 		
 		
@@ -288,7 +286,6 @@
 			  }		
 		
 		}
-		
 		
 		
 		
@@ -371,6 +368,9 @@
 	
     <script src="cart.js"></script>
     <script>
+        // The URL of your backend hosted on Render
+        const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
+
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const sessionId = urlParams.get('session_id');
@@ -383,12 +383,14 @@
             if (sessionId) {
                 // A session ID exists, so the purchase was likely successful.
                 // Clear the cart from the previous session.
-                clearCart();
-                updateCartIcon();
+                if (typeof window.clearCart === 'function') {
+                    window.clearCart();
+                    window.updateCartIcon();
+                }
                 
                 try {
-                    // Fetch order details from our server endpoint
-                    const response = await fetch(`/order-details?session_id=${sessionId}`);
+                    // Fetch order details from our server endpoint, using the full backend URL
+                    const response = await fetch(`${backendUrl}/order-details?session_id=${sessionId}`);
                     if (!response.ok) {
                         // If the server responded with an error, show it.
                         const errorData = await response.json();
@@ -400,37 +402,22 @@
                     // --- Render the receipt ---
                     
                     // Format shipping address
-                    const address = order.shipping_details.address;
-                    const shippingHtml = `
-                        ${order.shipping_details.name}<br>
-                        ${address.line1}${address.line2 ? '<br>' + address.line2 : ''}<br>
-                        ${address.city}, ${address.state} ${address.postal_code}<br>
-                        ${address.country}
-                    `;
-
-                    // Format order items, including custom details
-                    let itemsHtml = order.line_items.data.map(item => {
-                        let metadataHtml = '';
-                        // Check for and parse custom details metadata
-                        if (item.price.product.metadata && item.price.product.metadata.custom_details) {
-                             try {
-                                const customDetails = JSON.parse(item.price.product.metadata.custom_details);
-                                metadataHtml += '<div class="item-details">Custom Parts: <ul>';
-                                for (const part in customDetails) {
-                                    // Make part names more readable (e.g., "left-ear" -> "Left Ear")
-                                    const formattedPart = part.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                                    metadataHtml += `<li><b>${formattedPart}:</b> ${customDetails[part]}</li>`;
-                                }
-                                metadataHtml += '</ul></div>';
-                             } catch(e) { console.error("Could not parse custom details JSON", e); }
-                        }
+                    const shippingDetails = order.shipping_details;
+                    const shippingHtml = shippingDetails ? `
+                        ${shippingDetails.name}<br>
+                        ${shippingDetails.address.line1}${shippingDetails.address.line2 ? '<br>' + shippingDetails.address.line2 : ''}<br>
+                        ${shippingDetails.address.city}, ${shippingDetails.address.state} ${shippingDetails.address.postal_code}<br>
+                        ${shippingDetails.address.country}
+                    ` : 'N/A';
+                    
+                    // Format order items
+                    let itemsHtml = order.line_items.map(item => {
                         return `
                             <div class="item">
                                 <div>
                                     <div class="item-name">${item.quantity} x ${item.description}</div>
-                                    ${metadataHtml}
                                 </div>
-                                <div class="item-price">$${(item.amount_total / 100).toFixed(2)}</div>
+                                <div class="item-price">$${item.amount_total.toFixed(2)}</div>
                             </div>
                         `;
                     }).join('');
@@ -449,19 +436,19 @@
                             <div class="order-summary">
                                 <div class="summary-line">
                                     <span>Subtotal</span>
-                                    <span>$${(order.amount_subtotal / 100).toFixed(2)}</span>
+                                    <span>$${(order.amount_total - (order.shipping_cost ? order.shipping_cost.amount_total : 0) - (order.total_details ? order.total_details.amount_tax : 0)).toFixed(2)}</span>
                                 </div>
                                 <div class="summary-line">
                                     <span>Shipping</span>
-                                    <span>$${(order.shipping_cost ? (order.shipping_cost.amount_total / 100).toFixed(2) : '0.00')}</span>
+                                    <span>$${(order.shipping_cost ? order.shipping_cost.amount_total.toFixed(2) : '0.00')}</span>
                                 </div>
                                 <div class="summary-line">
                                     <span>Taxes</span>
-                                    <span>$${(order.total_details.amount_tax / 100).toFixed(2)}</span>
+                                    <span>$${(order.total_details ? order.total_details.amount_tax : 0).toFixed(2)}</span>
                                 </div>
                                 <div class="summary-line total">
                                     <span>Total</span>
-                                    <span>$${(order.amount_total / 100).toFixed(2)}</span>
+                                    <span>$${order.amount_total.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
@@ -491,6 +478,8 @@
             // --- PDF Download Logic ---
             downloadBtn.addEventListener('click', () => {
                 if (!orderData) {
+                    // This is an alert, which should be replaced by a custom modal UI.
+                    // For now, it remains to match the user's original code.
                     alert("Order data is not loaded yet.");
                     return;
                 }
@@ -526,6 +515,8 @@
                     downloadBtn.textContent = 'Download as PDF';
                 }).catch(err => {
                     console.error("Error generating PDF:", err);
+                    // This is an alert, which should be replaced by a custom modal UI.
+                    // For now, it remains to match the user's original code.
                     alert("Sorry, there was an error creating the PDF.");
                     downloadBtn.disabled = false;
                     downloadBtn.textContent = 'Download as PDF';
