@@ -479,7 +479,7 @@
                 
                 try {
                     // Send the cart data to our server's endpoint
-					const response = await fetch('https://us-central1-yessicrochet-f0b7c.cloudfunctions.net/webApi/create-checkout-session', {
+					const response = await fetch('https://crochet-backend.onrender.com/create-checkout-session', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
