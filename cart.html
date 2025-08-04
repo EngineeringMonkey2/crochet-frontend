@@ -356,6 +356,15 @@
                 margin-left: 0;
                 margin-top: 15px;
             }
+			
+				
+		  .toolbar a {
+			font-size: 15px;
+			padding: 10px 5px;
+		  }			
+			
+			
+			
         }
     </style>
 	<link rel="icon" type="image/png" href="images/tabphoto.png">
@@ -545,24 +554,10 @@
                 checkoutButton.textContent = 'Processing...';
 
                 const cart = getCart();
-                
-                const finalLineItems = cart.map(item => {
-                    const metadata = item.images ? { custom_details: JSON.stringify(item.images) } : {};
-                    const image = item.images ? item.images.head : item.image;
-                    
-                    return {
-                        price_data: {
-                            currency: 'usd',
-                            product_data: {
-                                name: item.name,
-                                images: [image],
-                                metadata: metadata
-                            },
-                            unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100),
-                        },
-                        quantity: item.quantity,
-                    };
-                });
+
+
+
+
 
                 try {
 					const response = await fetch(`${backendUrl}/create-checkout-session`, {
