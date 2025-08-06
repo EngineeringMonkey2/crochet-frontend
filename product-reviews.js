@@ -23,8 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .star-rating input { display: none; }
         .star-rating label { font-size: 2.5rem; color: #e0e0e0; cursor: pointer; transition: color 0.2s; }
         .star-rating input:checked ~ label,
-        .star-rating:hover label:hover ~ label,
-        .star-rating:hover label { color: #ffc107; }
+
     `;
     const styleSheet = document.createElement("style");
     styleSheet.type = "text/css";
