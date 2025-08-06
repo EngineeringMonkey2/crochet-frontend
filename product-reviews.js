@@ -1,6 +1,6 @@
 // product-reviews.js (Rewritten for Render Backend)
 
-const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
+// The backendUrl variable is now defined in config.js
 
 document.addEventListener('DOMContentLoaded', () => {
     const reviewsContainer = document.getElementById('reviews-container');
@@ -57,8 +57,33 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUser = await window.checkUserStatus();
 
         if (currentUser) {
-            renderNewReviewForm();
+            // User is logged in, now check if they purchased the item
+            try {
+                const purchaseCheckResponse = await fetch(`${backendUrl}/api/user/has-purchased/${productId}`, {
+                    credentials: 'include'
+                });
+
+                if (!purchaseCheckResponse.ok) {
+                    throw new Error('Purchase check failed');
+                }
+
+                const { hasPurchased } = await purchaseCheckResponse.json();
+
+                if (hasPurchased) {
+                    renderNewReviewForm();
+                } else {
+                    reviewFormContainer.innerHTML = `
+                        <div class="bg-gray-100 p-4 rounded-lg text-center">
+                            <p class="text-gray-700">You must purchase this product to write a review.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error checking purchase status:', error);
+                reviewFormContainer.innerHTML = `<p class="text-red-500">Could not verify your purchase status.</p>`;
+            }
         } else {
+            // User is not logged in
             reviewFormContainer.innerHTML = `
                 <div class="bg-gray-100 p-4 rounded-lg text-center">
                     <p class="text-gray-700">Please <a href="login.html" class="font-bold text-blue-600 hover:underline">log in</a> to write a review.</p>
@@ -68,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderNewReviewForm() {
-        // ... (The HTML for the form itself is the same as your old file)
         reviewFormContainer.innerHTML = `
             <h3 class="text-2xl font-bold mb-4 text-gray-800">Write a Review</h3>
             <form id="new-review-form" class="bg-white p-6 rounded-lg shadow-sm">
@@ -92,7 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('new-review-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const rating = document.querySelector('input[name="rating"]:checked').value;
+            const ratingElement = document.querySelector('input[name="rating"]:checked');
+            if (!ratingElement) {
+                alert('Please select a star rating.');
+                return;
+            }
+            const rating = ratingElement.value;
             const comment = document.getElementById('review-comment').value;
 
             try {
@@ -107,7 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     reviewFormContainer.innerHTML = '<p class="text-green-600 font-bold">Thank you for your review!</p>';
                     fetchReviews(); // Refresh the reviews list
                 } else {
-                    alert('Failed to submit review. Please try again.');
+                    const errorData = await response.json();
+                    alert(`Failed to submit review: ${errorData.error || 'Please try again.'}`);
                 }
             } catch (error) {
                 console.error('Error submitting review:', error);

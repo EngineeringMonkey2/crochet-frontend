@@ -309,11 +309,6 @@
 		
       }
 
-
-
-
-
-
     /* Responsive Design */
     @media (max-width: 900px) {
       .product-container {
@@ -416,16 +411,12 @@
       </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
   <!-- Your Scripts -->
+  <!-- Load the shared config file FIRST -->
+  <script src="config.js"></script> 
   <script src="auth.js"></script>
   <script src="products.js"></script>
   <script src="cart.js"></script>
-  <!-- FIX: The old, conflicting reviews.js script has been removed -->
   <script src="product-reviews.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {

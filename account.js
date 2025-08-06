@@ -1,7 +1,6 @@
 // account.js (Rewritten for Render Backend)
 
-// Define the base URL of your live backend on Render.
-const backendUrl = 'https://crochet-backend-ho1l.onrender.com';
+// The backendUrl variable is now defined in config.js
 
 document.addEventListener('DOMContentLoaded', async () => {
     const accountDetailsContainer = document.getElementById('account-details');
@@ -35,11 +34,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('sign-out-btn').addEventListener('click', async () => {
                 try {
-                    await fetch(`${backendUrl}/auth/logout`, { 
-                        method: 'POST',
-                        credentials: 'include' 
-                    });
-                    window.location.href = 'login.html';
+                    // Create a form to POST to the logout route, as redirects are GET
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `${backendUrl}/auth/logout`;
+                    document.body.appendChild(form);
+                    form.submit();
                 } catch (error) {
                     console.error('Sign out error', error);
                 }
@@ -68,15 +68,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 let ordersHtml = orders.map(order => {
                     const orderDate = new Date(order.created_at).toLocaleDateString();
-                    const itemsHtml = order.line_items.map(item =>
-                        `<li>${item.quantity} x ${item.description} - $${item.amount_total.toFixed(2)}</li>`
+                    // Safely parse line_items
+                    const lineItems = typeof order.line_items === 'string' ? JSON.parse(order.line_items) : order.line_items;
+                    const itemsHtml = lineItems.map(item =>
+                        `<li>${item.quantity} x ${item.description} - $${(item.price.unit_amount / 100).toFixed(2)}</li>`
                     ).join('');
 
                     return `
                         <div class="border-t p-4">
                             <p class="font-bold">Order #${order.order_id.slice(-8)}</p>
                             <p>Date: ${orderDate}</p>
-                            <p>Total: $${order.amount_total.toFixed(2)}</p>
+                            <p>Total: $${(order.amount_total).toFixed(2)}</p>
                             <ul class="list-disc list-inside mt-2 text-sm text-gray-700">
                                 ${itemsHtml}
                             </ul>
