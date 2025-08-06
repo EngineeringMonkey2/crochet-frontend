@@ -1,4 +1,4 @@
-// product-reviews.js (With Edit/Delete/Custom Name Functionality)
+// product-reviews.js (With Edit/Delete/Custom Name Functionality - Modern CSS)
 
 document.addEventListener('DOMContentLoaded', () => {
     const reviewsContainer = document.getElementById('reviews-container');
@@ -25,32 +25,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderAllReviews(reviews) {
-        reviewsContainer.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Customer Reviews</h2>';
+        reviewsContainer.innerHTML = '<h2 class="text-4xl font-extrabold mb-8 text-gray-900 tracking-tight">Customer Reviews</h2>';
         if (reviews.length === 0) {
-            reviewsContainer.innerHTML += '<p class="text-gray-600">Be the first to review this product!</p>';
+            reviewsContainer.innerHTML += '<p class="text-gray-500 text-lg font-medium">Be the first to review this product!</p>';
         } else {
             reviews.forEach(review => {
-                const reviewDate = new Date(review.created_at).toLocaleDateString();
+                const reviewDate = new Date(review.created_at).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
                 const isOwnReview = currentUser && currentUser.google_id === review.user_id;
                 
                 const editDeleteButtons = isOwnReview ? `
-                    <div class="review-actions text-xs mt-2">
-                        <button class="text-blue-600 hover:underline edit-review-btn" data-review-id="${review.id}">Edit</button>
-                        <button class="text-red-600 hover:underline ml-2 delete-review-btn" data-review-id="${review.id}">Delete</button>
+                    <div class="review-actions flex gap-3 mt-4">
+                        <button class="text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors duration-200 edit-review-btn" data-review-id="${review.id}">
+                            <i class="fas fa-edit mr-1"></i>Edit
+                        </button>
+                        <button class="text-red-600 hover:text-red-800 font-medium text-sm transition-colors duration-200 delete-review-btn" data-review-id="${review.id}">
+                            <i class="fas fa-trash-alt mr-1"></i>Delete
+                        </button>
                     </div>
                 ` : '';
 
                 const reviewHtml = `
-                    <div class="bg-white p-5 rounded-lg shadow-sm mb-4" id="review-${review.id}">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="font-bold text-gray-900">${review.user_name || 'Anonymous'}</h4>
-                            <span class="text-xs text-gray-500">${reviewDate}</span>
+                    <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 mb-6 border border-gray-100" id="review-${review.id}">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                                    ${(review.user_name || 'A')[0].toUpperCase()}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-lg">${review.user_name || 'Anonymous'}</h4>
+                                    <span class="text-xs text-gray-500 font-medium">${reviewDate}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex items-center text-yellow-500 mb-2">
-                            ${'<i class="fas fa-star"></i>'.repeat(review.rating)}
-                            ${'<i class="far fa-star text-gray-300"></i>'.repeat(5 - review.rating)}
+                        <div class="flex items-center mb-3">
+                            ${[...Array(5)].map((_, i) => 
+                                `<i class="fas fa-star ${i < review.rating ? 'text-amber-400' : 'text-gray-200'} text-lg"></i>`
+                            ).join('')}
+                            <span class="ml-2 text-sm font-semibold text-gray-600">${review.rating}.0</span>
                         </div>
-                        <p class="text-gray-700 text-sm leading-relaxed">${review.comment}</p>
+                        <p class="text-gray-700 leading-relaxed">${review.comment}</p>
                         ${editDeleteButtons}
                     </div>`;
                 reviewsContainer.innerHTML += reviewHtml;
@@ -90,18 +107,46 @@ document.addEventListener('DOMContentLoaded', () => {
     function showEditForm(reviewId) {
         const reviewElement = document.getElementById(`review-${reviewId}`);
         const currentComment = reviewElement.querySelector('p').textContent;
-        const currentRating = reviewElement.querySelectorAll('.fa-star').length;
+        const currentRating = reviewElement.querySelectorAll('.fa-star.text-amber-400').length;
 
         reviewElement.innerHTML = `
-            <div class="edit-form-container bg-gray-50 p-4 rounded-md">
-                <div class="star-rating-edit flex flex-row-reverse justify-end text-3xl mb-2">
-                    ${[5,4,3,2,1].map(star => `<input type="radio" id="edit-star${star}" name="edit-rating" value="${star}" class="hidden peer" ${currentRating === star ? 'checked' : ''} required/><label for="edit-star${star}" class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 peer-checked:text-yellow-500">★</label>`).join('')}
+            <div class="edit-form-container bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border border-gray-200">
+                <h4 class="text-lg font-bold text-gray-800 mb-4">Edit Your Review</h4>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                    <div class="star-rating-edit flex gap-1">
+                        ${[1,2,3,4,5].map(star => `
+                            <input type="radio" id="edit-star${star}" name="edit-rating" value="${star}" class="hidden peer" ${currentRating === star ? 'checked' : ''} required/>
+                            <label for="edit-star${star}" class="cursor-pointer text-3xl text-gray-300 hover:text-amber-400 peer-checked:text-amber-400 transition-colors duration-200">
+                                <i class="fas fa-star"></i>
+                            </label>
+                        `).join('')}
+                    </div>
                 </div>
-                <textarea class="w-full p-2 border rounded-md mb-2">${currentComment}</textarea>
-                <button class="bg-green-600 text-white px-3 py-1 rounded-md text-sm save-edit-btn" data-review-id="${reviewId}">Save</button>
-                <button class="bg-gray-400 text-white px-3 py-1 rounded-md text-sm ml-2 cancel-edit-btn">Cancel</button>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Review</label>
+                    <textarea class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors duration-200 resize-none" rows="4">${currentComment}</textarea>
+                </div>
+                <div class="flex gap-3">
+                    <button class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg save-edit-btn" data-review-id="${reviewId}">
+                        Save Changes
+                    </button>
+                    <button class="bg-gray-200 text-gray-700 px-6 py-2.5 rounded-xl font-semibold hover:bg-gray-300 transition-colors duration-200 cancel-edit-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
         `;
+
+        // Add CSS for checked stars to cascade
+        const style = document.createElement('style');
+        style.textContent = \`
+            .star-rating-edit input:checked ~ input + label i,
+            .star-rating-edit input:checked + label i {
+                color: #fbbf24 !important;
+            }
+        \`;
+        reviewElement.appendChild(style);
 
         reviewElement.querySelector('.save-edit-btn').addEventListener('click', saveReviewEdit);
         reviewElement.querySelector('.cancel-edit-btn').addEventListener('click', () => fetchReviews());
@@ -132,16 +177,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderOrderVerificationForm() {
         reviewFormContainer.innerHTML = `
-            <h3 class="text-2xl font-bold mb-4 text-gray-800">Write a Review</h3>
-            <form id="verify-order-form" class="bg-white p-6 rounded-lg shadow-sm">
-                <p class="text-gray-700 mb-4">To leave a review, please enter an Order ID from your purchase history that has reviews remaining.</p>
-                <div class="mb-4">
-                    <label for="order-id-input" class="block text-gray-700 font-bold mb-2">Order ID</label>
-                    <input type="text" id="order-id-input" class="w-full p-3 border border-gray-300 rounded-md" placeholder="Enter your Order ID (e.g., #AbCdEfGh)" required>
-                </div>
-                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-md hover:bg-green-700">Verify Purchase</button>
-                <p id="verify-error-message" class="text-red-500 text-sm mt-2"></p>
-            </form>
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl shadow-lg border border-indigo-100">
+                <h3 class="text-3xl font-extrabold mb-6 text-gray-900 tracking-tight">Write a Review</h3>
+                <form id="verify-order-form" class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl">
+                        <p class="text-gray-600 mb-6 leading-relaxed">To leave a review, please enter an Order ID from your purchase history that has reviews remaining.</p>
+                        <div>
+                            <label for="order-id-input" class="block text-sm font-semibold text-gray-700 mb-2">Order ID</label>
+                            <div class="relative">
+                                <input type="text" 
+                                    id="order-id-input" 
+                                    class="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-all duration-200 font-mono text-lg" 
+                                    placeholder="e.g., #AbCdEfGh" 
+                                    required>
+                                <i class="fas fa-receipt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
+                        <i class="fas fa-check-circle mr-2"></i>Verify Purchase
+                    </button>
+                    <p id="verify-error-message" class="text-red-600 text-sm font-medium text-center"></p>
+                </form>
+            </div>
         `;
 
         document.getElementById('verify-order-form').addEventListener('submit', async (e) => {
@@ -169,28 +227,80 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // UPDATED: Added a name input field
+    // UPDATED: Added a name input field with modern styling
     function renderNewReviewForm(orderId) {
         reviewFormContainer.innerHTML = `
-            <h3 class="text-2xl font-bold mb-4 text-gray-800">Write a Review</h3>
-            <form id="new-review-form" class="bg-white p-6 rounded-lg shadow-sm">
-                <div class="mb-4">
-                    <label for="review-user-name" class="block text-gray-700 font-bold mb-2">Display Name</label>
-                    <input type="text" id="review-user-name" class="w-full p-3 border border-gray-300 rounded-md" value="${currentUser.display_name}" placeholder="Leave blank for Anonymous">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-bold mb-2">Your Rating</label>
-                    <div class="star-rating-new flex flex-row-reverse justify-end text-3xl">
-                        ${[5,4,3,2,1].map(star => `<input type="radio" id="star${star}" name="rating" value="${star}" class="hidden peer" required/><label for="star${star}" class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 peer-checked:text-yellow-500">★</label>`).join('')}
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl shadow-lg border border-indigo-100">
+                <h3 class="text-3xl font-extrabold mb-6 text-gray-900 tracking-tight">Write Your Review</h3>
+                <form id="new-review-form" class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl space-y-6">
+                        <div>
+                            <label for="review-user-name" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2 text-indigo-600"></i>Display Name
+                            </label>
+                            <input type="text" 
+                                id="review-user-name" 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-all duration-200" 
+                                value="${currentUser.display_name}" 
+                                placeholder="Leave blank for Anonymous">
+                            <p class="text-xs text-gray-500 mt-1">This is how your name will appear with your review</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                <i class="fas fa-star mr-2 text-amber-400"></i>Your Rating
+                            </label>
+                            <div class="star-rating-new flex gap-2 items-center">
+                                ${[1,2,3,4,5].map(star => `
+                                    <input type="radio" id="star${star}" name="rating" value="${star}" class="hidden peer" required/>
+                                    <label for="star${star}" class="cursor-pointer text-4xl text-gray-300 hover:text-amber-400 peer-checked:text-amber-400 transition-all duration-200 transform hover:scale-110">
+                                        <i class="fas fa-star"></i>
+                                    </label>
+                                `).join('')}
+                                <span class="ml-3 text-sm font-medium text-gray-600" id="rating-text"></span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="review-comment" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-comment-alt mr-2 text-indigo-600"></i>Your Review
+                            </label>
+                            <textarea 
+                                id="review-comment" 
+                                rows="5" 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-all duration-200 resize-none" 
+                                placeholder="Share your experience with this product..." 
+                                required></textarea>
+                            <p class="text-xs text-gray-500 mt-1">Tell others what you liked or disliked about this product</p>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4">
-                    <label for="review-comment" class="block text-gray-700 font-bold mb-2">Your Review</label>
-                    <textarea id="review-comment" rows="4" class="w-full p-3 border border-gray-300 rounded-md" placeholder="What did you like or dislike?" required></textarea>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700">Submit Review</button>
-            </form>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
+                        <i class="fas fa-paper-plane mr-2"></i>Submit Review
+                    </button>
+                </form>
+            </div>
         `;
+
+        // Add dynamic rating text and star interaction
+        const ratingTexts = ['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent'];
+        const style = document.createElement('style');
+        style.textContent = `
+            .star-rating-new input:checked ~ input + label i,
+            .star-rating-new input:checked + label i {
+                color: #fbbf24 !important;
+            }
+            .star-rating-new label:hover ~ label i {
+                color: #d1d5db !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('input[name="rating"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                document.getElementById('rating-text').textContent = ratingTexts[e.target.value];
+            });
+        });
 
         document.getElementById('new-review-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -207,7 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    reviewFormContainer.innerHTML = '<p class="text-green-600 font-bold text-center">Thank you for your review!</p>';
+                    reviewFormContainer.innerHTML = `
+                        <div class="bg-green-50 border-2 border-green-200 p-6 rounded-xl text-center">
+                            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
+                            <p class="text-green-800 font-bold text-lg">Thank you for your review!</p>
+                            <p class="text-green-600 text-sm mt-2">Your feedback helps others make better decisions.</p>
+                        </div>
+                    `;
                     fetchReviews();
                 } else {
                     const errorData = await response.json();
@@ -228,7 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentUser && !hasExistingReview) {
             renderOrderVerificationForm();
         } else if (!currentUser) {
-            reviewFormContainer.innerHTML = `<div class="bg-gray-100 p-4 rounded-lg text-center"><p class="text-gray-700">Please <a href="login.html" class="font-bold text-blue-600 hover:underline">log in</a> to write a review.</p></div>`;
+            reviewFormContainer.innerHTML = `
+                <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl text-center border-2 border-gray-200">
+                    <i class="fas fa-lock text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-gray-700 text-lg font-medium">
+                        Please <a href="login.html" class="font-bold text-indigo-600 hover:text-indigo-800 underline decoration-2 underline-offset-2 transition-colors duration-200">log in</a> to write a review.
+                    </p>
+                </div>
+            `;
         } else {
             reviewFormContainer.innerHTML = '';
         }
