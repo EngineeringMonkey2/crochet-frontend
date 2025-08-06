@@ -315,13 +315,6 @@
 			
 		}		
 			
-		
-		
-		
-		
-		
-		
-		
     </style>
 	<link rel="icon" type="image/png" href="images/tabphoto.png">
 </head>
@@ -395,12 +388,9 @@
     </div>
   </div>
   
-  
-  
    <div class="footer-section">
       <div class="footer-container">
 	    <a href="aboutus.html">About Us</a>
-
         <a href="privacypolicy.html">Privacy Policy</a>
         <a href="contact.html">Contact Information</a>
         <a href="returnpolicy.html">Refund Policy</a>
@@ -409,18 +399,13 @@
       </div>
    </div>
  
-  
-  
-  
-  
-  
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <!-- ADDED: The missing Firestore script -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-    <!-- Your custom auth script -->
+    <!-- 
+      CORRECTED SCRIPT LOADING ORDER
+      1. Load the shared config file that defines `backendUrl`.
+      2. Load the auth script that USES `backendUrl`.
+      (Old Firebase scripts have been removed as they are no longer needed).
+    -->
+    <script src="config.js"></script>
     <script src="auth.js"></script>
 </body>
 </html>
