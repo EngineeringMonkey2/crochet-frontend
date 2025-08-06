@@ -74,11 +74,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         `<li>${item.quantity} x ${item.description} - $${(item.price.unit_amount / 100).toFixed(2)}</li>`
                     ).join('');
 
+                    // FIX: Convert order.amount_total from a string to a number before calling .toFixed()
+                    const totalAmount = parseFloat(order.amount_total);
+
                     return `
                         <div class="border-t p-4">
                             <p class="font-bold">Order #${order.order_id.slice(-8)}</p>
                             <p>Date: ${orderDate}</p>
-                            <p>Total: $${(order.amount_total).toFixed(2)}</p>
+                            <p>Total: $${totalAmount.toFixed(2)}</p>
                             <ul class="list-disc list-inside mt-2 text-sm text-gray-700">
                                 ${itemsHtml}
                             </ul>
