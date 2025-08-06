@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentUser = null;
     let allReviews = [];
-    let currentPage = 1;
+    let reviewsToShowCount = 1; // Start by showing only 1 review
     const reviewsPerPage = 10;
 
     // Inject the necessary CSS for the modern star rating system
@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .star-rating input { display: none; }
         .star-rating label { font-size: 2.5rem; color: #e0e0e0; cursor: pointer; transition: color 0.2s; }
         .star-rating input:checked ~ label,
-
+        .star-rating:hover label:hover ~ label,
+        .star-rating:hover label { color: #ffc107; }
     `;
     const styleSheet = document.createElement("style");
     styleSheet.type = "text/css";
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`${backendUrl}/api/reviews/${productId}`);
             allReviews = await response.json();
-            currentPage = 1; // Reset to first page on every fetch
+            reviewsToShowCount = 1; // Reset to 1 on every fresh fetch
             renderPage();
         } catch (error) {
             console.error("Error fetching reviews:", error);
@@ -43,8 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderPage() {
-        // Clear previous content before re-rendering
-        reviewsContainer.innerHTML = '';
+        reviewsContainer.innerHTML = ''; // Clear previous content
         renderReviewSummary(allReviews);
         renderReviewsSlice(allReviews);
     }
@@ -71,15 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
-        // Prepend the summary to the container
         reviewsContainer.insertAdjacentHTML('beforeend', summaryHtml);
     }
 
-    // Renders only a slice of reviews and adds a "Load More" button
+    // Renders reviews based on the new pagination rule
     function renderReviewsSlice(reviews) {
-        const start = 0;
-        const end = currentPage * reviewsPerPage;
-        const reviewsToShow = reviews.slice(start, end);
+        const reviewsToShow = reviews.slice(0, reviewsToShowCount);
 
         if (reviews.length === 0) {
             reviewsContainer.innerHTML += '<p class="text-gray-600">Be the first to review this product!</p>';
@@ -111,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        if (end < reviews.length) {
+        if (reviewsToShowCount < reviews.length) {
             const loadMoreBtn = document.createElement('button');
             loadMoreBtn.textContent = 'Load More Reviews';
             loadMoreBtn.className = 'w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-300 mt-4';
@@ -122,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     reviewsContainer.addEventListener('click', (e) => {
         if (e.target.id === 'load-more-reviews') {
-            currentPage++;
+            // After the first click, load 10 more each time
+            reviewsToShowCount += reviewsPerPage;
             renderPage();
         }
         if (e.target.classList.contains('delete-review-btn')) {
