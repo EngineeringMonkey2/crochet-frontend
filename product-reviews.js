@@ -1,4 +1,4 @@
-// product-reviews.js (Rewritten for Render Backend)
+// product-reviews.js (With Order ID Verification)
 
 // The backendUrl variable is now defined in config.js
 
@@ -6,13 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewsContainer = document.getElementById('reviews-container');
     const reviewFormContainer = document.getElementById('review-form-container');
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = parseInt(urlParams.get('productId'));
+    
+    let productId = parseInt(urlParams.get('productId'));
+    if (!productId && window.location.pathname.includes('customizationproduct.html')) {
+        productId = 99; // Static ID for "Custom Monkey"
+    }
 
     if (!reviewsContainer || !productId) return;
 
     let currentUser = null;
 
-    // Fetch and display reviews for the product
+    // Fetch and display existing reviews for the product
     async function fetchReviews() {
         try {
             const response = await fetch(`${backendUrl}/api/reviews/${productId}`);
@@ -49,49 +53,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Check user status and render the review form if applicable
-    async function setupReviewForm() {
-        if (typeof window.checkUserStatus !== 'function') {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        currentUser = await window.checkUserStatus();
+    // NEW: Renders the initial form to ask for an Order ID
+    function renderOrderVerificationForm() {
+        reviewFormContainer.innerHTML = `
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Write a Review</h3>
+            <form id="verify-order-form" class="bg-white p-6 rounded-lg shadow-sm">
+                <p class="text-gray-700 mb-4">To leave a review, please enter the Order ID from your confirmation email that contains this product.</p>
+                <div class="mb-4">
+                    <label for="order-id-input" class="block text-gray-700 font-bold mb-2">Order ID</label>
+                    <input type="text" id="order-id-input" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="cs_test_..." required>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-md hover:bg-green-700 transition-colors">Verify Purchase</button>
+                <p id="verify-error-message" class="text-red-500 text-sm mt-2"></p>
+            </form>
+        `;
 
-        if (currentUser) {
-            // User is logged in, now check if they purchased the item
+        document.getElementById('verify-order-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const orderId = document.getElementById('order-id-input').value.trim();
+            const errorMessageEl = document.getElementById('verify-error-message');
+            errorMessageEl.textContent = '';
+
             try {
-                const purchaseCheckResponse = await fetch(`${backendUrl}/api/user/has-purchased/${productId}`, {
-                    credentials: 'include'
+                const response = await fetch(`${backendUrl}/api/verify-order-for-review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ orderId, productId })
                 });
 
-                if (!purchaseCheckResponse.ok) {
-                    throw new Error('Purchase check failed');
-                }
+                const result = await response.json();
 
-                const { hasPurchased } = await purchaseCheckResponse.json();
-
-                if (hasPurchased) {
+                if (response.ok && result.verified) {
+                    // If verification is successful, show the actual review form
                     renderNewReviewForm();
                 } else {
-                    reviewFormContainer.innerHTML = `
-                        <div class="bg-gray-100 p-4 rounded-lg text-center">
-                            <p class="text-gray-700">You must purchase this product to write a review.</p>
-                        </div>
-                    `;
+                    // Show an error message if verification fails
+                    errorMessageEl.textContent = result.message || 'Verification failed. Please check the Order ID and try again.';
                 }
             } catch (error) {
-                console.error('Error checking purchase status:', error);
-                reviewFormContainer.innerHTML = `<p class="text-red-500">Could not verify your purchase status.</p>`;
+                console.error('Error verifying order:', error);
+                errorMessageEl.textContent = 'An unexpected error occurred. Please try again later.';
             }
-        } else {
-            // User is not logged in
-            reviewFormContainer.innerHTML = `
-                <div class="bg-gray-100 p-4 rounded-lg text-center">
-                    <p class="text-gray-700">Please <a href="login.html" class="font-bold text-blue-600 hover:underline">log in</a> to write a review.</p>
-                </div>
-            `;
-        }
+        });
     }
 
+    // This function now only runs AFTER the order has been verified
     function renderNewReviewForm() {
         reviewFormContainer.innerHTML = `
             <h3 class="text-2xl font-bold mb-4 text-gray-800">Write a Review</h3>
@@ -133,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    reviewFormContainer.innerHTML = '<p class="text-green-600 font-bold">Thank you for your review!</p>';
+                    reviewFormContainer.innerHTML = '<p class="text-green-600 font-bold text-center">Thank you for your review!</p>';
                     fetchReviews(); // Refresh the reviews list
                 } else {
                     const errorData = await response.json();
@@ -146,7 +153,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Main logic to set up the page
+    async function setupPage() {
+        if (typeof window.checkUserStatus !== 'function') {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        currentUser = await window.checkUserStatus();
+
+        if (currentUser) {
+            // If the user is logged in, show the order verification form.
+            renderOrderVerificationForm();
+        } else {
+            // If the user is not logged in, prompt them to log in.
+            reviewFormContainer.innerHTML = `
+                <div class="bg-gray-100 p-4 rounded-lg text-center">
+                    <p class="text-gray-700">Please <a href="login.html" class="font-bold text-blue-600 hover:underline">log in</a> to write a review.</p>
+                </div>
+            `;
+        }
+    }
+
     // Initial load
     fetchReviews();
-    setupReviewForm();
+    setupPage();
 });
