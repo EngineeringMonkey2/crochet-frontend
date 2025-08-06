@@ -20,7 +20,7 @@ const products = [
   {
     id: 2,
     name: "Bunny",
-    images: [root2 + "bunny1.png", root2 + "bunny2.png", root2 + "bunny11.png", root2 + "bunny5.png" , root2 + "bunny10.png", root2 + "bunny12.png"],
+    images: [root2 + "bunny1.png", root2 + "bunny2.png", root2 + "bunny11.png", root2 + "bunny18.png" , root2 + "bunny10.png", root2 + "bunny12.png"],
     price: "$49.99",
     description: "A cute handmade crocheted bunny with floppy ears, perfect for your animal collection!",
 	dimensions: " Dimensions: 1ft. by 9 in. ",
@@ -29,7 +29,7 @@ const products = [
   {
     id: 3,
     name: "Regular Monkey",
-    images: [root3 + "monkey1.png", root3 + "monkey2.png", root3 + "monkey1.png", root3 + "bunny5.png" , root3 + "bunny10.png", root3 + "bunny12.png"],
+    images: [root3 + "monkey1.png", root3 + "monkey2.png", root3 + "monkey3.png", root3 + "bunny5.png" , root3 + "bunny10.png", root3 + "bunny12.png"],
     price: "$49.99",
     description: "A welcoming monkey to greet your guests with charm.",
 	dimensions: " Dimensions: 12in. by 9 in. "
@@ -47,7 +47,7 @@ const products = [
   {
     id: 5,
     name: "Bee",
-    images: [root5 + "bee1.png", root5 + "bee2.png", root5 + "monkey1.png", root5 + "bunny5.png" , root5 + "bunny10.png", root5 + "bunny12.png"],
+    images: [root5 + "bee1.png", root5 + "bee2.png", root5 + "bee3.png", root5 + "bunny5.png" , root5 + "bunny10.png", root5 + "bunny12.png"],
     price: "$14.99",
     description: "Cook up some fun with this chef-themed crocheted monkey.",
 	dimensions: " Dimensions: 7 in. by 3 in. "
