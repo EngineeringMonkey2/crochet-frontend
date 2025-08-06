@@ -1,4 +1,4 @@
-// product-reviews.js (With Modern UI, Summary, Pagination, and Edit Name)
+// product-reviews.js (With UI Fixes, Toggling Load Button, and Pagination)
 
 document.addEventListener('DOMContentLoaded', () => {
     const reviewsContainer = document.getElementById('reviews-container');
@@ -22,9 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .star-rating { display: inline-flex; flex-direction: row-reverse; }
         .star-rating input { display: none; }
         .star-rating label { font-size: 2.5rem; color: #e0e0e0; cursor: pointer; transition: color 0.2s; }
+        /* FIX: Corrected hover logic to only color the hovered star and those before it */
         .star-rating input:checked ~ label,
-        .star-rating:hover label:hover ~ label,
-        .star-rating:hover label { color: #ffc107; }
+        .star-rating label:hover ~ label,
+        .star-rating label:hover { color: #ffc107; }
     `;
     const styleSheet = document.createElement("style");
     styleSheet.type = "text/css";
@@ -49,14 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         renderReviewsSlice(allReviews);
     }
     
-    // Renders the summary section at the top
     function renderReviewSummary(reviews) {
         let summaryHtml = '';
         if (reviews.length > 0) {
             const totalReviews = reviews.length;
             const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews;
             const fullStars = Math.floor(averageRating);
-            const halfStar = averageRating % 1 >= 0.25 ? 1 : 0; // Use half star for .25 and up
+            const halfStar = averageRating % 1 >= 0.25 ? 1 : 0;
             const emptyStars = 5 - fullStars - halfStar;
 
             summaryHtml = `
@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewsContainer.insertAdjacentHTML('beforeend', summaryHtml);
     }
 
-    // Renders reviews based on the new pagination rule
     function renderReviewsSlice(reviews) {
         const reviewsToShow = reviews.slice(0, reviewsToShowCount);
 
@@ -108,19 +107,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        if (reviewsToShowCount < reviews.length) {
-            const loadMoreBtn = document.createElement('button');
-            loadMoreBtn.textContent = 'Load More Reviews';
-            loadMoreBtn.className = 'w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-300 mt-4';
-            loadMoreBtn.id = 'load-more-reviews';
-            reviewsContainer.appendChild(loadMoreBtn);
+        // NEW: Toggle button logic
+        if (reviews.length > 1) { // Only show buttons if there's more than one review
+            if (reviewsToShowCount < reviews.length) {
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.textContent = 'Load More Reviews';
+                loadMoreBtn.className = 'w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-300 mt-4';
+                loadMoreBtn.id = 'load-more-reviews';
+                reviewsContainer.appendChild(loadMoreBtn);
+            } else if (reviewsToShowCount > 1) {
+                const showLessBtn = document.createElement('button');
+                showLessBtn.textContent = 'Show Less';
+                showLessBtn.className = 'w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-300 mt-4';
+                showLessBtn.id = 'show-less-reviews';
+                reviewsContainer.appendChild(showLessBtn);
+            }
         }
     }
 
     reviewsContainer.addEventListener('click', (e) => {
         if (e.target.id === 'load-more-reviews') {
-            // After the first click, load 10 more each time
             reviewsToShowCount += reviewsPerPage;
+            renderPage();
+        }
+        if (e.target.id === 'show-less-reviews') {
+            reviewsToShowCount = 1;
             renderPage();
         }
         if (e.target.classList.contains('delete-review-btn')) {
