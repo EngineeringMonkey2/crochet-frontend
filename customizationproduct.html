@@ -79,6 +79,8 @@
       width: 100%;
       box-sizing: border-box;
       min-height: 100vh;
+      position: relative; /* FIX: Establish a stacking context */
+      z-index: 1; /* FIX: Ensure it's below the toolbar */
     }
 
     .product-container {
