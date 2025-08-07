@@ -21,9 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const customStyles = `
         /* --- Layout Fixes for Review Section --- */
         #reviews-container, #review-form-container {
-            max-width: none !important; /* Override HTML class */
+            max-width: 50% !important; /* Constrain to left side */
             margin-left: 0 !important;   /* Override HTML class */
-            margin-right: 0 !important;  /* Override HTML class */
+            margin-right: auto !important;  /* Override HTML class */
         }
 
         /* --- Star Rating Styles --- */
@@ -77,10 +77,19 @@ document.addEventListener('DOMContentLoaded', () => {
             background-color: #d1d5db; /* Lighter gray on hover */
         }
         
-        /* --- Other review styles that used Tailwind --- */
-        .review-summary { background-color: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-        .review-card { background-color: white; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1rem; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-        .review-form-wrapper { background-color: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        /* FIX: Make review components transparent */
+        .review-summary, .review-card, .review-form-wrapper { 
+            background-color: transparent; 
+            padding: 1rem; 
+            border-radius: 0; 
+            margin-bottom: 1.5rem; 
+            border-bottom: 1px solid #e5e7eb; 
+            box-shadow: none; 
+        }
+        .review-summary {
+             display: flex; align-items: center;
+        }
+
         .form-label { display: block; color: #374151; font-weight: bold; margin-bottom: 0.5rem; }
         .form-input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; box-sizing: border-box; }
         .error-message { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; }
@@ -275,19 +284,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderOrderVerificationForm() {
         reviewFormContainer.innerHTML = `
-            <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #1f2937;">Write a Review</h3>
-            <form id="verify-order-form" class="review-form-wrapper">
-                <p style="color: #374151; margin-bottom: 1rem;">To leave a review, please enter an Order ID from your purchase history that has reviews remaining.</p>
-                <div style="margin-bottom: 1rem;">
-                    <label for="order-id-input" class="form-label">Order ID</label>
-                    <input type="text" id="order-id-input" class="form-input" placeholder="Enter your Order ID (e.g., #AbCdEfGh)" required>
-                </div>
-                <button type="submit" class="btn btn-verify">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Verify Purchase
-                </button>
-                <p id="verify-error-message" class="error-message"></p>
-            </form>
+            <div class="review-form-wrapper">
+                <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #1f2937;">Write a Review</h3>
+                <form id="verify-order-form">
+                    <p style="color: #374151; margin-bottom: 1rem;">To leave a review, please enter an Order ID from your purchase history that has reviews remaining.</p>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="order-id-input" class="form-label">Order ID</label>
+                        <input type="text" id="order-id-input" class="form-input" placeholder="Enter your Order ID (e.g., #AbCdEfGh)" required>
+                    </div>
+                    <button type="submit" class="btn btn-verify">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Verify Purchase
+                    </button>
+                    <p id="verify-error-message" class="error-message"></p>
+                </form>
+            </div>
         `;
         document.getElementById('verify-order-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -315,24 +326,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderNewReviewForm(orderId) {
         reviewFormContainer.innerHTML = `
-            <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #1f2937;">Write a Review</h3>
-            <form id="new-review-form" class="review-form-wrapper">
-                <div style="margin-bottom: 1rem;">
-                    <label for="review-user-name" class="form-label">Display Name</label>
-                    <input type="text" id="review-user-name" class="form-input" value="${currentUser.display_name}" placeholder="Leave blank for Anonymous">
-                </div>
-                <div style="margin-bottom: 1rem;">
-                    <label class="form-label">Your Rating</label>
-                    <div class="star-rating">
-                        ${[5,4,3,2,1].map(star => `<input type="radio" id="star${star}" name="rating" value="${star}" required/><label for="star${star}">&#9733;</label>`).join('')}
+            <div class="review-form-wrapper">
+                <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #1f2937;">Write a Review</h3>
+                <form id="new-review-form">
+                    <div style="margin-bottom: 1rem;">
+                        <label for="review-user-name" class="form-label">Display Name</label>
+                        <input type="text" id="review-user-name" class="form-input" value="${currentUser.display_name}" placeholder="Leave blank for Anonymous">
                     </div>
-                </div>
-                <div style="margin-bottom: 1rem;">
-                    <label for="review-comment" class="form-label">Your Review</label>
-                    <textarea id="review-comment" rows="4" class="form-input" placeholder="What did you like or dislike?" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-verify">Submit Review</button>
-            </form>
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label">Your Rating</label>
+                        <div class="star-rating">
+                            ${[5,4,3,2,1].map(star => `<input type="radio" id="star${star}" name="rating" value="${star}" required/><label for="star${star}">&#9733;</label>`).join('')}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="review-comment" class="form-label">Your Review</label>
+                        <textarea id="review-comment" rows="4" class="form-input" placeholder="What did you like or dislike?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-verify">Submit Review</button>
+                </form>
+            </div>
         `;
         document.getElementById('new-review-form').addEventListener('submit', async (e) => {
             e.preventDefault();
