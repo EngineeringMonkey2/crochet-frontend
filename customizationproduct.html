@@ -327,14 +327,14 @@
       	  
       
       .product-image {
-        justify-content: center; /* Center on mobile */
-        padding-left: 0; /* Remove left padding on mobile */
+        margin-left: -120px;
+        width: 100%; /* FIX: Ensure container doesn't exceed screen width */
       }
       
       #character-container {
           transform: scale(0.35); /* Slightly smaller scale for mobile */
           transform-origin: top; /* Center origin on mobile */
-		  margin-bottom: -480px; /* FIX: Add negative margin to collapse the empty space created by scale() */
+		  margin-bottom: -480px; /* Add negative margin to collapse the empty space created by scale() */
 
       }
 
@@ -345,6 +345,7 @@
       .product-info {
         align-items: top;
       }
+	  
 	  
 
     }
