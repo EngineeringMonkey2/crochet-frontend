@@ -21,9 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const customStyles = `
         /* --- Layout Fixes for Review Section --- */
         #reviews-container, #review-form-container {
-            max-width: 25% !important; /* FIX: Constrain to left side even more */
+            max-width: 25% !important; /* Constrain to left side */
             margin-left: 0 !important;   /* Override HTML class */
             margin-right: auto !important;  /* Override HTML class */
+            margin-top: 2rem !important; /* FIX: Add margin above the review section */
         }
 
         /* --- Star Rating Styles --- */
@@ -71,21 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
             background-color: #e5e7eb; /* Gray background */
             color: #374151; /* Dark gray text */
             margin-top: 16px;
-            width: auto; /* FIX: Make button fit content */
-            padding: 8px 16px; /* FIX: Adjust padding for smaller size */
+            width: auto; /* Make button fit content */
+            padding: 8px 16px; /* Adjust padding for smaller size */
         }
 
         .btn-load:hover {
             background-color: #d1d5db; /* Lighter gray on hover */
         }
         
-        /* FIX: Make review components transparent and remove underlines */
+        /* Make review components transparent and remove underlines */
         .review-summary, .review-card, .review-form-wrapper { 
             background-color: transparent; 
             padding: 1rem; 
             border-radius: 0; 
-            margin-bottom: 1.5rem; 
-            border-bottom: none; /* FIX: Remove underline */
+            margin-bottom: 0.5rem; /* FIX: Reduce space between summary and first review */
+            border-bottom: none; /* Remove underline */
             box-shadow: none; 
         }
         .review-summary {
@@ -101,13 +102,19 @@ document.addEventListener('DOMContentLoaded', () => {
         .form-input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; box-sizing: border-box; }
         .error-message { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; }
         
-        /* FIX: Remove background and center alignment from login prompt */
         .login-prompt { 
             background-color: transparent; 
             padding: 0; 
             border-radius: 0; 
             text-align: left; /* Align text to the left */
             margin-top: 1rem; /* Add some space */
+        }
+
+        /* FIX: Add responsive styles for mobile */
+        @media (max-width: 768px) {
+            #reviews-container, #review-form-container {
+                max-width: 100% !important; /* Expand to full width on mobile */
+            }
         }
     `;
     const styleSheet = document.createElement("style");
