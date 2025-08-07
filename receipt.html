@@ -412,17 +412,20 @@
                         ${shippingDetails.address.country}
                     ` : 'N/A';
                     
-                    // Format order items
-                    let itemsHtml = order.line_items.map(item => {
-                        return `
-                            <div class="item">
-                                <div>
-                                    <div class="item-name">${item.quantity} x ${item.description}</div>
-                                </div>
-                                <div class="item-price">$${item.amount_total.toFixed(2)}/100</div>
-                            </div>
-                        `;
-                    }).join('');
+										// Format order items
+					let itemsHtml = order.line_items.map(item => {
+						// Calculate the item price by dividing the amount_total by 100
+						const itemPrice = (item.amount_total / 100).toFixed(2);
+
+						return `
+							<div class="item">
+								<div>
+									<div class="item-name">${item.quantity} x ${item.description}</div>
+								</div>
+								<div class="item-price">$${itemPrice}</div>
+							</div>
+						`;
+					}).join('');
 
                     // Populate the container with all the order information
                     receiptContainer.innerHTML = `
