@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const customStyles = `
         /* --- Layout Fixes for Review Section --- */
         #reviews-container, #review-form-container {
-            max-width: 50% !important; /* Constrain to left side */
+            max-width: 25% !important; /* FIX: Constrain to left side even more */
             margin-left: 0 !important;   /* Override HTML class */
             margin-right: auto !important;  /* Override HTML class */
         }
@@ -71,24 +71,31 @@ document.addEventListener('DOMContentLoaded', () => {
             background-color: #e5e7eb; /* Gray background */
             color: #374151; /* Dark gray text */
             margin-top: 16px;
+            width: auto; /* FIX: Make button fit content */
+            padding: 8px 16px; /* FIX: Adjust padding for smaller size */
         }
 
         .btn-load:hover {
             background-color: #d1d5db; /* Lighter gray on hover */
         }
         
-        /* FIX: Make review components transparent */
+        /* FIX: Make review components transparent and remove underlines */
         .review-summary, .review-card, .review-form-wrapper { 
             background-color: transparent; 
             padding: 1rem; 
             border-radius: 0; 
             margin-bottom: 1.5rem; 
-            border-bottom: 1px solid #e5e7eb; 
+            border-bottom: none; /* FIX: Remove underline */
             box-shadow: none; 
         }
         .review-summary {
              display: flex; align-items: center;
         }
+        .review-card {
+            border-bottom: 1px solid #e0e0e0; /* Add a subtle separator for individual reviews */
+            padding-bottom: 1.5rem;
+        }
+
 
         .form-label { display: block; color: #374151; font-weight: bold; margin-bottom: 0.5rem; }
         .form-input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; box-sizing: border-box; }
