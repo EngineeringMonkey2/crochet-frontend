@@ -216,7 +216,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label for="order-id-input" class="block text-gray-700 font-bold mb-2">Order ID</label>
                     <input type="text" id="order-id-input" class="w-full p-3 border border-gray-300 rounded-md" placeholder="Enter your Order ID (e.g., #AbCdEfGh)" required>
                 </div>
-                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-md hover:bg-green-700">Verify Purchase</button>
+				
+				
+								
+				<button type="submit" class="w-full flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
+					<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+					Verify Purchase
+				</button>				
+								
+				
+				
                 <p id="verify-error-message" class="text-red-500 text-sm mt-2"></p>
             </form>
         `;
