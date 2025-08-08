@@ -607,61 +607,61 @@
 
     /* --- END: ANIME BUTTON STYLES --- */
 
-    /* --- Styles for the interactive cart button --- */
+ /* --- Styles for the interactive cart button --- */
     .add-to-cart-container {
-        margin-top: 15px;
-        height: 40px; /* Fixed height to prevent layout shifts */
-        display: flex;
-        justify-content: center;
-        align-items: center;
+		margin-top: 3px;
+        bottom: 15px;
+        left: 15px;
     }
 
     .add-btn {
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background-color: #5d4037; /* Brown color from your theme */
+        background-color: #9FD177;
         color: white;
         border: none;
-        width: 100%;
-        max-width: 200px;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
     }
 
     .add-btn:hover {
-        background-color: #4e342e;
-        transform: scale(1.05);
+        background-color: #425933;
+        transform: scale(1.1);
     }
 
     .quantity-controls {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         background-color: #f0f0f0;
         color: #333;
         border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 5px;
-        width: 100%;
-        max-width: 150px;
+        border-radius: 20px; /* Rounded pill shape */
+        padding: 4px;
+        width: 90px;
+        transition: all 0.3s ease;
     }
 
     .quantity-controls .quantity-btn {
         background: white;
         border: 1px solid #ccc;
         color: #333;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         cursor: pointer;
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: background-color 0.2s;
-        padding: 0;
+        padding: 5px;
     }
 
     .quantity-controls .quantity-btn:hover {
@@ -673,10 +673,11 @@
     }
 
     .quantity-controls .quantity {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         min-width: 25px;
         text-align: center;
+        padding: 0 5px;
     }
 
   </style>
@@ -855,7 +856,7 @@
                             <p>${product.price}</p>
                         </div>
                         <div class="add-to-cart-container">
-                            <button class="add-btn" style="display: ${addBtnDisplay};">Add to Cart</button>
+                            <button class="add-btn" style="display: ${addBtnDisplay};">+</button>
                             <div class="quantity-controls" style="display: ${controlsDisplay};">
                                 <button class="quantity-btn minus-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
