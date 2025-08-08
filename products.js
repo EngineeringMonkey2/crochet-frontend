@@ -29,7 +29,7 @@ const products = [
   },
   {
     id: 3,
-    name: "Oringinal Monkey",
+    name: "Original Monkey",
     images: [root3 + "monkey1.png", root3 + "monkey3.png", root3 + "monkey2.png", root3 + "monkey4.png" , root3 + "monkey6.png", root3 + "monkey5.png"],
     price: "$44.99",
     description: "The oringinal handmade noncustomized monkey plushie.",
