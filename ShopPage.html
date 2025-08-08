@@ -139,7 +139,8 @@
       border-radius: 10px;
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
+      display: flex;
+      flex-direction: column;
     }
 
 
@@ -151,27 +152,34 @@
 	  color: #82569c;
     }
 
-    .product-card img {
+    .product-card .product-image {
       width: 100%;
       height: 300px;
       object-fit: cover;
+      cursor: pointer;
     }
 
     .product-info {
       padding: 15px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1; /* Allows the info to take up remaining space */
+      justify-content: space-between; /* Pushes button to the bottom */
     }
 
     .product-info h3 {
       margin: 10px 0;
       font-size: 18px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .product-info p {
       margin: 5px 0;
       font-size: 16px;
       color: black;
+      cursor: pointer;
     }
 
     /* This container acts as the "canvas" for our character. */
@@ -599,6 +607,78 @@
 
     /* --- END: ANIME BUTTON STYLES --- */
 
+    /* --- Styles for the interactive cart button --- */
+    .add-to-cart-container {
+        margin-top: 15px;
+        height: 40px; /* Fixed height to prevent layout shifts */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .add-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: #5d4037; /* Brown color from your theme */
+        color: white;
+        border: none;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .add-btn:hover {
+        background-color: #4e342e;
+        transform: scale(1.05);
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 5px;
+        width: 100%;
+        max-width: 150px;
+    }
+
+    .quantity-controls .quantity-btn {
+        background: white;
+        border: 1px solid #ccc;
+        color: #333;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+        padding: 0;
+    }
+
+    .quantity-controls .quantity-btn:hover {
+        background-color: #e9e9e9;
+    }
+    
+    .quantity-controls .minus-btn svg {
+        pointer-events: none; /* Ensures click is registered on the button */
+    }
+
+    .quantity-controls .quantity {
+        font-size: 18px;
+        font-weight: bold;
+        min-width: 25px;
+        text-align: center;
+    }
+
   </style>
 	<link rel="icon" type="image/png" href="images/tabphoto-min.png">
   <!-- Font for Anime Button -->
@@ -724,7 +804,8 @@
   <div class="shop" id="shop">
     <h1>Products</h1>
     <div class="product-grid" id="product-grid">
-      </div>
+      <!-- Products will be injected here by JavaScript -->
+    </div>
   </div>
   
   
@@ -744,124 +825,182 @@
   <script src="cart.js"></script>
   <script src="products.js"></script>
   <script>
-    // Function to render products
-    function renderProducts() {
-      const productGrid = document.getElementById('product-grid');
-      productGrid.innerHTML = '';
-      products.forEach(product => {
-        const productCard = document.createElement('div');
-        productCard.classList.add('product-card');
-        
-        const imageUrl = product.image || (product.images && product.images[0]);
-
-        productCard.innerHTML = `
-          <img src="${imageUrl}" alt="${product.name}">
-          <div class="product-info">
-            <h3>${product.name}</h3>
-            <p>${product.price}</p>
-          </div>
-        `;
-        
-        productCard.addEventListener('click', () => {
-          window.location.href = `product.html?productId=${product.id}`;
-        });
-        productGrid.appendChild(productCard);
-      });
-    }
-
-    // --- Combined Scroll Logic ---
-    let lastScrollTop = 0;
-    const toolbar = document.querySelector('.toolbarcontain');
-
-    window.addEventListener('scroll', function() {
-      // Original animation on scroll for product cards
-      const shopSection = document.querySelector('.shop');
-      const productCards = document.querySelectorAll('.product-card');
-      const sectionTop = shopSection.getBoundingClientRect().top;
-      const windowHeight = window.innerHeight;
-
-      if (sectionTop < windowHeight * 0.75) {
-        productCards.forEach((card, index) => {
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          }, index * 100);
-        });
-      }
-
-      // --- New logic for toolbar visibility ---
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (scrollTop > lastScrollTop) {
-          // Downscroll code
-          toolbar.classList.add('toolbar-hidden');
-      } else {
-          // Upscroll code
-          toolbar.classList.remove('toolbar-hidden');
-      }
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    });
-	
-	// Wait for the document to be fully loaded before running the script
+    // Wait for the document to be fully loaded before running the script
     document.addEventListener('DOMContentLoaded', () => {
         
-        renderProducts();
+        const productGrid = document.getElementById('product-grid');
 
-        // --- NEW: Monkey Auto-Scaling Logic ---
+        // Function to render products
+        function renderProducts() {
+            productGrid.innerHTML = '';
+            const cart = getCart();
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.dataset.productId = product.id; // Add product id to the card
+
+                const imageUrl = product.image || (product.images && product.images[0]);
+                const itemInCart = cart.find(item => item.id === product.id);
+
+                const quantity = itemInCart ? itemInCart.quantity : 0;
+                const addBtnDisplay = quantity > 0 ? 'none' : 'block';
+                const controlsDisplay = quantity > 0 ? 'flex' : 'none';
+
+                productCard.innerHTML = `
+                    <img src="${imageUrl}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <div>
+                            <h3>${product.name}</h3>
+                            <p>${product.price}</p>
+                        </div>
+                        <div class="add-to-cart-container">
+                            <button class="add-btn" style="display: ${addBtnDisplay};">Add to Cart</button>
+                            <div class="quantity-controls" style="display: ${controlsDisplay};">
+                                <button class="quantity-btn minus-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                    </svg>
+                                </button>
+                                <span class="quantity">${quantity}</span>
+                                <button class="quantity-btn plus-btn">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Event listener for the entire product grid (event delegation)
+        productGrid.addEventListener('click', (e) => {
+            const productCard = e.target.closest('.product-card');
+            if (!productCard) return;
+
+            const productId = parseInt(productCard.dataset.productId);
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const addBtn = productCard.querySelector('.add-btn');
+            const controls = productCard.querySelector('.quantity-controls');
+            const quantitySpan = productCard.querySelector('.quantity');
+
+            // Handle clicking "Add to cart"
+            if (e.target.classList.contains('add-btn')) {
+                const item = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image || (product.images && product.images[0]),
+                    quantity: 1
+                };
+                addToCart(item);
+                showToast(`${product.name} added to cart!`);
+
+                addBtn.style.display = 'none';
+                controls.style.display = 'flex';
+                quantitySpan.textContent = '1';
+                return; // Stop further actions
+            }
+
+            // Handle clicking "+"
+            if (e.target.classList.contains('plus-btn')) {
+                const cart = getCart();
+                const itemIndex = cart.findIndex(item => item.id === productId);
+                if (itemIndex > -1) {
+                    updateQuantity(itemIndex, 1);
+                    // Re-fetch cart to get the updated quantity
+                    const updatedCart = getCart();
+                    quantitySpan.textContent = updatedCart[itemIndex].quantity;
+                    updateCartIcon();
+                }
+                return; // Stop further actions
+            }
+
+            // Handle clicking the trash can "-"
+            if (e.target.classList.contains('minus-btn') || e.target.closest('.minus-btn')) {
+                const cart = getCart();
+                const itemIndex = cart.findIndex(item => item.id === productId);
+                if (itemIndex > -1) {
+                    updateQuantity(itemIndex, -1);
+                    const updatedCart = getCart(); // Get cart again after potential removal
+                    const updatedItem = updatedCart.find(item => item.id === productId);
+                    
+                    if (updatedItem) {
+                        quantitySpan.textContent = updatedItem.quantity;
+                    } else {
+                        // Item was removed from cart
+                        addBtn.style.display = 'block';
+                        controls.style.display = 'none';
+                    }
+                    updateCartIcon();
+                }
+                return; // Stop further actions
+            }
+
+            // If none of the buttons were clicked, navigate to the product page
+            window.location.href = `product.html?productId=${product.id}`;
+        });
+
+
+        // --- Combined Scroll Logic ---
+        let lastScrollTop = 0;
+        const toolbar = document.querySelector('.toolbarcontain');
+
+        window.addEventListener('scroll', function() {
+          // Original animation on scroll for product cards
+          const shopSection = document.querySelector('.shop');
+          const productCards = document.querySelectorAll('.product-card');
+          const sectionTop = shopSection.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+
+          if (sectionTop < windowHeight * 0.75) {
+            productCards.forEach((card, index) => {
+              setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+              }, index * 100);
+            });
+          }
+
+          // --- New logic for toolbar visibility ---
+          let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          if (scrollTop > lastScrollTop) {
+              // Downscroll code
+              toolbar.classList.add('toolbar-hidden');
+          } else {
+              // Upscroll code
+              toolbar.classList.remove('toolbar-hidden');
+          }
+          lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+        
+        // --- Monkey Builder and Scaling Logic (Unchanged) ---
         const characterContainer = document.getElementById('character-container');
-        characterContainer.style.transition = 'transform 0.3s ease'; // Apply transition for smooth scaling
-        let baseScale = 1; // This will hold the current scale based on window size
-				
-		// This is a new helper function that calculates the multiplier with a decay effect.
+        characterContainer.style.transition = 'transform 0.3s ease'; 
+        let baseScale = 1;
+
 		function getDynamicMultiplier(currentSize, minSize, maxSize, maxMultiplier, minMultiplier) {
-			// If the screen is smaller than our minimum, use the largest multiplier.
-			if (currentSize <= minSize) {
-				return maxMultiplier;
-			}
-			// If the screen is larger than our maximum, use the smallest multiplier.
-			if (currentSize >= maxSize) {
-				return minMultiplier;
-			}
-
-			// Calculate how far we are between the min and max screen sizes (a value from 0.0 to 1.0).
+			if (currentSize <= minSize) return maxMultiplier;
+			if (currentSize >= maxSize) return minMultiplier;
 			const progress = (currentSize - minSize) / (maxSize - minSize);
-
-			// Apply a non-linear decay curve. Math.pow(progress, 2) makes the size change more naturally.
 			const easedProgress = Math.pow(progress, 2);
-
-			// Calculate the final multiplier by interpolating between the max and min values.
 			return maxMultiplier - (easedProgress * (maxMultiplier - minMultiplier));
 		}
 
-
-		// Replace your old updateMonkeyScale function with this new one.
 		function updateMonkeyScale() {
-			// --- Configuration for Dynamic Scaling ---
-			// You can adjust these values to change the scaling behavior.
+			const MIN_SCREEN_WIDTH = 320, MAX_SCREEN_WIDTH = 1920;
+			const MIN_SCREEN_HEIGHT = 480, MAX_SCREEN_HEIGHT = 1080;
+			const MAX_WIDTH_MULTIPLIER = 0.5, MIN_WIDTH_MULTIPLIER = 0.40;
+			const MAX_HEIGHT_MULTIPLIER = 0.80, MIN_HEIGHT_MULTIPLIER = 0.65;
 
-			// Screen size boundaries
-			const MIN_SCREEN_WIDTH = 320;  // Smallest mobile screen width to consider
-			const MAX_SCREEN_WIDTH = 1920; // Large desktop screen width
-			const MIN_SCREEN_HEIGHT = 480; // Smallest mobile screen height
-			const MAX_SCREEN_HEIGHT = 1080; // Standard desktop screen height
-
-			// Multiplier boundaries (the % of the screen the monkey should occupy)
-			const MAX_WIDTH_MULTIPLIER = 0.5; // Use 85% of width on the SMALLEST screens
-			const MIN_WIDTH_MULTIPLIER = 0.40; // Use 40% of width on the LARGEST screens
-			const MAX_HEIGHT_MULTIPLIER = 0.80; // Use 80% of height on the SMALLEST screens
-			const MIN_HEIGHT_MULTIPLIER = 0.65; // Use 65% of height on the LARGEST screens
-
-			// --- End of Configuration ---
-
-
-			// Get the dynamic multipliers for the current screen size.
 			const widthMultiplier = getDynamicMultiplier(window.innerWidth, MIN_SCREEN_WIDTH, MAX_SCREEN_WIDTH, MAX_WIDTH_MULTIPLIER, MIN_WIDTH_MULTIPLIER);
 			const heightMultiplier = getDynamicMultiplier(window.innerHeight, MIN_SCREEN_HEIGHT, MAX_SCREEN_HEIGHT, MAX_HEIGHT_MULTIPLIER, MIN_HEIGHT_MULTIPLIER);
 
-			// Calculate target dimensions using the new dynamic multipliers.
 			const targetWidth = window.innerWidth * widthMultiplier;
 			const targetHeight = window.innerHeight * heightMultiplier;
 
-			// The rest of this logic remains the same.
 			let scaleBasedOnHeight = targetHeight / 900;
 			let scaleBasedOnWidth = targetWidth / 600;
 
@@ -869,261 +1008,99 @@
 			characterContainer.style.transform = `translate(-50%, -50%) scale(${baseScale})`;
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Add event listeners for hover effects
         characterContainer.addEventListener('mouseenter', () => {
-            const hoverScale = baseScale * 1.03; // Make it slightly bigger on hover
+            const hoverScale = baseScale * 1.03;
             characterContainer.style.transform = `translate(-50%, -50%) scale(${hoverScale})`;
         });
 
         characterContainer.addEventListener('mouseleave', () => {
-            // Revert to the base scale when the mouse leaves
             characterContainer.style.transform = `translate(-50%, -50%) scale(${baseScale})`;
         });
 
-        // Add an event listener to rescale the monkey whenever the window is resized
         window.addEventListener('resize', updateMonkeyScale);
 
-        // Call the function once on page load to set the initial size
-        updateMonkeyScale();
-
-
-        // --- Character Head Changer ---
+        // --- Character Part Changers (Unchanged) ---
         const headImage = document.getElementById('head');
         const prevHeadButton = document.getElementById('prev-head');
         const nextHeadButton = document.getElementById('next-head');
-        const headImages = [
-            'images/Anime/BuildingTemplate/01-Head/Heads/Head1-min.png',
-            'images/Anime/BuildingTemplate/01-Head/Heads/Head2-min.png',
-			'images/Anime/BuildingTemplate/01-Head/Heads/Head3-min.png',
-            'images/Anime/BuildingTemplate/01-Head/Heads/Head4-min.png',
-			'images/Anime/BuildingTemplate/01-Head/Heads/Head5-min.png',
-			'images/Anime/BuildingTemplate/01-Head/Heads/Head6-min.png'
-        ];
+        const headImages = ['images/Anime/BuildingTemplate/01-Head/Heads/Head1-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head2-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head3-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head4-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head5-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head6-min.png'];
         let currentHeadIndex = 0;
-        function updateHead() {
-            headImage.src = headImages[currentHeadIndex];
-        }
+        function updateHead() { headImage.src = headImages[currentHeadIndex]; }
 
-        // --- Character Ear Changer ---
         const leftEarImage = document.getElementById('left-ear');
         const rightEarImage = document.getElementById('right-ear');
         const prevEarsButton = document.getElementById('prev-ears');
         const nextEarsButton = document.getElementById('next-ears');
-        const earImages = [
-            { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar1-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar1-min.png' },
-            { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar2-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar2-min.png' },
-            { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar3-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar3-min.png' },
-            { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar4-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar4-min.png' },
-            { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar5-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar5-min.png' },
-            { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar6-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar6-min.png' }
-        ];
+        const earImages = [{ left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar1-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar1-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar2-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar2-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar3-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar3-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar4-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar4-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar5-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar5-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar6-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar6-min.png' }];
         let currentEarIndex = 0;
-        function updateEars() {
-            const earPair = earImages[currentEarIndex];
-            leftEarImage.src = earPair.left;
-            rightEarImage.src = earPair.right;
-        }
+        function updateEars() { const earPair = earImages[currentEarIndex]; leftEarImage.src = earPair.left; rightEarImage.src = earPair.right; }
 
-        // --- Character Body Changer ---
         const bodyImage = document.getElementById('body');
         const prevBodyButton = document.getElementById('prev-body');
         const nextBodyButton = document.getElementById('next-body');
-        const bodyImages = [
-            'images/Anime/BuildingTemplate/05-Body/Bodies/Body1-min.png',
-            'images/Anime/BuildingTemplate/05-Body/Bodies/Body2-min.png',
-            'images/Anime/BuildingTemplate/05-Body/Bodies/Body3-min.png',
-            'images/Anime/BuildingTemplate/05-Body/Bodies/Body4-min.png',
-            'images/Anime/BuildingTemplate/05-Body/Bodies/Body5-min.png',
-            'images/Anime/BuildingTemplate/05-Body/Bodies/Body6-min.png'
-        ];
+        const bodyImages = ['images/Anime/BuildingTemplate/05-Body/Bodies/Body1-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body2-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body3-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body4-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body5-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body6-min.png'];
         let currentBodyIndex = 0;
-        function updateBody() {
-            bodyImage.src = bodyImages[currentBodyIndex];
-        }
+        function updateBody() { bodyImage.src = bodyImages[currentBodyIndex]; }
 
-        // --- Character Arm Changer ---
         const leftArmImage = document.getElementById('left-arm');
         const rightArmImage = document.getElementById('right-arm');
         const prevArmsButton = document.getElementById('prev-arms');
         const nextArmsButton = document.getElementById('next-arms');
-        const armImages = [
-            { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm1-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm1-min.png' },
-            { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm2-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm2-min.png' },
-            { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm3-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm3-min.png' },
-            { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm4-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm4-min.png' },
-            { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm5-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm5-min.png' },
-            { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm6-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm6-min.png' }
-        ];
+        const armImages = [{ left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm1-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm1-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm2-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm2-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm3-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm3-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm4-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm4-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm5-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm5-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm6-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm6-min.png' }];
         let currentArmIndex = 0;
-        function updateArms() {
-            const armPair = armImages[currentArmIndex];
-            leftArmImage.src = armPair.left;
-            rightArmImage.src = armPair.right;
-        }
+        function updateArms() { const armPair = armImages[currentArmIndex]; leftArmImage.src = armPair.left; rightArmImage.src = armPair.right; }
 
-        // --- Character Leg Changer ---
         const legsImage = document.getElementById('legs');
         const prevLegsButton = document.getElementById('prev-legs');
         const nextLegsButton = document.getElementById('next-legs');
-        const legImages = [
-            'images/Anime/BuildingTemplate/07-Legs/Legs/Legs1-min.png',
-            'images/Anime/BuildingTemplate/07-Legs/Legs/Legs2-min.png',
-            'images/Anime/BuildingTemplate/07-Legs/Legs/Legs3-min.png',
-            'images/Anime/BuildingTemplate/07-Legs/Legs/Legs4-min.png',
-            'images/Anime/BuildingTemplate/07-Legs/Legs/Legs5-min.png',
-            'images/Anime/BuildingTemplate/07-Legs/Legs/Legs6-min.png'
-        ];
+        const legImages = ['images/Anime/BuildingTemplate/07-Legs/Legs/Legs1-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs2-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs3-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs4-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs5-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs6-min.png'];
         let currentLegIndex = 0;
-        function updateLegs() {
-            legsImage.src = legImages[currentLegIndex];
-        }
+        function updateLegs() { legsImage.src = legImages[currentLegIndex]; }
 
-        // --- Character Tail Changer ---
         const tailImage = document.getElementById('tail');
         const prevTailButton = document.getElementById('prev-tail');
         const nextTailButton = document.getElementById('next-tail');
-        const tailImages = [
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail1-min.png',
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail2-min.png',
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail3-min.png',
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail4-min.png',
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail5-min.png',
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail6-min.png',
-            'images/Anime/BuildingTemplate/08-Tail/Tails/Tail7-min.png'
-        ];
+        const tailImages = ['images/Anime/BuildingTemplate/08-Tail/Tails/Tail1-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail2-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail3-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail4-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail5-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail6-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail7-min.png'];
         let currentTailIndex = 0;
-        function updateTail() {
-            tailImage.src = tailImages[currentTailIndex];
-        }
+        function updateTail() { tailImage.src = tailImages[currentTailIndex]; }
 
-
-        // --- Event Listeners ---
-        nextHeadButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentHeadIndex = (currentHeadIndex + 1) % headImages.length;
-            updateHead();
-        });
-        prevHeadButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentHeadIndex = (currentHeadIndex - 1 + headImages.length) % headImages.length;
-            updateHead();
-        });
+        // --- Event Listeners for Monkey Builder (Unchanged) ---
+        nextHeadButton.addEventListener('click', (event) => { event.stopPropagation(); currentHeadIndex = (currentHeadIndex + 1) % headImages.length; updateHead(); });
+        prevHeadButton.addEventListener('click', (event) => { event.stopPropagation(); currentHeadIndex = (currentHeadIndex - 1 + headImages.length) % headImages.length; updateHead(); });
+        nextEarsButton.addEventListener('click', (event) => { event.stopPropagation(); currentEarIndex = (currentEarIndex + 1) % earImages.length; updateEars(); });
+        prevEarsButton.addEventListener('click', (event) => { event.stopPropagation(); currentEarIndex = (currentEarIndex - 1 + earImages.length) % earImages.length; updateEars(); });
+        nextBodyButton.addEventListener('click', (event) => { event.stopPropagation(); currentBodyIndex = (currentBodyIndex + 1) % bodyImages.length; updateBody(); });
+        prevBodyButton.addEventListener('click', (event) => { event.stopPropagation(); currentBodyIndex = (currentBodyIndex - 1 + bodyImages.length) % bodyImages.length; updateBody(); });
+        nextArmsButton.addEventListener('click', (event) => { event.stopPropagation(); currentArmIndex = (currentArmIndex + 1) % armImages.length; updateArms(); });
+        prevArmsButton.addEventListener('click', (event) => { event.stopPropagation(); currentArmIndex = (currentArmIndex - 1 + armImages.length) % armImages.length; updateArms(); });
+        nextLegsButton.addEventListener('click', (event) => { event.stopPropagation(); currentLegIndex = (currentLegIndex + 1) % legImages.length; updateLegs(); });
+        prevLegsButton.addEventListener('click', (event) => { event.stopPropagation(); currentLegIndex = (currentLegIndex - 1 + legImages.length) % legImages.length; updateLegs(); });
+        nextTailButton.addEventListener('click', (event) => { event.stopPropagation(); currentTailIndex = (currentTailIndex + 1) % tailImages.length; updateTail(); });
+        prevTailButton.addEventListener('click', (event) => { event.stopPropagation(); currentTailIndex = (currentTailIndex - 1 + tailImages.length) % tailImages.length; updateTail(); });
         
-        nextEarsButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentEarIndex = (currentEarIndex + 1) % earImages.length;
-            updateEars();
-        });
-        prevEarsButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentEarIndex = (currentEarIndex - 1 + earImages.length) % earImages.length;
-            updateEars();
-        });
-
-        nextBodyButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentBodyIndex = (currentBodyIndex + 1) % bodyImages.length;
-            updateBody();
-        });
-        prevBodyButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentBodyIndex = (currentBodyIndex - 1 + bodyImages.length) % bodyImages.length;
-            updateBody();
+        // --- Order Button Logic (Unchanged) ---
+        const orderButton = document.getElementById('orderButton');
+        orderButton.addEventListener('click', (e) => {
+            const partsToSave = ['head', 'left-ear', 'right-ear', 'body', 'left-arm', 'right-arm', 'legs', 'tail'];
+            const params = new URLSearchParams();
+            partsToSave.forEach(partId => {
+                const imageElement = document.getElementById(partId);
+                if (imageElement) {
+                    params.append(partId, encodeURIComponent(imageElement.src));
+                }
+            });
+            window.location.href = `customizationproduct.html?${params.toString()}`;
         });
 
-        nextArmsButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentArmIndex = (currentArmIndex + 1) % armImages.length;
-            updateArms();
-        });
-        prevArmsButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentArmIndex = (currentArmIndex - 1 + armImages.length) % armImages.length;
-            updateArms();
-        });
-
-        nextLegsButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentLegIndex = (currentLegIndex + 1) % legImages.length;
-            updateLegs();
-        });
-        prevLegsButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentLegIndex = (currentLegIndex - 1 + legImages.length) % legImages.length;
-            updateLegs();
-        });
-
-        nextTailButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentTailIndex = (currentTailIndex + 1) % tailImages.length;
-            updateTail();
-        });
-        prevTailButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            currentTailIndex = (currentTailIndex - 1 + tailImages.length) % tailImages.length;
-            updateTail();
-        });
-        
-        // --- Initial Setup ---
+        // --- Initial Setup Calls ---
+        renderProducts();
+        updateMonkeyScale();
         updateHead();
         updateEars();
         updateBody();
         updateArms();
         updateLegs();
         updateTail();
-
-        // --- START: ANIME BUTTON SCRIPT ---
-        const orderButton = document.getElementById('orderButton');
-        const effectsContainer = document.getElementById('effectsContainer');
-
-        orderButton.addEventListener('click', (e) => {
-            // --- MODIFICATION START ---
-            // This is the new logic to open the customization page.
-            
-            // 1. Define the parts we need to get the source for.
-            const partsToSave = [
-                'head', 'left-ear', 'right-ear', 'body',
-                'left-arm', 'right-arm', 'legs', 'tail'
-            ];
-
-            // 2. Create a new URLSearchParams object to build our query string.
-            const params = new URLSearchParams();
-
-            // 3. Loop through the parts, get their image src, and add to the params.
-            partsToSave.forEach(partId => {
-                const imageElement = document.getElementById(partId);
-                if (imageElement) {
-                    // encodeURIComponent makes the URL safe to use in a query string.
-                    params.append(partId, encodeURIComponent(imageElement.src));
-                }
-            });
-
-            // 4. Redirect to the new page with the parameters.
-            window.location.href = `customizationproduct.html?${params.toString()}`;
-
-            // --- MODIFICATION END ---
-        });
-        // --- END: ANIME BUTTON SCRIPT ---
-
     });
   </script>
 </body>
