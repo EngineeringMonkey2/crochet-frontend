@@ -412,20 +412,26 @@
                         ${shippingDetails.address.country}
                     ` : 'N/A';
                     
-										// Format order items
-					let itemsHtml = order.line_items.map(item => {
-						// Calculate the item price by dividing the amount_total by 100
-						const itemPrice = (item.amount_total / 100).toFixed(2);
+                    // Format order items
+                    let itemsHtml = order.line_items.map(item => {
+                        // Stripe amounts are in cents, so divide by 100 for dollars.
+                        const itemPrice = (item.amount_total / 100).toFixed(2);
 
-						return `
-							<div class="item">
-								<div>
-									<div class="item-name">${item.quantity} x ${item.description}</div>
-								</div>
-								<div class="item-price">$${itemPrice}</div>
-							</div>
-						`;
-					}).join('');
+                        return `
+                            <div class="item">
+                                <div>
+                                    <div class="item-name">${item.quantity} x ${item.description}</div>
+                                </div>
+                                <div class="item-price">$${itemPrice}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Correctly calculate and format currency values from cents to dollars
+                    const subtotal = (order.amount_subtotal / 100).toFixed(2);
+                    const shipping = ((order.shipping_cost ? order.shipping_cost.amount_total : 0) / 100).toFixed(2);
+                    const taxes = ((order.total_details ? order.total_details.amount_tax : 0) / 100).toFixed(2);
+                    const total = (order.amount_total / 100).toFixed(2);
 
                     // Populate the container with all the order information
                     receiptContainer.innerHTML = `
@@ -441,19 +447,19 @@
                             <div class="order-summary">
                                 <div class="summary-line">
                                     <span>Subtotal</span>
-                                    <span>$${(order.amount_total - (order.shipping_cost ? order.shipping_cost.amount_total : 0) - (order.total_details ? order.total_details.amount_tax : 0)).toFixed(2)}</span>
+                                    <span>$${subtotal}</span>
                                 </div>
                                 <div class="summary-line">
                                     <span>Shipping</span>
-                                    <span>$${(order.shipping_cost ? order.shipping_cost.amount_total.toFixed(2) : '0.00')}</span>
+                                    <span>$${shipping}</span>
                                 </div>
                                 <div class="summary-line">
                                     <span>Taxes</span>
-                                    <span>$${(order.total_details ? order.total_details.amount_tax : 0).toFixed(2)}</span>
+                                    <span>$${taxes}</span>
                                 </div>
                                 <div class="summary-line total">
                                     <span>Total</span>
-                                    <span>$${order.amount_total.toFixed(2)}</span>
+                                    <span>$${total}</span>
                                 </div>
                             </div>
                         </div>
@@ -484,7 +490,6 @@
             downloadBtn.addEventListener('click', () => {
                 if (!orderData) {
                     // This is an alert, which should be replaced by a custom modal UI.
-                    // For now, it remains to match the user's original code.
                     alert("Order data is not loaded yet.");
                     return;
                 }
@@ -521,7 +526,6 @@
                 }).catch(err => {
                     console.error("Error generating PDF:", err);
                     // This is an alert, which should be replaced by a custom modal UI.
-                    // For now, it remains to match the user's original code.
                     alert("Sorry, there was an error creating the PDF.");
                     downloadBtn.disabled = false;
                     downloadBtn.textContent = 'Download as PDF';
