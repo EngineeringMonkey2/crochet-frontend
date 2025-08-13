@@ -9,6 +9,9 @@ const root7 = "images/RealChrochet/lamb/"
 const root8 = "images/RealChrochet/frog/"
 const root9 = "images/RealChrochet/elephant/"
 const root10 = "images/RealChrochet/giraffe/"
+const root11 = "images/RealChrochet/turtle/"
+const root12 = "images/RealChrochet/ghost/"
+
 
 const products = [
   {
@@ -143,5 +146,31 @@ const products = [
     description: "Beautiful hand made giraffe plushie, biggest animal out of all the crochet animals!",
 	dimensions: " Dimensions: Height of 15 in. Width of 6 in."
 
+  },
+  
+  {
+    id: 11,
+    name: "Turtle",
+    images: [root11 + "turtle1.png", root11 + "turtle2.png", root11 + "turtle3.png", root11 + "turtle5.png", root11 + "turtle4.png", root11 + "turtle6.png"],
+    price: "$19.99",
+    description: "Beautiful hand made turtle plushie, perfect for your collection!",
+	dimensions: " Dimensions: Height of 7 in. Width of 4 in."
+
+  },
+  
+  {
+    id: 12,
+    name: "Ghost",
+    images: [root12 + "ghost2.png", root12 + "ghost5.png", root12 + "ghost3.png", root12 + "ghost4.png", root12 + "ghost1.png", root12 + "ghost6.png"],
+    price: "$14.99",
+    description: "Beautiful hand made ghost plushie, perfect for the autumn season!",
+	dimensions: " Dimensions: Height of 5 in. Width of 4 in."
+
   }
+  
+    
+  
+  
+  
+  
 ];
