@@ -168,7 +168,16 @@ const products = [
 
   }
   
-    
+  {
+    id: 13,
+    name: "Test",
+    images: [],
+    price: "$0.99",
+    description: "Test for Devs, Don't buy this",
+
+  }
+  
+        
   
   
   
