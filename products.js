@@ -11,7 +11,7 @@ const root9 = "images/RealChrochet/elephant/"
 const root10 = "images/RealChrochet/giraffe/"
 const root11 = "images/RealChrochet/turtle/"
 const root12 = "images/RealChrochet/ghost/"
-
+const root13 = "images/"
 
 const products = [
   {
@@ -166,12 +166,12 @@ const products = [
     description: "Beautiful hand made ghost plushie, perfect for the autumn season!",
 	dimensions: " Dimensions: Height of 5 in. Width of 4 in."
 
-  }
+  },
   
   {
     id: 13,
     name: "Test",
-    images: [],
+    images: [root13 + "test.png"],
     price: "$0.99",
     description: "Test for Devs, Don't buy this",
 
