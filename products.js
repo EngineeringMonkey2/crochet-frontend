@@ -166,19 +166,7 @@ const products = [
     description: "Beautiful hand made ghost plushie, perfect for the autumn season!",
 	dimensions: " Dimensions: Height of 5 in. Width of 4 in."
 
-  },
-  
-  {
-    id: 13,
-    name: "Test",
-    images: [root13 + "test.png"],
-    price: "$0.99",
-    description: "Test for Devs, Don't buy this",
-
   }
-  
-        
-  
   
   
   
