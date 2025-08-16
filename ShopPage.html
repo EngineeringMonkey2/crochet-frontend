@@ -157,6 +157,8 @@
       height: 300px;
       object-fit: cover;
       cursor: pointer;
+      /* Add a background color for a smoother loading experience */
+      background-color: #f0f0f0;
     }
 
     .product-info {
@@ -873,7 +875,7 @@
                 const controlsDisplay = quantity > 0 ? 'flex' : 'none';
 
                 productCard.innerHTML = `
-                    <img src="${imageUrl}" alt="${product.name}" class="product-image">
+                    <img src="${imageUrl}" alt="${product.name}" class="product-image" loading="lazy" decoding="async">
                     <div class="product-info">
                         <div>
                             <h3>${product.name}</h3>
@@ -1078,7 +1080,7 @@
         const legsImage = document.getElementById('legs');
         const prevLegsButton = document.getElementById('prev-legs');
         const nextLegsButton = document.getElementById('next-legs');
-        const legImages = ['images/Anime/BuildingTemplate/07-Legs/Legs/Legs1-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs2-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs3-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs4-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs5-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs6-min.png'];
+        const legImages = ['images/Anime/BuildingTemplate/07-Legs/Legs/Legs1-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs2-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs3-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs4-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs5-min.png', 'images/Anime/BuildingTemplate/07-_Legs/Legs/Legs6-min.png'];
         let currentLegIndex = 0;
         function updateLegs() { legsImage.src = legImages[currentLegIndex]; }
 
