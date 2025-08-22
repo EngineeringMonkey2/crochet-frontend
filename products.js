@@ -34,7 +34,7 @@ const products = [
     id: 3,
     name: "Original Monkey",
     images: [root3 + "monkey1.png", root3 + "monkey3.png", root3 + "monkey2.png", root3 + "monkey4.png" , root3 + "monkey6.png", root3 + "monkey5.png"],
-    price: "$44.99",
+    price: "$39.99",
     description: "The oringinal handmade noncustomized monkey plushie.",
 	dimensions: " Dimensions: 12in. by 9 in. "
 
@@ -43,7 +43,7 @@ const products = [
     id: 4,
     name: "Strawberry Cow",
     images: [root4 + "strawberrycow1.png", root4 + "strawberrycow2.png"],
-    price: "$44.99",
+    price: "$39.99",
     description: "A beautiful hand made strawberry cow plushie with spots, perfect for your collection.",
 	dimensions: "  Dimensions: Height of 12 in. Width of 5 in. "
 
@@ -58,7 +58,7 @@ const products = [
     id: 5,
     name: "Lamb",
     images: [root7 + "lamb1.png", root7 + "lamb2.png", root7 + "lamb3.png", root7 + "lamb4.png", root7 + "lamb5.png", root7 + "lamb6.png"],
-    price: "$44.99",
+    price: "$39.99",
     description: "Beautiful hand made lamb plushie, perfect to add to your collection of animals",
 	dimensions: " Dimensions: Height of 12 in. Width of 6 in. "
 

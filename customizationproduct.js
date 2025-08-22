@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = {
             id: uniqueId,
             name: 'Custom Monkey',
-            price: '$64.99',
+            price: '$44.99',
             quantity: quantity,
             images: customImages // Store the whole object of part images
         };
