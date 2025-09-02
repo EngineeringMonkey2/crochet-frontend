@@ -310,7 +310,51 @@
       color: #000000;
       text-decoration: underline;
     }
-    /* --- END: Footer Section Styles --- */	  
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+    /* --- END: Footer Section Styles --- */	
+
+
+
+	/* --- START: Cartoon Old Price Styles --- */
+	/* Place this block right after the .product-info .price rule */
+
+	/* Style the OLD, crossed-out price */
+	.price del {
+		/* These styles target ONLY the $64.99 price */
+		position: relative;
+		text-decoration: none;
+		font-size: 20px;     /* Makes it slightly smaller than the new price */
+		font-weight: normal; /* Makes it less bold */
+		color: #bcaaa4;
+		margin-right: 10px;  /* Adds some space between the two prices */
+	}
+
+	/* This creates the custom, cartoonish strikethrough line! */
+	.price del::after {
+		content: '';
+		position: absolute;
+		left: -5%;
+		top: 50%;
+		width: 110%;
+		height: 3px;
+		background-color: #ef5350; /* A fun, friendly red */
+		border-radius: 3px;
+		transform: rotate(-6deg);  /* Tilts it for a playful, hand-drawn look! */
+	}
+	/* --- END: Cartoon Old Price Styles --- */
+
+
+
+	
 
     /* Responsive design */
     @media (max-width: 900px) {
@@ -346,7 +390,7 @@
         align-items: top;
       }
 	  
-	  
+
 
     }
   </style>
@@ -404,7 +448,11 @@
 
       <div class="product-info">
         <h1>Your Custom Creation</h1>
-        <p class="price">$64.99</p>
+		
+		<p class="price"><del>$64.99</del>$44.99</p>
+		
+		
+		
         <p class="description">A unique, one-of-a-kind monkey designed by you! All parts are 100% crocheted with love and care. Review your creation and add it to your cart. **DISCLAIMER** The different colors are not the monkeys clothes but fur</p>
         
         <div class="quantity-selector">
