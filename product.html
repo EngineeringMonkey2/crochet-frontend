@@ -368,7 +368,7 @@
           <!-- Thumbnails will be injected here by JavaScript -->
         </div>
         <div class="main-image-container">
-          <img id="product-image" src="" alt="Product Image">
+          <img id="product-image" src="" alt="Product Image" loading="lazy">
           <div class="gallery-controls">
             <button class="arrow prev-arrow" id="prev-btn" style="display: none;">&#10094;</button>
             <button class="arrow next-arrow" id="next-btn" style="display: none;">&#10095;</button>
@@ -462,6 +462,8 @@
                 thumb.alt = `${product.name} thumbnail ${index + 1}`;
                 thumb.className = 'thumbnail-item';
                 thumb.dataset.index = index;
+                thumb.loading = 'lazy'; // Add lazy loading to thumbnails
+
                 thumb.addEventListener('click', () => setActiveImage(index));
                 thumbnailGallery.appendChild(thumb);
             });

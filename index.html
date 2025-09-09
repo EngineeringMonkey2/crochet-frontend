@@ -287,7 +287,7 @@
     .title-underline-path {
         fill: none;
         stroke: #87baf5; /* MATCHED blue color */
-        stroke-width: 10;   /* MATCHED thickness */
+        stroke-width: 10;    /* MATCHED thickness */
         stroke-linecap: round;
     }
     /* --- END: UPDATED styles for Featured Title SVG underline --- */
@@ -314,6 +314,7 @@
       flex-direction: column;
       flex: 1;
       min-width: 300px;
+      max-width: 350px; /* This is the fix to prevent over-stretching */
     }
 
     .featured-card:hover {
@@ -451,6 +452,7 @@
 		gap:30px;
       }
 	  
+	  
 
       .build-text {
         text-align: center;
@@ -465,7 +467,7 @@
       }
 	  
 	  
-	 
+	  
 
     }
   </style>
@@ -515,27 +517,40 @@
       </svg>
     </h1>
     <div class="featured-container">
-      <a href="product.html?productId=4" class="featured-card">
-        <img src="images/RealChrochet/strawberrycow/strawberrycow1-min.png" alt="Strawberry Cow">
+	
+	
+	
+	
+      <a href="product.html?productId=14" class="featured-card">
+        <img src="images/RealChrochet/zombee/zombee4.png" alt="Bunny" loading="lazy">
         <div class="featured-card-info">
-          <h3>Strawberry Cow</h3>
-          <p>A cute crocheted strawberry cow, perfect for your collection.</p>
+          <h3>ZomBee</h3>
+          <p>A scary ZomBee Plushie, don't get stung by this little guy! </p>
+        </div>
+      </a>
+	
+	
+	
+	
+      <a href="product.html?productId=15" class="featured-card">
+        <img src="images/RealChrochet/pumpkin/pumpkin1.png" alt="Strawberry Cow" loading="lazy">
+        <div class="featured-card-info">
+          <h3>Pumpkin</h3>
+          <p>A cute crocheted happy pumpkin, perfect for your collection.</p>
         </div>
       </a>
 
-      <a href="product.html?productId=2" class="featured-card">
-        <img src="images/RealChrochet/bunny/bunny1-min.png" alt="Bunny">
-        <div class="featured-card-info">
-          <h3>Bunny</h3>
-          <p>A beautiful large bunny.</p>
-        </div>
-      </a>
 
-      <a href="product.html?productId=3" class="featured-card">
-        <img src="images/RealChrochet/monkey/monkey1-min.png" alt="Regular Monkey">
+
+
+
+
+
+      <a href="product.html?productId=12" class="featured-card">
+        <img src="images/RealChrochet/ghost/ghost2.png" alt="Regular Monkey" loading="lazy">
         <div class="featured-card-info">
-          <h3>Original Monkey</h3>
-          <p>The original monkey, add additions in the build your monkey collections!</p>
+          <h3>Ghost</h3>
+          <p>A plushie Ghost, perfect addition for your halloween decorations!</p>
         </div>
       </a>
     </div>
@@ -547,7 +562,7 @@
           <path class="animated-line" d="" />
       </svg>
       <div class="build-image">
-		<img src="images/buildyourmonkey-min.png" alt="Custom crochet monkey" />
+		<img src="images/buildyourmonkey-min.png" alt="Custom crochet monkey" loading="lazy" />
 	  </div>
 	  <div class="build-text">
 		<h1>Build Your Monkey</h1>
@@ -640,7 +655,7 @@
 
         // Calculate all coordinates relative to the buildSection container
         const imageCenterY_rel = (imageRect.top - sectionRect.top) + (imageRect.height / 2);
-        const buttonCenterX_rel = (buttonRect.left - sectionRect.left) + (buttonRect.width / 2);
+        const buttonCenterX_rel = (buttonRect.left - sectionRect.left) + (buttonRect.width / 2); 
         const buttonCenterY_rel = (buttonRect.top - sectionRect.top) + (buttonRect.height / 2);
 
         // Define the radius for the circle around the button, adding some padding
@@ -668,7 +683,7 @@
         // --- NEW: Define points for the graceful exit to the right ---
         const endX = sectionRect.width + 10; // Go just off the right edge
         const endY = imageCenterY_rel; // End at the same vertical level as the start for balance
-    
+        
         // Control points for the exit curve.
         const cp3X = topOfCircleX + 150;
         const cp3Y = topOfCircleY - 100;
@@ -747,30 +762,23 @@
         
         // Define all Y coordinates to be safely BELOW the text
         const underlineY = headingRect.height + 15; // Position the main underline 15px below the text block
-        const loopRadius = 10;
-        // Position the top of the loop relative to the underline, ensuring it doesn't go above the text
-        const loopTopY = underlineY - (loopRadius * 1); 
-
+        
         // Define key X coordinates
         const startX = -10;
-        const endX = headingRect.width ;
-        const loopCenterX = headingRect.width / 1;
-
-        // Define control points for the curves to make them smooth
-        const cp1X = loopCenterX * 0.6;
-        const cp1Y = underlineY - 30; // Control point to swoop up high
+        const endX = headingRect.width + 10;
         
-        const cp2X = loopCenterX;
-        const cp2Y = underlineY + 50; // Control point for after the loop
+        // Control points for a gentle swoop - FIXED to create a subtle UPWARD curve
+        const cp1X = headingRect.width * 0.25;
+        const cp1Y = underlineY - 10; // Changed from +20 to -10
+        const cp2X = headingRect.width * 0.75;
+        const cp2Y = underlineY - 10; // Changed from +20 to -10
 
-        // Construct the path string
+        // Construct the path string with a simple line and curve
         const pathData = `
-            M ${startX}, ${underlineY}
-            L 0, ${underlineY}
-            C ${cp1X}, ${cp1Y}, ${loopCenterX - loopRadius}, ${loopTopY}, ${loopCenterX}, ${loopTopY}
-            A ${underlineY}
-            L ${headingRect.width}, ${underlineY}
-            C ${endX}
+            M ${startX},${underlineY}
+            L 0,${underlineY}
+            C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${headingRect.width},${underlineY}
+            L ${endX},${underlineY}
         `;
         
         titlePath.setAttribute('d', pathData.trim());
@@ -808,3 +816,5 @@
   </script>
 </body>
 </html>
+
+

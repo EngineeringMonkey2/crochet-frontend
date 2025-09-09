@@ -122,13 +122,82 @@
       box-sizing: border-box;
     }
 
+    /* --- Shop Controls: Search and Categories --- */
+    .shop-controls {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
+    .search-bar input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+    }
 
+    .search-bar input:focus {
+      border-color: #82569c;
+      box-shadow: 0 0 5px rgba(130, 86, 156, 0.5);
+    }
+
+    .category-filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .category-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .category-btn:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+      background-color: #82569c;
+      color: white;
+      border-color: #82569c;
+    }
+
+    @media (min-width: 768px) {
+      .shop-controls {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .search-bar {
+        flex-grow: 1;
+        margin-right: 20px;
+        max-width: 400px;
+      }
+      .category-filters {
+        justify-content: flex-end;
+      }
+    }
 
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 30px;
       max-width: 1500px;
       margin: 0 auto;
@@ -498,7 +567,7 @@
       }
 
       .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 15px;
       }
 
@@ -528,6 +597,7 @@
 
 	}	
 		
+	
 	
 	
 	
@@ -830,6 +900,21 @@
 
   <div class="shop" id="shop">
     <h1>Products</h1>
+    <div class="shop-controls">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search products...">
+      </div>
+      <div class="category-filters" id="category-filters">
+
+
+        <button class="category-btn active" data-category="all">All</button>
+		
+        <button class="category-btn" data-category="Other">Halloween🎃</button>
+        <button class="category-btn" data-category="Animals">Animals</button>
+        <button class="category-btn" data-category="Insects">Insects</button>
+        <button class="category-btn" data-category="Home Goods">Home Goods</button>
+      </div>
+    </div>
     <div class="product-grid" id="product-grid">
       <!-- Products will be injected here by JavaScript -->
     </div>
@@ -856,13 +941,23 @@
     document.addEventListener('DOMContentLoaded', () => {
         
         const productGrid = document.getElementById('product-grid');
+        const searchInput = document.getElementById('search-input');
+        const categoryFilters = document.getElementById('category-filters');
+
+        let currentCategory = 'all';
+        let currentSearchTerm = '';
 
         // Function to render products
-        function renderProducts() {
+        function renderProducts(productsToRender) {
             productGrid.innerHTML = '';
             const cart = getCart();
 
-            products.forEach(product => {
+            if (productsToRender.length === 0) {
+                productGrid.innerHTML = '<p style="color: black; text-align: center; grid-column: 1 / -1; font-size: 18px;">No products found matching your criteria.</p>';
+                return;
+            }
+
+            productsToRender.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.classList.add('product-card');
                 productCard.dataset.productId = product.id; // Add product id to the card
@@ -899,6 +994,43 @@
                 productGrid.appendChild(productCard);
             });
         }
+
+        function filterAndRender() {
+            let filteredProducts = products;
+
+            // Filter by category
+            if (currentCategory !== 'all') {
+                filteredProducts = filteredProducts.filter(product => product.category === currentCategory);
+            }
+
+            // Filter by search term
+            if (currentSearchTerm) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.name.toLowerCase().includes(currentSearchTerm)
+                );
+            }
+
+            renderProducts(filteredProducts);
+        }
+
+        // Event listener for search input
+        searchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value.toLowerCase();
+            filterAndRender();
+        });
+
+        // Event listener for category buttons
+        categoryFilters.addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-btn')) {
+                const currentActive = categoryFilters.querySelector('.active');
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                }
+                e.target.classList.add('active');
+                currentCategory = e.target.dataset.category;
+                filterAndRender();
+            }
+        });
 
         // Event listener for the entire product grid (event delegation)
         productGrid.addEventListener('click', (e) => {
@@ -1120,7 +1252,7 @@
         });
 
         // --- Initial Setup Calls ---
-        renderProducts();
+        filterAndRender();
         updateMonkeyScale();
         updateHead();
         updateEars();
@@ -1132,3 +1264,4 @@
   </script>
 </body>
 </html>
+
