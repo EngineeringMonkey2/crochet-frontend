@@ -15,6 +15,13 @@ const root14 = "images/RealChrochet/zombee/"
 const root15 = "images/RealChrochet/pumpkin/"
 const root16 = "images/RealChrochet/puppyghost/"
 const root17 = "images/RealChrochet/pumpkinkey/"
+const root18 = "images/RealChrochet/piecoaster/"
+
+const root19 = "images/RealChrochet/whitesushi/"
+const root20 = "images/RealChrochet/whiteyellowsushi/"
+const root21 = "images/RealChrochet/blacksushi/"
+const root22 = "images/RealChrochet/allthree/"
+
 
 
 
@@ -101,7 +108,7 @@ const products = [
   },
   {
     id: 9,
-    name: "Succulent Coasters",
+    name: "Succulent Coasters (4 Pack)",
     images: [root6 + "succoaster1.png", root6 + "succoaster2.png", root6 + "succoaster3.png", root6 + "succoaster4.png", root6 + "succoaster5.png", root6 + "succoaster6.png"],
     price: "$24.99",
     description: "Four hand made beautiful large succulent coasters with a basket to store, able to fit any cup size!",
@@ -204,7 +211,71 @@ const products = [
 	dimensions: " Dimensions: Length of 7 in. Width of 5 in. ",
     category: "Other"
 
+  },
+  
+  
+  {
+    id: 18,
+    name: "Pumpkin Pie Coasters (4 Pack)",
+    images: [root18 + "piecoaster1.png", root18 + "piecoaster2.png", root18 + "piecoaster3.png", root18 + "piecoaster4.png"],
+    price: "$29.99",
+    description: "Four beautiful hand made Pumpkin Pie Coasters, perfect for the autumn season!",
+	dimensions: " Dimensions: Diameter of 6 in.",
+    category: "Other"
+
+  },
+  
+  
+  {
+    id: 19,
+    name: "Nigiri Sushi Cat",
+    images: [root19 + "whitesushi1.png", root19 + "whitesushi2.png", root19 + "whitesushi3.png", root19 + "whitesushi4.png", root19 + "whitesushi5.png", root19 + "whitesushi6.png"],
+    price: "$24.99",
+    description: "Beautiful Nigiri Sushi Cat, perfect for the autumn season!",
+	dimensions: " Dimensions: Length of 7 in. Width of 4.5 in.",
+    category: "Other"
+
+  },
+  
+  {
+    id: 20,
+    name: "Tamago Nigiri Sushi Cat",
+    images: [root20 + "whiteyellowsushi1.png", root20 + "whiteyellowsushi2.png", root20 + "whiteyellowsushi3.png", root20 + "whiteyellowsushi4.png", root20 + "whiteyellowsushi5.png", root20 + "whiteyellowsushi6.png"],
+    price: "$24.99",
+    description: "Beautiful Tamago Nigiri Sushi Cat, perfect for the autumn season!",
+	dimensions: " Dimensions: Length of 7 in. Width of 4.5 in.",
+    category: "Other"
+
+  },
+  
+        
+  {
+    id: 21,
+    name: "Ikura Sushi Cat",
+    images: [root21 + "blacksushi1.png", root21 + "blacksushi2.png", root21 + "blacksushi3.png", root21 + "blacksushi4.png", root21 + "blacksushi5.png", root21 + "blacksushi6.png"],
+    price: "$24.99",
+    description: "Beautiful Ikura Sushi Cat, perfect for the autumn season!",
+	dimensions: " Dimensions: Length of 7 in. Width of 4.5 in.",
+    category: "Other"
+
+  },
+  
+  {
+    id: 22,
+    name: "Sushi Cat Trio!",
+    images: [root22 + "all1.png", root22 + "all2.png", root22 + "all3.png", root22 + "all4.png", root22 + "all5.png", root22 + "all6.png"],
+    price: "$59.99",
+    description: "The Sushi Cat trio, collecting all the original sushi cats!",
+	dimensions: " Dimensions: Length of 7 in. Width of 4.5 in.",
+    category: "Other"
+
   }
+  
+    
+  
+          
+  
+  
   
   
   
