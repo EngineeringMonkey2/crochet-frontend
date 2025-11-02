@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect - Partner with Yobilis</title>
+    <meta name="description" content="Join the Yobilis platform and connect your small business with our marketplace. Professional setup and support included.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yobilis.com/connect.html">
+    <meta property="og:title" content="Connect - Partner with Yobilis">
+    <meta property="og:description" content="Join the Yobilis platform and connect your small business with our marketplace. Professional setup and support included.">
+    <meta property="og:image" content="https://yobilis.com/images/tabphoto-min.png">
+    
+    <link rel="icon" type="image/png" href="images/tabphoto-min.png">
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(220, 53, 69, 0.06) 0%, transparent 50%);
+            line-height: 1.6;
+        }
+
+        /* Toolbar container */
+        .toolbarcontain {
+            background-color: rgba(220, 225, 230, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 20px;
+            box-sizing: border-box;
+            transition: top 0.3s ease;
+            border-bottom: 1px solid rgba(200, 210, 220, 0.4);
+        }
+
+        .toolbar .cart-link {
+            position: relative;
+        }
+        
+        #cart-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+
+        /* Toolbar links */
+        .toolbar a {
+            color: #333333;
+            text-align: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        /* Hover effects */
+        .hovertext a:hover {
+            color: #6c757d;
+            transform: scale(1.3);
+        }
+
+        .hoverbackground a:hover {
+            transform: scale(1.3);
+        }
+
+        /* Left and right alignment */
+        .leftali, .rightali {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 80px;
+            padding: 60px 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.9));
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+            margin-bottom: 60px;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-section h2 {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .benefits-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .pricing-card .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .pricing-card .detail {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .download-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .download-section h2 {
+            color: #dc3545;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 20px 10px;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #007bff;
+        }
+
+        .contact-info h3 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .email-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+
+        .steps-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            margin: 40px 0;
+        }
+
+        .steps-section h2 {
+            color: #6610f2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #6610f2;
+        }
+
+        .step-number {
+            background: #6610f2;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .step-content p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .main-container {
+                margin-top: 100px;
+                padding: 0 15px;
+            }
+
+            .info-section, .download-section, .steps-section {
+                padding: 30px 20px;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Footer */
+        .footer-section {
+            background-color: rgba(220, 225, 230, 0.95);
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-container a {
+            color: #333333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .footer-container a:hover {
+            color: #007bff;
+        }
+
+        /* Stripe Integration Section */
+        .stripe-integration {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .stripe-integration h2 {
+            color: #635bff;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .stripe-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .stripe-logo-section {
+            text-align: center;
+        }
+
+        .stripe-logo-section img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .stripe-dashboard-section {
+            text-align: center;
+        }
+
+        .stripe-dashboard-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 2px solid #f8f9fa;
+        }
+
+        .stripe-features {
+            background: linear-gradient(135deg, #635bff, #4f46e5);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .stripe-features h4 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .stripe-features p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .stripe-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbarcontain" id="home">
+        <div class="hovertext">
+            <div class="leftali">
+                <div class="toolbar">
+                    <a href="index.html">Home</a>
+                    <a href="ShopPage.html#shop">Shop</a>
+                    <a href="connect.html">Connect</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="rightali">
+            <div class="hoverbackground">
+                <div class="toolbar">
+                    <a href="login.html" class="user-link" aria-label="User account">
+                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:20px; vertical-align:middle;">
+                            <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#333333"></path>
+                            <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#333333"></path>
+                        </svg>
+                    </a>
+                    <a href="cart.html" class="cart-link" aria-label="Shopping cart">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:20px; vertical-align:middle;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16.5285 6C16.5098 5.9193 16.4904 5.83842 16.4701 5.75746C16.2061 4.70138 15.7904 3.55383 15.1125 2.65C14.4135 1.71802 13.3929 1 12 1C10.6071 1 9.58648 1.71802 8.88749 2.65C8.20962 3.55383 7.79387 4.70138 7.52985 5.75747C7.50961 5.83842 7.49016 5.9193 7.47145 6H5.8711C4.29171 6 2.98281 7.22455 2.87775 8.80044L2.14441 19.8004C2.02898 21.532 3.40238 23 5.13777 23H18.8622C20.5976 23 21.971 21.532 21.8556 19.8004L21.1222 8.80044C21.0172 7.22455 19.7083 6 18.1289 6H16.5285ZM8 11C8.57298 11 8.99806 10.5684 9.00001 9.99817C9.00016 9.97438 9.00044 9.9506 9.00084 9.92682C9.00172 9.87413 9.00351 9.79455 9.00718 9.69194C9.01451 9.48652 9.0293 9.18999 9.05905 8.83304C9.08015 8.57976 9.10858 8.29862 9.14674 8H14.8533C14.8914 8.29862 14.9198 8.57976 14.941 8.83305C14.9707 9.18999 14.9855 9.48652 14.9928 9.69194C14.9965 9.79455 14.9983 9.87413 14.9992 9.92682C14.9996 9.95134 14.9999 9.97587 15 10.0004C15 10.0004 15 11 16 11C17 11 17 9.99866 17 9.99866C16.9999 9.9636 16.9995 9.92854 16.9989 9.89349C16.9978 9.829 16.9957 9.7367 16.9915 9.62056C16.9833 9.38848 16.9668 9.06001 16.934 8.66695C16.917 8.46202 16.8953 8.23812 16.8679 8H18.1289C18.6554 8 19.0917 8.40818 19.1267 8.93348L19.86 19.9335C19.8985 20.5107 19.4407 21 18.8622 21H5.13777C4.55931 21 4.10151 20.5107 4.13998 19.9335L4.87332 8.93348C4.90834 8.40818 5.34464 8 5.8711 8H7.13208C7.10465 8.23812 7.08303 8.46202 7.06595 8.66696C7.0332 9.06001 7.01674 9.38848 7.00845 9.62056C7.0043 9.7367 7.00219 9.829 7.00112 9.89349C7.00054 9.92785 7.00011 9.96221 7 9.99658C6.99924 10.5672 7.42833 11 8 11ZM9.53352 6H14.4665C14.2353 5.15322 13.921 4.39466 13.5125 3.85C13.0865 3.28198 12.6071 3 12 3C11.3929 3 10.9135 3.28198 10.4875 3.85C10.079 4.39466 9.76472 5.15322 9.53352 6Z" fill="#333333"></path>
+                        </svg>
+                        <span id="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>Connect with Yobilis<br><span style="color: #28a745; font-size: 0.8em;">Support Locals</span></h1>
+            <p>Join our platform and connect your small business with our growing marketplace. We provide comprehensive support to help you succeed.</p>
+
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Left Column - Information -->
+            <div class="info-section">
+                <h2>Partner with Us</h2>
+                <p>At Yobilis, our mission is to empower small businesses by providing a unified platform that connects artisans, crafters, and entrepreneurs with customers who appreciate quality handmade products. We are committed to strengthening local and independent businesses by prioritizing them over large corporate retailers. We do not use AI for marketing, every product contains real photos.</p>
+                
+                <p>When you join our marketplace, you're not just listing products—you're becoming part of a community dedicated to supporting small business growth and fostering meaningful connections between creators and customers.</p>
+
+                <h3>What We Offer:</h3>
+                <ul class="benefits-list">
+                    <li>Complete Stripe integration with professional analytics dashboard</li>
+                    <li>Comprehensive purchase history and sales tracking</li>
+                    <li>Professional storefront with customizable branding</li>
+                    <li>Marketing support and featured product placement (Included!)</li>
+                    <li>Dedicated customer service and technical support</li>
+                    <li>Inventory management tools and automated notifications</li>
+                    <li>Mobile-optimized shopping experience for your customers (Included!)</li>
+                    <li>Secure payment processing with fraud protection</li>
+                </ul>
+
+                <p>Our platform is designed to handle all the technical complexities of e-commerce, allowing you to focus on what you do best—creating amazing products. From payment processing to order management, we've got you covered.</p>
+
+                <div class="pricing-card">
+                    <h3>🚫 NO HIDDEN FEES - NO MONTHLY CHARGES 🚫</h3>
+                    <div class="price" style="font-size: 1.5rem; margin: 15px 0;">100% Transparent Pricing</div>
+                    <div class="detail" style="margin: 15px 0; font-size: 1.1rem; font-weight: bold;">
+                        <strong>Orders $0-$100:</strong> 7.5% + 2.5% Stripe = 10% Total
+                    </div>
+                    <div class="detail" style="margin: 15px 0; font-size: 1.1rem; font-weight: bold;">
+                        <strong>Orders $100+:</strong> 5% + 2.5% Stripe = 7.5% Total
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                        <p style="margin: 0; font-size: 1rem; font-weight: bold;">✅ ZERO Setup Fees</p>
+                        <p style="margin: 5px 0; font-size: 1rem; font-weight: bold;">✅ ZERO Monthly Fees</p>
+                        <p style="margin: 5px 0; font-size: 1rem; font-weight: bold;">✅ ZERO Hidden Charges</p>
+                        <p style="margin: 5px 0 0 0; font-size: 1rem; font-weight: bold;">💰 You ONLY pay when you make sales!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Application Process -->
+            <div class="info-section">
+                <h2>Application Process</h2>
+                <p>Getting started is simple. Our application process is designed to ensure we can provide the best possible support for your business while maintaining the quality standards our customers expect.</p>
+
+                <p>Upon approval, our dedicated team will work closely with you to:</p>
+                <ul class="benefits-list">
+                    <li>Set up your professional Stripe merchant account</li>
+                    <li>Configure your custom storefront and branding</li>
+                    <li>Import your product catalog and optimize listings</li>
+                    <li>Train you on our dashboard and analytics tools</li>
+                    <li>Establish your shipping and fulfillment preferences</li>
+                    <li>Feature your products on our platform with promotional support</li>
+                </ul>
+
+                <p><strong>Company Showcase:</strong> Approved partners will have their company name, logo, and location featured prominently on our website, giving you additional exposure and building customer trust through transparency.</p>
+
+                <p><strong>Ongoing Support:</strong> Our relationship doesn't end at launch. We provide continuous support, regular platform updates, marketing opportunities, and business growth consultations to ensure your long-term success.</p>
+            </div>
+        </div>
+
+        <!-- Stripe Integration Section -->
+        <div class="stripe-integration">
+            <h2>Powered by Stripe</h2>
+            <p>We partner with Stripe, the world's leading payment processing platform, to provide you with enterprise-grade payment infrastructure and comprehensive business analytics.</p>
+            
+            <div class="stripe-content">
+                <div class="stripe-logo-section">
+                    <img src="https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/StripeLogo.png" alt="Stripe Logo" loading="lazy">
+                    <div class="stripe-features">
+                        <h4>Trusted Payment Processing</h4>
+                        <p>Secure, reliable payments trusted by millions of businesses worldwide. Accept all major credit cards, digital wallets, and international payments.</p>
+                    </div>
+                </div>
+                
+                <div class="stripe-dashboard-section">
+                    <h3 style="color: #333; margin-bottom: 15px;">Professional Analytics Dashboard</h3>
+                    <img src="https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/StripeDashboard.png" alt="Stripe Dashboard Analytics" loading="lazy">
+                    <div class="stripe-features">
+                        <h4>Complete Business Insights</h4>
+                        <p>Track sales, analyze customer behavior, monitor performance metrics, and make data-driven decisions with Stripe's powerful dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Steps -->
+        <div class="steps-section">
+            <h2>How to Apply</h2>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Download Application Form</h4>
+                    <p>Download our comprehensive business setup form that covers your company information, product details, and business goals.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Complete Application</h4>
+                    <p>Fill out all sections thoroughly, including business registration details, product catalog, and marketing materials.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Submit for Review</h4>
+                    <p>Email your completed application to our partnership team for evaluation and approval.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Get Started</h4>
+                    <p>Upon approval, we'll schedule your onboarding session and begin setting up your professional storefront.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Section -->
+        <div class="download-section">
+            <p>Download our business setup application form to begin your journey with Yobilis. This comprehensive form helps us understand your business and how we can best support your success on our platform.</p>
+
+            <a href="https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/Business%20Setup.pdf" class="download-btn" target="_blank" rel="noopener noreferrer">
+                📄 Download Business Setup Form
+            </a>
+            
+            <div class="contact-info">
+                <h3>Submit Your Application</h3>
+                <p>Once completed, please email your application form to:</p>
+                <a href="mailto:yessica.nobili@nobilisartsandcraft.com" class="email-link">yessica.nobili@nobilisartsandcraft.com</a>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                    Our team typically reviews applications within 3-5 business days and will contact you with next steps.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-section">
+        <div class="footer-container">
+            <a href="aboutus.html">About Us</a>
+            <a href="privacypolicy.html">Privacy Policy</a>
+            <a href="contact.html">Contact Information</a>
+            <a href="returnpolicy.html">Refund Policy</a>
+            <a href="shippingpolicy.html">Shipping Policy</a>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>
