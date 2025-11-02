@@ -51,7 +51,7 @@
 
     /*CONTAINERS*/
 
-    /* Toolbar container */
+    /* Toolbar container - EXACT COPY from ShopPage.html */
     .toolbarcontain {
       background-color: rgba(220, 225, 230, 0.95);
       backdrop-filter: blur(10px);
@@ -66,13 +66,6 @@
       box-sizing: border-box;
       transition: top 0.3s ease; /* Added for smooth transition */
       border-bottom: 1px solid rgba(200, 210, 220, 0.4);
-    }
-
-    /* Mobile toolbar adjustments - simplified like ShopPage.html */
-    @media screen and (max-width: 768px) {
-      .toolbarcontain {
-        padding: 15px 10px;
-      }
     }
     
     .toolbar .cart-link {
@@ -210,14 +203,14 @@
       transition: transform 0.3s ease, color 0.3s ease;
     }
 
-    /* Hover effects */
+    /* Hover effects - EXACT COPY from ShopPage.html */
     .hovertext a:hover {
       color: #6c757d;
       transform: scale(1.3);
     }
 
     .hoverbackground a:hover {
-      transform: scale(1.3);
+      transform: scale(1.1);
     }
 
     /* Left and right alignment */
@@ -242,8 +235,8 @@
     @media screen and (max-width: 768px) {
       .front {
         height: 100vh;
-        justify-content: flex-end;
-        padding-bottom: 80px;
+        justify-content: center;
+        align-items: center;
       }
     }
 
@@ -310,16 +303,11 @@
       border: 1px solid rgba(200, 210, 220, 0.4);
     }
 
-    /* Mobile SHOP NOW button positioning */
+    /* Mobile SHOP NOW button - keep it simple and normal */
     @media screen and (max-width: 768px) {
       .front a {
-        margin-top: 0;
         padding: 20px 40px;
         font-size: 28px;
-        position: absolute;
-        bottom: 60px;
-        left: 50%;
-        transform: translateX(-50%);
       }
     }
 
@@ -327,7 +315,6 @@
       .front a {
         padding: 15px 30px;
         font-size: 24px;
-        bottom: 40px;
       }
     }
 
@@ -526,17 +513,7 @@
           height: auto; /* Add this new rule to let the parent container grow */
       }
 
-      .toolbar a {
-        font-size: 16px;
-        padding: 10px 15px;
-      }
     }
-
-    @media screen and (max-width: 480px) {
-      .toolbar a {
-        font-size: 14px;
-        padding: 8px 12px;
-      }
       
       .buildsection {
         flex-direction: column;
@@ -563,7 +540,6 @@
 	  
 	  
 
-    }
   </style>
 	<link rel="icon" type="image/png" href="images/tabphoto-min.png">
 
