@@ -292,6 +292,7 @@
     }
 
     .shop-now-link {
+      --cta-translate: 0;
       display: inline-block;
       margin-top: 20px;
       padding: 30px 60px;
@@ -302,21 +303,23 @@
       font-size: 32px;
       font-weight: bold;
       border-radius: 5px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
       position: relative;
       z-index: 2; /* Ensure button stays above background */
       border: 1px solid rgba(200, 210, 220, 0.4);
+      transform: translateX(var(--cta-translate, 0));
     }
 
     .shop-now-link:hover {
       background-color: rgba(200, 210, 220, 0.95);
-      transform: scale(1.05);
+      transform: translateX(var(--cta-translate, 0)) scale(1.05);
     }
 
     /* Desktop placement keeps CTA near the bottom of the hero without inline styles */
     @media screen and (min-width: 769px) {
       .shop-now-link {
         margin-top: clamp(320px, 52vh, 650px);
+        transition: background-color 0.3s ease, transform 0.2s ease;
       }
     }
 
@@ -328,17 +331,19 @@
         position: absolute;
         bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
         left: 50%;
-        transform: translateX(-50%);
+        --cta-translate: -50%;
+        transform: translateX(var(--cta-translate));
         z-index: 10;
         margin-top: 0;
         width: clamp(220px, 65vw, 320px);
         max-width: 320px;
+        transform-origin: center;
       }
     }
 
     @media screen and (max-width: 480px) {
       .shop-now-link {
-        padding: 18px 36px;
+        padding: 22px 28px;
         font-size: 22px;
         bottom: calc(env(safe-area-inset-bottom, 0px) + 40px);
         width: clamp(200px, 70vw, 290px);
@@ -606,7 +611,7 @@
     <div class="front-background">
       <iframe class="front-animation" src="Animation.html" frameborder="0" allowfullscreen></iframe>
     </div>
-    <a href="ShopPage.html" class="shop-now-link">SHOP NOW</a>
+  <a href="ShopPage.html#shop" class="shop-now-link">SHOP NOW</a>
   </div>
  
   <div class="featuredsection" id="featured">
