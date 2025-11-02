@@ -249,14 +249,29 @@
         /* Mobile landscape (576-767px) - much smaller */
         @media screen and (max-width: 767px) and (min-width: 576px) {
             :root {
-                --scale-factor: 0.6;
+                --scale-factor: 0.5;
             }
         }
         
         /* Mobile portrait (under 576px) - smallest scale */
         @media screen and (max-width: 575px) {
             :root {
-                --scale-factor: 0.4;
+                --scale-factor: 0.35;
+            }
+            
+            /* Better image visibility on mobile */
+            .slideshow-background {
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+        }
+
+        /* Additional mobile improvements for better image visibility */
+        @media screen and (max-width: 767px) {
+            .slideshow-background {
+                background-size: contain;
+                background-repeat: no-repeat;
             }
         }
 

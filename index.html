@@ -67,6 +67,35 @@
       transition: top 0.3s ease; /* Added for smooth transition */
       border-bottom: 1px solid rgba(200, 210, 220, 0.4);
     }
+
+    /* Mobile toolbar adjustments */
+    @media screen and (max-width: 768px) {
+      .toolbarcontain {
+        padding: 15px 10px;
+        flex-wrap: wrap;
+      }
+      
+      .leftali, .rightali {
+        flex: 1;
+        justify-content: center;
+      }
+      
+      .leftali {
+        order: 2;
+        width: 100%;
+        margin-top: 10px;
+      }
+      
+      .rightali {
+        order: 1;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .toolbarcontain {
+        padding: 10px 5px;
+      }
+    }
     
     .toolbar .cart-link {
         position: relative;
@@ -263,21 +292,28 @@
     /* Responsive adjustments for animation iframe */
     @media screen and (max-width: 991px) {
       .front-animation {
-        transform: scale(1.1);
+        transform: scale(0.9);
         transform-origin: center center;
       }
     }
     
     @media screen and (max-width: 767px) {
       .front-animation {
-        transform: scale(1.2);
+        transform: scale(0.8);
         transform-origin: center center;
       }
     }
     
     @media screen and (max-width: 575px) {
       .front-animation {
-        transform: scale(1.4);
+        transform: scale(0.7);
+        transform-origin: center center;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .front-animation {
+        transform: scale(0.6);
         transform-origin: center center;
       }
     }
@@ -505,8 +541,13 @@
       }
 
       .toolbar a {
-        font-size: 15px;
-        padding: 10px 5px;
+        font-size: 14px;
+        padding: 8px 4px;
+      }
+      
+      /* Better mobile toolbar layout */
+      .toolbarcontain {
+        min-height: 60px;
       }
       
       .buildsection {
