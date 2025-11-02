@@ -68,37 +68,10 @@
       border-bottom: 1px solid rgba(200, 210, 220, 0.4);
     }
 
-    /* Mobile toolbar adjustments */
+    /* Mobile toolbar adjustments - simplified like ShopPage.html */
     @media screen and (max-width: 768px) {
       .toolbarcontain {
-        padding: 12px 8px;
-        flex-wrap: nowrap;
-        height: auto;
-        min-height: 50px;
-      }
-      
-      .leftali {
-        flex: 2;
-        justify-content: flex-start;
-      }
-      
-      .rightali {
-        flex: 1;
-        justify-content: flex-end;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      .toolbarcontain {
-        padding: 8px 5px;
-      }
-      
-      .leftali {
-        flex: 3;
-      }
-      
-      .rightali {
-        flex: 1;
+        padding: 15px 10px;
       }
     }
     
@@ -265,6 +238,15 @@
       position: relative;
     }
 
+    /* Mobile front section adjustments */
+    @media screen and (max-width: 768px) {
+      .front {
+        height: 100vh;
+        justify-content: flex-end;
+        padding-bottom: 80px;
+      }
+    }
+
     .front-background {
       position: absolute;
       top: 0;
@@ -326,6 +308,27 @@
       position: relative;
       z-index: 2; /* Ensure button stays above background */
       border: 1px solid rgba(200, 210, 220, 0.4);
+    }
+
+    /* Mobile SHOP NOW button positioning */
+    @media screen and (max-width: 768px) {
+      .front a {
+        margin-top: 0;
+        padding: 20px 40px;
+        font-size: 28px;
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .front a {
+        padding: 15px 30px;
+        font-size: 24px;
+        bottom: 40px;
+      }
     }
 
     .front a:hover {
@@ -525,20 +528,14 @@
 
       .toolbar a {
         font-size: 16px;
-        padding: 10px 8px;
+        padding: 10px 15px;
       }
-      
-      /* Better mobile toolbar layout */
-      .toolbarcontain {
-        min-height: 50px;
-      }
-      
-      /* Extra small mobile adjustments */
-      @media screen and (max-width: 480px) {
-        .toolbar a {
-          font-size: 14px;
-          padding: 8px 6px;
-        }
+    }
+
+    @media screen and (max-width: 480px) {
+      .toolbar a {
+        font-size: 14px;
+        padding: 8px 12px;
       }
       
       .buildsection {
@@ -609,7 +606,7 @@
     <div class="front-background">
       <iframe class="front-animation" src="Animation.html" frameborder="0" allowfullscreen></iframe>
     </div>
-    <a href="ShopPage.html" style="margin-top: 650px;">SHOP NOW</a>
+    <a href="ShopPage.html">SHOP NOW</a>
   </div>
  
   <div class="featuredsection" id="featured">
