@@ -92,6 +92,26 @@
             background-image: url('https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/third1.png');
         }
 
+        /* Mobile-specific images for phones */
+        @media screen and (max-width: 767px) {
+            .slideshow-background {
+                background-size: cover;
+                background-position: center center;
+            }
+            
+            .slideshow-background.image1 {
+                background-image: url('https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/first1phone.png');
+            }
+
+            .slideshow-background.image2 {
+                background-image: url('https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/second1phone.png');
+            }
+
+            .slideshow-background.image3 {
+                background-image: url('https://ik.imagekit.io/hscfnpdjm/nobilis-crochet/third1phone.png');
+            }
+        }
+
         /* General Setup */
         body {
             display: flex;
@@ -246,32 +266,24 @@
             }
         }
         
-        /* Mobile landscape (576-767px) - much smaller */
+        /* Mobile landscape (576-767px) - scale down characters and bag */
         @media screen and (max-width: 767px) and (min-width: 576px) {
             :root {
-                --scale-factor: 0.5;
+                --scale-factor: 0.6;
             }
         }
         
-        /* Mobile portrait (under 576px) - smallest scale */
+        /* Mobile portrait (under 576px) - scale down characters and bag more */
         @media screen and (max-width: 575px) {
             :root {
-                --scale-factor: 0.35;
-            }
-            
-            /* Better image visibility on mobile */
-            .slideshow-background {
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position: center;
+                --scale-factor: 0.4;
             }
         }
-
-        /* Additional mobile improvements for better image visibility */
-        @media screen and (max-width: 767px) {
-            .slideshow-background {
-                background-size: contain;
-                background-repeat: no-repeat;
+        
+        /* Extra small mobile devices */
+        @media screen and (max-width: 390px) {
+            :root {
+                --scale-factor: 0.35;
             }
         }
 

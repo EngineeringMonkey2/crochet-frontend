@@ -71,29 +71,34 @@
     /* Mobile toolbar adjustments */
     @media screen and (max-width: 768px) {
       .toolbarcontain {
-        padding: 15px 10px;
-        flex-wrap: wrap;
-      }
-      
-      .leftali, .rightali {
-        flex: 1;
-        justify-content: center;
+        padding: 12px 8px;
+        flex-wrap: nowrap;
+        height: auto;
+        min-height: 50px;
       }
       
       .leftali {
-        order: 2;
-        width: 100%;
-        margin-top: 10px;
+        flex: 2;
+        justify-content: flex-start;
       }
       
       .rightali {
-        order: 1;
+        flex: 1;
+        justify-content: flex-end;
       }
     }
 
     @media screen and (max-width: 480px) {
       .toolbarcontain {
-        padding: 10px 5px;
+        padding: 8px 5px;
+      }
+      
+      .leftali {
+        flex: 3;
+      }
+      
+      .rightali {
+        flex: 1;
       }
     }
     
@@ -289,33 +294,11 @@
       overflow: hidden;
     }
     
-    /* Responsive adjustments for animation iframe */
-    @media screen and (max-width: 991px) {
-      .front-animation {
-        transform: scale(0.9);
-        transform-origin: center center;
-      }
-    }
-    
-    @media screen and (max-width: 767px) {
-      .front-animation {
-        transform: scale(0.8);
-        transform-origin: center center;
-      }
-    }
-    
-    @media screen and (max-width: 575px) {
-      .front-animation {
-        transform: scale(0.7);
-        transform-origin: center center;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      .front-animation {
-        transform: scale(0.6);
-        transform-origin: center center;
-      }
+    /* Animation iframe should fill the screen on all devices */
+    .front-animation {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     .front h1 {
@@ -541,13 +524,21 @@
       }
 
       .toolbar a {
-        font-size: 14px;
-        padding: 8px 4px;
+        font-size: 16px;
+        padding: 10px 8px;
       }
       
       /* Better mobile toolbar layout */
       .toolbarcontain {
-        min-height: 60px;
+        min-height: 50px;
+      }
+      
+      /* Extra small mobile adjustments */
+      @media screen and (max-width: 480px) {
+        .toolbar a {
+          font-size: 14px;
+          padding: 8px 6px;
+        }
       }
       
       .buildsection {
