@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Build Your Monkey - Yobilis</title>
+  <meta name="description" content="Create your custom crochet monkey with our interactive builder at Yobilis.">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yobilis.com/build.html">
+  <meta property="og:title" content="Build Your Monkey - Yobilis">
+  <meta property="og:description" content="Create your custom crochet monkey with our interactive builder at Yobilis.">
+  <meta property="og:image" content="https://yobilis.com/images/tabphoto-min.png">
+  
+  <link rel="icon" type="image/png" href="images/tabphoto-min.png">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      color: #333333;
+      background: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Toolbar container */
+    .toolbarcontain {
+      background-color: rgba(220, 225, 230, 0.95);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 20px;
+      box-sizing: border-box;
+      transition: top 0.3s ease;
+      border-bottom: 1px solid rgba(200, 210, 220, 0.4);
+    }
+    
+    .toolbar .cart-link {
+        position: relative;
+    }
+    
+    #cart-count {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        display: none;
+    }
+
+    /* New class to hide the toolbar when scrolling down */
+    .toolbar-hidden {
+        top: -100px;
+    }
+
+    /* Toolbar links */
+    .toolbar a {
+      color: #333333;
+      text-align: center;
+      padding: 15px 20px;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 600;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .hovertext a:hover {
+      color: #6c757d;
+      transform: scale(1.3);
+    }
+
+    .hoverbackground a:hover {
+      transform: scale(1.1);
+    }
+
+    .leftali, .rightali {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Front section */
+    .front {
+      height: 100vh;
+      width: 100%;
+      background-image: url('images/shoppaage-minfall.png');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Padding1 */
+    .shoppadding {
+      padding-top: 70px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .front h1 {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* This container acts as the "canvas" for our character. */
+    #character-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 600px;
+        height: 900px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* Common style for all image parts of the character. */
+    .character-part {
+        position: absolute;
+        transition: transform 0.5s ease-in-out;
+        outline: none;
+    }
+
+    /* --- POSITIONING RULES --- */
+    #head {
+        top: -40px;
+        left: 50px;
+        z-index: 10;
+    }
+
+    #left-ear {
+        top: 100px;
+        left: -70px;
+        transform: rotate(18deg);
+        z-index: 5;
+    }
+
+    #right-ear {
+        top: 100px;
+        left: 515px;
+        transform: rotate(-18deg);
+        z-index: 5;
+    }
+    
+    /* Animate ears on hover for more life */
+    #character-container:hover #left-ear {
+        transform: rotate(10deg) translateY(-10px);
+    }
+    #character-container:hover #right-ear {
+        transform: rotate(-10deg) translateY(-10px);
+    }
+
+    #body {
+        top: 520px;
+        left: 150px;
+        z-index: 9;
+    }
+
+    #left-arm {
+        top: 500px;
+        left: -145px;
+        z-index: 8;
+    }
+
+    #right-arm {
+        top: 500px;
+        left: 442px;
+        z-index: 8;
+    }
+
+    #legs {
+        top: 800px;
+        left: 115px;
+        z-index: 8;
+    }
+    
+    #tail {
+        top: 750px;
+        left: 440px;
+        z-index: 6;
+    }
+
+    /* --- Eye Styles --- */
+    .eye {
+        position: absolute;
+        width: 100px;
+        height: 80px;
+        background: #ffffff;
+        border-top: 30px solid #ffffff; 
+        border-radius: 50px 50px 50px 50px;
+        z-index: 16;
+        animation: blink 5s infinite;
+        forced-color-adjust: none;
+    }
+
+    #left-eye {
+        top: 220px;
+        left: 150px;
+    }
+
+    #right-eye {
+        top: 220px;
+        left: 380px;
+    }
+
+    .pupil {
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        background: black;
+        border-radius: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: look-around 7s ease-in-out infinite;
+    }
+	
+    .pupilwhiteleft {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        left: 30%;
+        top: -30%;
+        transform: translate(-50%, -50%);
+        animation: look-around 7s ease-in-out infinite;
+    }
+			
+    .pupilwhiteright {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        left: 30%;
+        top: -30%;
+        transform: translate(-50%, -50%);
+        animation: look-around 7s ease-in-out infinite;
+    }
+    
+    @keyframes look-around {
+        0% { transform: translate(-50%, -50%) translateX(-20px) translateY(10px); }
+        15%, 35% { transform: translate(-50%, -50%) translateX(-20px) translateY(10px); }
+        40% { transform: translate(-50%, -50%) translateX(10px) translateY(15px); }
+        50%, 70% { transform: translate(-50%, -50%) translateX(10px) translateY(15px); }
+        75% { transform: translate(-50%, -50%) translateX(-10px) translateY(13px); }
+        80%, 100% { transform: translate(-50%, -50%) translateX(-10px) translateY(13px); }
+    }
+
+    @keyframes blink {
+        0%, 10%, 15%, 100% { transform: scaleY(1); }
+        12% { transform: scaleY(0.1); }
+    }
+
+    /* --- MOUTH STYLES --- */
+    #mouth {
+        position: absolute;
+        z-index: 15;
+        width: 110px;
+        height: 40px;
+        border: 12px solid black;
+        border-color: transparent transparent black transparent;
+        border-radius: 0 0 120px 120px / 0 0 60px 60px;
+        top: 400px;
+        left: 52%;
+        transform: translateX(-50%);
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    #tongue {
+        position: absolute;
+        width: 50px;
+        height: 35px;
+        background: #ff8a8a;
+        border: 4px solid #000;
+        border-radius: 50% 50% 20px 20px;
+        bottom: 8px;
+        left: 52%;
+        transform: translateX(-50%) scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.2s ease-in-out 0.1s;
+    }
+
+    /* Hover state (Happy smile) */
+    #character-container:hover #mouth {
+        width: 140px;
+        height: 60px;
+        background: black;
+        border: 5px solid #000;
+        border-radius: 0 0 120px 120px / 0 0 90px 90px;
+        top: 400px;
+        left: 52%;
+        transition: transform 0.4s ease-in-out 0.3s;
+    }
+
+    #character-container:hover #tongue {
+        transform: translateX(-50%) scaleY(1);
+    }
+
+    /* --- Arrow Button Styles --- */
+    .arrow-btn {
+        position: absolute;
+        z-index: 20;
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        border: 2px solid rgba(0,0,0,0.2);
+    }
+
+    .arrow-btn:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        transform: scale(1.1);
+    }
+    
+    .arrow-btn:active {
+        transform: scale(1.0);
+    }
+    
+    /* Head arrows positioning */
+    #prev-head {
+        left: 0px; 
+        top: 380px; 
+    }
+
+    #next-head {
+        right: -15px; 
+        top: 380px;
+    }
+    
+    /* Ear arrows positioning */
+    #prev-ears {
+        left: -110px;
+        top: 120px;
+    }
+    
+    #next-ears {
+        right: -130px;
+        top: 120px;
+    }
+
+    /* Body arrows positioning */
+    #prev-body {
+        left: 100px;
+        top: 650px;
+    }
+    
+    #next-body {
+        right: 75px;
+        top: 650px;
+    }
+
+    /* Arm arrows positioning */
+    #prev-arms {
+        left: -200px;
+        top: 520px;
+    }
+    
+    #next-arms {
+        right: -225px;
+        top: 520px;
+    }
+
+    /* Leg arrows positioning */
+    #prev-legs {
+        left: 50px;
+        top: 850px;
+    }
+
+    #next-legs {
+        right: 50px;
+        top: 850px;
+    }
+
+    /* Tail arrows positioning */
+    #prev-tail {
+        left: 475px;
+        top: 730px;
+    }
+    
+    #next-tail {
+        right: -30px;
+        top: 730px;
+    }
+
+    /* --- ANIME BUTTON STYLES --- */
+    .order-button-container {
+        position: absolute;
+        bottom: 50px;
+        right: 30px;
+        z-index: 25;
+    }
+
+    .order-button {
+        padding: 18px 10px;
+        font-size: 28px;
+        letter-spacing: 2px;
+        color: #000000;
+        background: #f5f5dc;
+        border: 3px solid #5d4037;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+        position: relative;
+        overflow: visible;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-family: 'Fredoka One', cursive; 
+        font-weight: bold;
+    }
+
+    .order-button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .order-button:active {
+        transform: translateY(2px) scale(0.95);
+    }
+
+    .effects-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .particle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background-color: rgba(120, 119, 198, 0.6);
+        border-radius: 50%;
+        opacity: 0;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 800px) {
+      .front h1 {
+        padding: 25px;
+        font-size: 42px;
+      }
+
+      .toolbar a {
+        font-size: 15px;
+        padding: 10px 5px;
+      }
+    }
+
+    /* Footer Section Styles */
+    .footer-section {
+      background-color: #ffffff;
+      color: #333;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-container a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-container a:hover {
+      color: #000000;
+      text-decoration: underline;
+    }
+
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="toolbarcontain">
+    <div class="hovertext">
+      <div class="leftali">
+        <div class="toolbar">
+          <a href="index.html">Home</a>
+          <a href="ShopPage.html">Shop</a>
+          <a href="connect.html">Connect</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="rightali">
+      <div class="hoverbackground">
+        <div class="toolbar">
+          <a href="login.html" class="user-link" aria-label="User account">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:20px; vertical-align:middle;">
+              <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#333333"></path>
+              <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#333333"></path>
+            </svg>
+          </a>
+          <a href="cart.html" class="cart-link" aria-label="Shopping cart">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:20px; vertical-align:middle;">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M16.5285 6C16.5098 5.9193 16.4904 5.83842 16.4701 5.75746C16.2061 4.70138 15.7904 3.55383 15.1125 2.65C14.4135 1.71802 13.3929 1 12 1C10.6071 1 9.58648 1.71802 8.88749 2.65C8.20962 3.55383 7.79387 4.70138 7.52985 5.75747C7.50961 5.83842 7.49016 5.9193 7.47145 6H5.8711C4.29171 6 2.98281 7.22455 2.87775 8.80044L2.14441 19.8004C2.02898 21.532 3.40238 23 5.13777 23H18.8622C20.5976 23 21.971 21.532 21.8556 19.8004L21.1222 8.80044C21.0172 7.22455 19.7083 6 18.1289 6H16.5285ZM8 11C8.57298 11 8.99806 10.5684 9.00001 9.99817C9.00016 9.97438 9.00044 9.9506 9.00084 9.92682C9.00172 9.87413 9.00351 9.79455 9.00718 9.69194C9.01451 9.48652 9.0293 9.18999 9.05905 8.83304C9.08015 8.57976 9.10858 8.29862 9.14674 8H14.8533C14.8914 8.29862 14.9198 8.57976 14.941 8.83305C14.9707 9.18999 14.9855 9.48652 14.9928 9.69194C14.9965 9.79455 14.9983 9.87413 14.9992 9.92682C14.9996 9.95134 14.9999 9.97587 15 10.0004C15 10.0004 15 11 16 11C17 11 17 9.99866 17 9.99866C16.9999 9.9636 16.9995 9.92854 16.9989 9.89349C16.9978 9.829 16.9957 9.7367 16.9915 9.62056C16.9833 9.38848 16.9668 9.06001 16.934 8.66695C16.917 8.46202 16.8953 8.23812 16.8679 8H18.1289C18.6554 8 19.0917 8.40818 19.1267 8.93348L19.86 19.9335C19.8985 20.5107 19.4407 21 18.8622 21H5.13777C4.55931 21 4.10151 20.5107 4.13998 19.9335L4.87332 8.93348C4.90834 8.40818 5.34464 8 5.8711 8H7.13208C7.10465 8.23812 7.08303 8.46202 7.06595 8.66696C7.0332 9.06001 7.01674 9.38848 7.00845 9.62056C7.0043 9.7367 7.00219 9.829 7.00112 9.89349C7.00054 9.92785 7.00011 9.96221 7 9.99658C6.99924 10.5672 7.42833 11 8 11ZM9.53352 6H14.4665C14.2353 5.15322 13.921 4.39466 13.5125 3.85C13.0865 3.28198 12.6071 3 12 3C11.3929 3 10.9135 3.28198 10.4875 3.85C10.079 4.39466 9.76472 5.15322 9.53352 6Z" fill="#333333"></path>
+            </svg>
+            <span id="cart-count">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="front" id="BuildYourMonkey">
+    <div class="shoppadding">
+      <h1>Build Your Monkey</h1>
+    </div>
+	    
+    <div id="character-container">
+        
+        <div id="prev-head" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </div>
+        <div id="next-head" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+        
+        <div id="prev-ears" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </div>
+        <div id="next-ears" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <div id="prev-body" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </div>
+        <div id="next-body" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <div id="prev-arms" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </div>
+        <div id="next-arms" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.svg>2d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <div id="prev-legs" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </div>
+        <div id="next-legs" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+        
+        <div id="prev-tail" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </div>
+        <div id="next-tail" class="arrow-btn">
+            <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <img id="head" class="character-part" src="" alt="Character Head">
+        <img id="left-ear" class="character-part" src="" alt="Left Ear">
+        <img id="right-ear" class="character-part" src="" alt="Right Ear">
+        <img id="body" class="character-part" src="" alt="Character Body">
+        <img id="left-arm" class="character-part" src="" alt="Left Arm">
+        <img id="right-arm" class="character-part" src="" alt="Right Arm">
+        <img id="legs" class="character-part" src="" alt="Legs">
+        <img id="tail" class="character-part" src="" alt="Tail">
+
+        <div id="left-eye" class="eye">
+            <div class="pupil"></div>
+            <div class="pupilwhiteleft"></div>
+        </div>
+        <div id="right-eye" class="eye">
+            <div class="pupil"></div>
+            <div class="pupilwhiteright"></div>
+        </div>
+        
+        <div id="mouth">
+            <div id="tongue"></div>
+        </div>
+    </div>
+    
+    <!-- ANIME BUTTON HTML -->
+    <div class="order-button-container" id="buttonContainer">
+        <button class="order-button" id="orderButton">
+            Order Now!
+            <div class="effects-container" id="effectsContainer"></div>
+        </button>
+    </div>
+
+  </div>
+
+  <div class="footer-section">
+      <div class="footer-container">
+        <a href="aboutus.html">About Us</a>
+        <a href="privacypolicy.html">Privacy Policy</a>
+        <a href="contact.html">Contact Information</a>
+        <a href="returnpolicy.html">Refund Policy</a>
+        <a href="shippingpolicy.html">Shipping Policy</a>
+      </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    // Wait for the document to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const characterContainer = document.getElementById('character-container');
+        characterContainer.style.transition = 'transform 0.3s ease'; 
+        let baseScale = 1;
+
+        function getDynamicMultiplier(currentSize, minSize, maxSize, maxMultiplier, minMultiplier) {
+            if (currentSize <= minSize) return maxMultiplier;
+            if (currentSize >= maxSize) return minMultiplier;
+            const progress = (currentSize - minSize) / (maxSize - minSize);
+            const easedProgress = Math.pow(progress, 2);
+            return maxMultiplier - (easedProgress * (maxMultiplier - minMultiplier));
+        }
+
+        function updateMonkeyScale() {
+            const MIN_SCREEN_WIDTH = 320, MAX_SCREEN_WIDTH = 1920;
+            const MIN_SCREEN_HEIGHT = 480, MAX_SCREEN_HEIGHT = 1080;
+            const MAX_WIDTH_MULTIPLIER = 0.5, MIN_WIDTH_MULTIPLIER = 0.40;
+            const MAX_HEIGHT_MULTIPLIER = 0.80, MIN_HEIGHT_MULTIPLIER = 0.65;
+
+            const widthMultiplier = getDynamicMultiplier(window.innerWidth, MIN_SCREEN_WIDTH, MAX_SCREEN_WIDTH, MAX_WIDTH_MULTIPLIER, MIN_WIDTH_MULTIPLIER);
+            const heightMultiplier = getDynamicMultiplier(window.innerHeight, MIN_SCREEN_HEIGHT, MAX_SCREEN_HEIGHT, MAX_HEIGHT_MULTIPLIER, MIN_HEIGHT_MULTIPLIER);
+
+            const targetWidth = window.innerWidth * widthMultiplier;
+            const targetHeight = window.innerHeight * heightMultiplier;
+
+            let scaleBasedOnHeight = targetHeight / 900;
+            let scaleBasedOnWidth = targetWidth / 600;
+
+            baseScale = Math.min(scaleBasedOnHeight, scaleBasedOnWidth);
+            characterContainer.style.transform = `translate(-50%, -50%) scale(${baseScale})`;
+        }
+
+        characterContainer.addEventListener('mouseenter', () => {
+            const hoverScale = baseScale * 1.03;
+            characterContainer.style.transform = `translate(-50%, -50%) scale(${hoverScale})`;
+        });
+
+        characterContainer.addEventListener('mouseleave', () => {
+            characterContainer.style.transform = `translate(-50%, -50%) scale(${baseScale})`;
+        });
+
+        window.addEventListener('resize', updateMonkeyScale);
+
+        // --- Character Part Changers ---
+        const resolveImage = (value) => (typeof window !== 'undefined' && window.resolveImagePath)
+            ? window.resolveImagePath(value)
+            : value;
+        const resolveImageList = (values) => Array.isArray(values)
+            ? values.map(resolveImage)
+            : values;
+        const resolveImagePairList = (pairs) => Array.isArray(pairs)
+            ? pairs.map(pair => ({ left: resolveImage(pair.left), right: resolveImage(pair.right) }))
+            : pairs;
+
+        const frontSection = document.querySelector('.front');
+        if (frontSection) {
+          frontSection.style.backgroundImage = `url('${resolveImage('images/frontpagewinter.png')}')`;
+        }
+
+        const headImage = document.getElementById('head');
+        const prevHeadButton = document.getElementById('prev-head');
+        const nextHeadButton = document.getElementById('next-head');
+        const headImages = resolveImageList(['images/Anime/BuildingTemplate/01-Head/Heads/Head1-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head2-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head3-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head4-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head5-min.png', 'images/Anime/BuildingTemplate/01-Head/Heads/Head6-min.png','images/Anime/BuildingTemplate/01-Head/Heads/Head7-min.png','images/Anime/BuildingTemplate/01-Head/Heads/Head8-min.png']);
+        let currentHeadIndex = 0;
+        function updateHead() { headImage.src = headImages[currentHeadIndex]; }
+
+        const leftEarImage = document.getElementById('left-ear');
+        const rightEarImage = document.getElementById('right-ear');
+        const prevEarsButton = document.getElementById('prev-ears');
+        const nextEarsButton = document.getElementById('next-ears');
+        const earImages = resolveImagePairList([{ left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar1-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar1-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar2-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar2-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar3-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar3-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar4-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar4-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar5-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar5-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar6-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar6-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar7-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar7-min.png' }, { left: 'images/Anime/BuildingTemplate/04-Ears/Ears/LeftEar8-min.png', right: 'images/Anime/BuildingTemplate/04-Ears/Ears/RightEar8-min.png' }]);
+        let currentEarIndex = 0;
+        function updateEars() { const earPair = earImages[currentEarIndex]; leftEarImage.src = earPair.left; rightEarImage.src = earPair.right; }
+
+        const bodyImage = document.getElementById('body');
+        const prevBodyButton = document.getElementById('prev-body');
+        const nextBodyButton = document.getElementById('next-body');
+        const bodyImages = resolveImageList(['images/Anime/BuildingTemplate/05-Body/Bodies/Body1-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body2-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body3-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body4-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body5-min.png', 'images/Anime/BuildingTemplate/05-Body/Bodies/Body6-min.png','images/Anime/BuildingTemplate/05-Body/Bodies/Body7-min.png']);
+        let currentBodyIndex = 0;
+        function updateBody() { bodyImage.src = bodyImages[currentBodyIndex]; }
+
+        const leftArmImage = document.getElementById('left-arm');
+        const rightArmImage = document.getElementById('right-arm');
+        const prevArmsButton = document.getElementById('prev-arms');
+        const nextArmsButton = document.getElementById('next-arms');
+        const armImages = resolveImagePairList([{ left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm1-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm1-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm2-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm2-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm3-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm3-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm4-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm4-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm5-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm5-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm6-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm6-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm7-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm7-min.png' }, { left: 'images/Anime/BuildingTemplate/06-Arms/Arms/LeftArm8-min.png', right: 'images/Anime/BuildingTemplate/06-Arms/Arms/RightArm8-min.png' }]);
+        let currentArmIndex = 0;
+        function updateArms() { const armPair = armImages[currentArmIndex]; leftArmImage.src = armPair.left; rightArmImage.src = armPair.right; }
+
+        const legsImage = document.getElementById('legs');
+        const prevLegsButton = document.getElementById('prev-legs');
+        const nextLegsButton = document.getElementById('next-legs');
+        const legImages = resolveImageList(['images/Anime/BuildingTemplate/07-Legs/Legs/Legs1-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs2-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs3-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs4-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs5-min.png', 'images/Anime/BuildingTemplate/07-Legs/Legs/Legs6-min.png','images/Anime/BuildingTemplate/07-Legs/Legs/Legs7-min.png','images/Anime/BuildingTemplate/07-Legs/Legs/Legs8-min.png']);
+        let currentLegIndex = 0;
+        function updateLegs() { legsImage.src = legImages[currentLegIndex]; }
+
+        const tailImage = document.getElementById('tail');
+        const prevTailButton = document.getElementById('prev-tail');
+        const nextTailButton = document.getElementById('next-tail');
+        const tailImages = resolveImageList(['images/Anime/BuildingTemplate/08-Tail/Tails/Tail1-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail2-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail3-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail4-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail5-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail6-min.png', 'images/Anime/BuildingTemplate/08-Tail/Tails/Tail7-min.png','images/Anime/BuildingTemplate/08-Tail/Tails/Tail8-min.png']);
+        let currentTailIndex = 0;
+        function updateTail() { tailImage.src = tailImages[currentTailIndex]; }
+
+        // --- Event Listeners for Monkey Builder ---
+        nextHeadButton.addEventListener('click', (event) => { event.stopPropagation(); currentHeadIndex = (currentHeadIndex + 1) % headImages.length; updateHead(); });
+        prevHeadButton.addEventListener('click', (event) => { event.stopPropagation(); currentHeadIndex = (currentHeadIndex - 1 + headImages.length) % headImages.length; updateHead(); });
+        nextEarsButton.addEventListener('click', (event) => { event.stopPropagation(); currentEarIndex = (currentEarIndex + 1) % earImages.length; updateEars(); });
+        prevEarsButton.addEventListener('click', (event) => { event.stopPropagation(); currentEarIndex = (currentEarIndex - 1 + earImages.length) % earImages.length; updateEars(); });
+        nextBodyButton.addEventListener('click', (event) => { event.stopPropagation(); currentBodyIndex = (currentBodyIndex + 1) % bodyImages.length; updateBody(); });
+        prevBodyButton.addEventListener('click', (event) => { event.stopPropagation(); currentBodyIndex = (currentBodyIndex - 1 + bodyImages.length) % bodyImages.length; updateBody(); });
+        nextArmsButton.addEventListener('click', (event) => { event.stopPropagation(); currentArmIndex = (currentArmIndex + 1) % armImages.length; updateArms(); });
+        prevArmsButton.addEventListener('click', (event) => { event.stopPropagation(); currentArmIndex = (currentArmIndex - 1 + armImages.length) % armImages.length; updateArms(); });
+        nextLegsButton.addEventListener('click', (event) => { event.stopPropagation(); currentLegIndex = (currentLegIndex + 1) % legImages.length; updateLegs(); });
+        prevLegsButton.addEventListener('click', (event) => { event.stopPropagation(); currentLegIndex = (currentLegIndex - 1 + legImages.length) % legImages.length; updateLegs(); });
+        nextTailButton.addEventListener('click', (event) => { event.stopPropagation(); currentTailIndex = (currentTailIndex + 1) % tailImages.length; updateTail(); });
+        prevTailButton.addEventListener('click', (event) => { event.stopPropagation(); currentTailIndex = (currentTailIndex - 1 + tailImages.length) % tailImages.length; updateTail(); });
+        
+        // --- Order Button Logic ---
+        const orderButton = document.getElementById('orderButton');
+        orderButton.addEventListener('click', (e) => {
+            const partsToSave = ['head', 'left-ear', 'right-ear', 'body', 'left-arm', 'right-arm', 'legs', 'tail'];
+            const params = new URLSearchParams();
+            partsToSave.forEach(partId => {
+                const imageElement = document.getElementById(partId);
+                if (imageElement) {
+                    params.append(partId, encodeURIComponent(imageElement.src));
+                }
+            });
+            window.location.href = `customizationproduct.html?${params.toString()}`;
+        });
+
+        // --- Initial Setup Calls ---
+        updateMonkeyScale();
+        updateHead();
+        updateEars();
+        updateBody();
+        updateArms();
+        updateLegs();
+        updateTail();
+    });
+  </script>
+</body>
+</html>
