@@ -114,6 +114,7 @@
     /* Front section */
     .front {
       height: 65vh;
+      max-height: 65vh;
       width: 100%;
       position: relative;
       overflow: hidden;
@@ -611,7 +612,9 @@
 
     @media (max-width: 900px) {
       .front {
-        min-height: calc(100vh - var(--hero-bottom-gap));
+        height: 55vh;
+        max-height: 55vh;
+        min-height: auto;
         overflow: hidden;
         padding-top: calc(var(--toolbar-height) + 24px);
         padding-bottom: var(--hero-bottom-gap);
@@ -630,18 +633,20 @@
       
       .hero-container {
         display: flex;
-        width: 400%;
+        width: 300%;
         height: 100%;
         transition: transform 0.3s ease-in-out;
         transform: translateX(0);
         padding: 0 16px;
         box-sizing: border-box;
         align-items: center;
+        touch-action: pan-y pinch-zoom;
       }
       
       .mobile-card {
         width: 20%;
-        height: auto;
+        height: 100%;
+        max-height: 55vh;
         flex-shrink: 0;
         display: flex;
         align-items: center;
@@ -662,7 +667,7 @@
       .mobile-card-content {
         width: 100%;
         aspect-ratio: 3 / 4;
-        max-height: calc(100vh - var(--toolbar-height) - (var(--hero-bottom-gap) * 1.5));
+        max-height: 100%;
         background: white;
         border-radius: 20px;
         overflow: hidden;
@@ -824,7 +829,15 @@
 		
 	/* For medium mobile screens */
 	@media (max-width: 600px) {
-	  .hero-text {
+	  .front {
+        height: 65vh;
+        max-height: 65vh;
+      }
+
+
+      
+
+      .hero-text {
         padding: 70px 25px 25px 25px;
       }
       
@@ -859,10 +872,32 @@
         right: 15px;
         gap: 8px;
       }
+
+
+      .mobile-card {
+        width: 25%;
+        height: 120%;
+        max-height: 60vh;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        box-sizing: border-box;
+        background: transparent;
+      }
+
+
+      
 	}
 
 	/* For very small screens where only one column fits */
 	@media (max-width: 450px) {
+	  .front {
+        height: 65vh;
+        max-height: 65vh;
+      }
+      
 	  .hero-text {
         padding: 60px 20px 25px 20px;
       }
@@ -929,6 +964,11 @@
 
 	/* For extra small screens */
 	@media (max-width: 360px) {
+	  .front {
+        height: 65vh;
+        max-height: 65vh;
+      }
+      
 	  .hero-text h1 {
         font-size: 28px;
       }
@@ -1657,7 +1697,7 @@
                 const deltaPercent = (deltaX / containerWidth) * 100;
                 
                 // Apply drag sensitivity multiplier for more responsive movement
-                const sensitivity = 1.5; // Increase this value for more drag distance
+                const sensitivity = 2; // Increase this value for more drag distance
                 const amplifiedDelta = deltaPercent * sensitivity;
                 
                 // Apply drag delta to base position
@@ -1699,11 +1739,18 @@
         }
 
         // Touch events for mobile swipe
+        let startY = 0;
+        let hasMoved = false;
+        let isHorizontalSwipe = false;
+        
         if (mobileSlideContainer) {
             mobileSlideContainer.addEventListener('touchstart', (e) => {
                 if (window.innerWidth <= 900) {
                     startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
                     isDragging = true;
+                    hasMoved = false;
+                    isHorizontalSwipe = false;
                     // Update base position to current position at start of new drag
                     baseTransform = currentTransform;
                     // Remove any transition during drag
@@ -1713,20 +1760,43 @@
 
             mobileSlideContainer.addEventListener('touchmove', (e) => {
                 if (!isDragging || window.innerWidth > 900) return;
-                e.preventDefault();
-                currentX = e.touches[0].clientX;
                 
-                // Calculate the drag distance and apply real-time transform
-                const deltaX = currentX - startX;
-                applyDragTransform(deltaX);
+                currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                
+                if (!hasMoved) {
+                    // Determine swipe direction on first move
+                    const deltaX = Math.abs(currentX - startX);
+                    const deltaY = Math.abs(currentY - startY);
+                    
+                    // If horizontal movement is greater than vertical, treat as horizontal swipe
+                    if (deltaX > deltaY && deltaX > 10) {
+                        isHorizontalSwipe = true;
+                    }
+                    hasMoved = true;
+                }
+                
+                // Only prevent default and handle swipe if it's a horizontal swipe
+                if (isHorizontalSwipe) {
+                    e.preventDefault();
+                    // Calculate the drag distance and apply real-time transform
+                    const deltaX = currentX - startX;
+                    applyDragTransform(deltaX);
+                }
             });
 
             mobileSlideContainer.addEventListener('touchend', (e) => {
                 if (!isDragging || window.innerWidth > 900) return;
-                isDragging = false;
                 
-                // Keep the current position without snapping
-                // No transition or snapping needed - stay where dragged
+                // Only handle end logic if it was a horizontal swipe
+                if (isHorizontalSwipe) {
+                    // Keep the current position without snapping
+                    // No transition or snapping needed - stay where dragged
+                }
+                
+                isDragging = false;
+                hasMoved = false;
+                isHorizontalSwipe = false;
             });
 
             // Mouse events for desktop testing
