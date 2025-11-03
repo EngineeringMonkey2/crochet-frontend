@@ -5,6 +5,11 @@
   <meta charset="UTF-8">
 
   <style>
+    :root {
+      --toolbar-height: 90px;
+      --hero-bottom-gap: 48px;
+    }
+
     body {
       margin: 0;
       font-family: 'Helvetica', 'Arial', sans-serif;
@@ -146,6 +151,9 @@
       height: 100%;
       position: relative;
       z-index: 2;
+      gap: 0;
+      margin: 0;
+      padding: 0;
     }
 
     /* Left text section */
@@ -207,13 +215,14 @@
 
     /* Right product showcase */
     .hero-products {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 100%;
       height: 100%;
       position: relative;
       padding: 0;
+      margin: 0;
       z-index: 2;
+      overflow: hidden;
+      display: block;
     }
 
     /* Remove old padding and title styles */
@@ -225,26 +234,38 @@
     .slideshow-container {
       width: 100%;
       height: 100%;
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       overflow: hidden;
       margin: 0;
       padding: 0;
       z-index: 3;
+      display: block;
     }
 
     .slideshow-wrapper {
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
       margin: 0;
       padding: 0;
+      display: block;
     }
 
     .slide {
       position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       opacity: 0;
@@ -252,6 +273,10 @@
       transition: opacity 1s ease-in-out;
       cursor: pointer;
       pointer-events: none;
+      margin: 0;
+      padding: 0;
+      border: none;
+      outline: none;
     }
 
     .slide.active {
@@ -264,6 +289,19 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      outline: none;
+      display: block;
+      min-width: 100%;
+      min-height: 100%;
     }
 
     .slide-overlay {
@@ -480,7 +518,7 @@
       }
       
       .hero-products {
-        padding: 0;
+        padding: 35px;
       }
       
       .slide-overlay {
@@ -515,7 +553,7 @@
       }
       
       .hero-products {
-        padding: 0;
+        padding: 30px;
       }
       
       .slide-overlay {
@@ -536,7 +574,7 @@
       }
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       .hero-text {
         padding: 35px;
       }
@@ -550,7 +588,7 @@
       }
       
       .hero-products {
-        padding: 0;
+        padding: 25px;
       }
       
       .slide-overlay {
@@ -573,9 +611,12 @@
 
     @media (max-width: 900px) {
       .front {
-        height: 75vh;
-        min-height: 75vh;
+        min-height: calc(100vh - var(--hero-bottom-gap));
         overflow: hidden;
+        padding-top: calc(var(--toolbar-height) + 24px);
+        padding-bottom: var(--hero-bottom-gap);
+        box-sizing: border-box;
+        margin-bottom: 0;
       }
       
       .front::before,
@@ -593,23 +634,35 @@
         height: 100%;
         transition: transform 0.3s ease-in-out;
         transform: translateX(0);
+        padding: 0 16px;
+        box-sizing: border-box;
+        align-items: center;
       }
       
       .mobile-card {
-        width: 25%;
-        height: 100%;
+        width: 20%;
+        height: auto;
         flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 120px 20px 40px 20px;
+        padding: 0 8px;
         box-sizing: border-box;
         background: transparent;
       }
 
+      .mobile-card:first-child {
+        padding-left: 0;
+      }
+
+      .mobile-card:last-child {
+        padding-right: 0;
+      }
+
       .mobile-card-content {
-        width: 90%;
-        height: 100%;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        max-height: calc(100vh - var(--toolbar-height) - (var(--hero-bottom-gap) * 1.5));
         background: white;
         border-radius: 20px;
         overflow: hidden;
@@ -618,13 +671,28 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        box-sizing: border-box;
+      }
+
+      .mobile-card-content > * {
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .mobile-text-card .mobile-card-content {
         background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
         color: white;
-        padding: 30px 20px;
         text-align: center;
+      }
+
+      .mobile-text-card .mobile-card-inner {
+        padding: 30px 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
       }
 
       .mobile-text-card h1 {
@@ -700,6 +768,11 @@
         opacity: 0.9;
       }
 
+      .toolbar a {
+        font-size: 15px;
+        padding: 10px 5px;
+      }
+
       .hero-text {
         display: none;
       }
@@ -751,10 +824,6 @@
 		
 	/* For medium mobile screens */
 	@media (max-width: 600px) {
-      .toolbar a {
-        font-size: 15px;
-        padding: 10px 5px;
-      }
 	  .hero-text {
         padding: 70px 25px 25px 25px;
       }
@@ -1083,20 +1152,22 @@
       <!-- Mobile card slides -->
       <div class="mobile-card mobile-text-card">
         <div class="mobile-card-content">
-          <h1>Handmade Collection</h1>
-          <p>Discover our stylish collection of handcrafted crochet items, custom drinkware, and premium tote bags. Each piece is carefully made with love and attention to detail.</p>
-          <div class="hero-stats">
-            <div class="stat-item">
-              <span class="stat-number">100%</span>
-              <div class="stat-label">Handmade</div>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">50+</span>
-              <div class="stat-label">Products</div>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">★★★★★</span>
-              <div class="stat-label">Quality</div>
+          <div class="mobile-card-inner">
+            <h1>Handmade Collection</h1>
+            <p>Discover our stylish collection of handcrafted crochet items, custom drinkware, and premium tote bags. Each piece is carefully made with love and attention to detail.</p>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <div class="stat-label">Handmade</div>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <div class="stat-label">Products</div>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">★★★★★</span>
+                <div class="stat-label">Quality</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1178,8 +1249,6 @@
         <input type="text" id="search-input" placeholder="Search products...">
       </div>
       <div class="category-filters" id="category-filters">
-
-
         <button class="category-btn active" data-category="all">All</button>
         <button class="category-btn" data-category="Crochet">Crochet</button>
         <button class="category-btn" data-category="Drinkware">Drinkware</button>
@@ -1466,7 +1535,7 @@
 
         // Auto-advance slideshow every 4 seconds (only for desktop)
         let slideshowInterval;
-        if (window.innerWidth > 800) {
+        if (window.innerWidth > 900) {
             slideshowInterval = setInterval(nextSlide, 4000);
         }
 
@@ -1478,116 +1547,224 @@
             });
         });
 
+        // --- Desktop Slideshow Swipe Functionality ---
+        let desktopStartX = 0;
+        let desktopCurrentX = 0;
+        let desktopIsDragging = false;
+        const desktopSlideContainer = document.querySelector('.slideshow-wrapper');
+
+        if (desktopSlideContainer) {
+            // Touch events for desktop slideshow
+            desktopSlideContainer.addEventListener('touchstart', (e) => {
+                if (window.innerWidth > 900) {
+                    desktopStartX = e.touches[0].clientX;
+                    desktopIsDragging = true;
+                }
+            });
+
+            desktopSlideContainer.addEventListener('touchmove', (e) => {
+                if (!desktopIsDragging || window.innerWidth <= 900) return;
+                e.preventDefault();
+                desktopCurrentX = e.touches[0].clientX;
+            });
+
+            desktopSlideContainer.addEventListener('touchend', (e) => {
+                if (!desktopIsDragging || window.innerWidth <= 900) return;
+                desktopIsDragging = false;
+                
+                const deltaX = desktopCurrentX - desktopStartX;
+                const threshold = 50; // Minimum swipe distance
+                
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0) {
+                        // Swipe right - go to previous slide
+                        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    } else {
+                        // Swipe left - go to next slide
+                        currentSlide = (currentSlide + 1) % totalSlides;
+                    }
+                    showSlide(currentSlide);
+                }
+            });
+
+            // Mouse events for desktop slideshow
+            desktopSlideContainer.addEventListener('mousedown', (e) => {
+                if (window.innerWidth > 900) {
+                    desktopStartX = e.clientX;
+                    desktopIsDragging = true;
+                    e.preventDefault();
+                }
+            });
+
+            desktopSlideContainer.addEventListener('mousemove', (e) => {
+                if (!desktopIsDragging || window.innerWidth <= 900) return;
+                e.preventDefault();
+                desktopCurrentX = e.clientX;
+            });
+
+            desktopSlideContainer.addEventListener('mouseup', (e) => {
+                if (!desktopIsDragging || window.innerWidth <= 900) return;
+                desktopIsDragging = false;
+                
+                const deltaX = desktopCurrentX - desktopStartX;
+                const threshold = 50; // Minimum swipe distance
+                
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0) {
+                        // Swipe right - go to previous slide
+                        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    } else {
+                        // Swipe left - go to next slide
+                        currentSlide = (currentSlide + 1) % totalSlides;
+                    }
+                    showSlide(currentSlide);
+                }
+            });
+
+            // Handle mouse leave to end drag
+            desktopSlideContainer.addEventListener('mouseleave', (e) => {
+                if (desktopIsDragging && window.innerWidth > 900) {
+                    desktopIsDragging = false;
+                }
+            });
+
+            // Prevent text selection during drag
+            desktopSlideContainer.addEventListener('selectstart', (e) => e.preventDefault());
+        }
+
         // --- Mobile Swipe Functionality ---
-  let mobileCurrentSlide = 0;
-  const mobileSlideContainer = document.getElementById('mobileSlideContainer');
-  let startX = 0;
-  let startY = 0;
-  let currentX = 0;
-  let isDragging = false;
-  let isHorizontalSwipe = false;
-  let directionLocked = false;
+        let mobileCurrentSlide = 0;
+        const mobileSlideContainer = document.getElementById('mobileSlideContainer');
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let baseTransform = 0; // Track base position
+        let currentTransform = 0; // Track current transform value
 
         function updateMobileSlide() {
-            if (window.innerWidth <= 800) {
+            if (window.innerWidth <= 900) {
                 const translateX = -mobileCurrentSlide * 25; // 25% per slide
+                baseTransform = translateX;
+                currentTransform = translateX;
                 mobileSlideContainer.style.transform = `translateX(${translateX}%)`;
+            }
+        }
+
+        function applyDragTransform(deltaX) {
+            if (window.innerWidth <= 900) {
+                // Convert pixel movement to percentage with increased sensitivity
+                const containerWidth = mobileSlideContainer.offsetWidth;
+                const deltaPercent = (deltaX / containerWidth) * 100;
+                
+                // Apply drag sensitivity multiplier for more responsive movement
+                const sensitivity = 1.5; // Increase this value for more drag distance
+                const amplifiedDelta = deltaPercent * sensitivity;
+                
+                // Apply drag delta to base position
+                currentTransform = baseTransform + amplifiedDelta;
+                
+                // Apply constraints - don't allow dragging beyond first/last slide
+                const minTransform = -75; // -25% * 3 (last slide)
+                const maxTransform = 0; // first slide
+                
+                // Allow slight overscroll for visual feedback
+                const overscrollAmount = 10; // 10% overscroll
+                const constrainedTransform = Math.max(
+                    minTransform - overscrollAmount, 
+                    Math.min(maxTransform + overscrollAmount, currentTransform)
+                );
+                
+                mobileSlideContainer.style.transform = `translateX(${constrainedTransform}%)`;
+            }
+        }
+
+        function snapToNearestSlide() {
+            if (window.innerWidth <= 900) {
+                // Determine which slide is closest based on current transform
+                const slidePositions = [0, -25, -50, -75]; // Positions for slides 0, 1, 2, 3
+                let closestSlide = 0;
+                let minDistance = Math.abs(currentTransform - slidePositions[0]);
+                
+                for (let i = 1; i < slidePositions.length; i++) {
+                    const distance = Math.abs(currentTransform - slidePositions[i]);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestSlide = i;
+                    }
+                }
+                
+                mobileCurrentSlide = closestSlide;
+                updateMobileSlide();
             }
         }
 
         // Touch events for mobile swipe
         if (mobileSlideContainer) {
-      mobileSlideContainer.addEventListener('touchstart', (e) => {
-        if (window.innerWidth <= 800) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          currentX = startX;
-          isDragging = true;
-          isHorizontalSwipe = false;
-          directionLocked = false;
-        }
-      });
+            mobileSlideContainer.addEventListener('touchstart', (e) => {
+                if (window.innerWidth <= 900) {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    // Update base position to current position at start of new drag
+                    baseTransform = currentTransform;
+                    // Remove any transition during drag
+                    mobileSlideContainer.style.transition = 'none';
+                }
+            });
 
-      mobileSlideContainer.addEventListener('touchmove', (e) => {
-        if (!isDragging || window.innerWidth > 800) return;
-        const touch = e.touches[0];
-        const diffX = touch.clientX - startX;
-        const diffY = touch.clientY - startY;
+            mobileSlideContainer.addEventListener('touchmove', (e) => {
+                if (!isDragging || window.innerWidth > 900) return;
+                e.preventDefault();
+                currentX = e.touches[0].clientX;
+                
+                // Calculate the drag distance and apply real-time transform
+                const deltaX = currentX - startX;
+                applyDragTransform(deltaX);
+            });
 
-        if (!directionLocked) {
-          if (Math.abs(diffX) > 10 || Math.abs(diffY) > 10) {
-            directionLocked = true;
-            isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
-          }
-        }
-
-        if (!isHorizontalSwipe) {
-          isDragging = false;
-          directionLocked = false;
-          isHorizontalSwipe = false;
-          return;
-        }
-
-        e.preventDefault();
-        currentX = touch.clientX;
-      });
-
-      mobileSlideContainer.addEventListener('touchend', (e) => {
-        if (!isDragging || window.innerWidth > 800 || !isHorizontalSwipe) {
-          isDragging = false;
-          directionLocked = false;
-          isHorizontalSwipe = false;
-          return;
-        }
-        isDragging = false;
-        directionLocked = false;
-        const diffX = startX - currentX;
-        const threshold = 50; // Minimum swipe distance
-
-        if (Math.abs(diffX) > threshold) {
-          if (diffX > 0) {
-            // Swipe left - next slide
-            mobileCurrentSlide = (mobileCurrentSlide + 1) % 4;
-          } else {
-            // Swipe right - previous slide
-            mobileCurrentSlide = (mobileCurrentSlide - 1 + 4) % 4;
-          }
-          updateMobileSlide();
-        }
-
-        isHorizontalSwipe = false;
-      });
+            mobileSlideContainer.addEventListener('touchend', (e) => {
+                if (!isDragging || window.innerWidth > 900) return;
+                isDragging = false;
+                
+                // Keep the current position without snapping
+                // No transition or snapping needed - stay where dragged
+            });
 
             // Mouse events for desktop testing
-      mobileSlideContainer.addEventListener('mousedown', (e) => {
-        if (window.innerWidth <= 800) {
-          startX = e.clientX;
-          currentX = startX;
-          isDragging = true;
-          e.preventDefault();
-        }
-      });
+            mobileSlideContainer.addEventListener('mousedown', (e) => {
+                if (window.innerWidth <= 900) {
+                    startX = e.clientX;
+                    isDragging = true;
+                    // Update base position to current position at start of new drag
+                    baseTransform = currentTransform;
+                    mobileSlideContainer.style.transition = 'none';
+                    e.preventDefault();
+                }
+            });
 
             mobileSlideContainer.addEventListener('mousemove', (e) => {
-                if (!isDragging || window.innerWidth > 800) return;
+                if (!isDragging || window.innerWidth > 900) return;
                 e.preventDefault();
                 currentX = e.clientX;
+                
+                // Calculate the drag distance and apply real-time transform
+                const deltaX = currentX - startX;
+                applyDragTransform(deltaX);
             });
 
             mobileSlideContainer.addEventListener('mouseup', (e) => {
-                if (!isDragging || window.innerWidth > 800) return;
+                if (!isDragging || window.innerWidth > 900) return;
                 isDragging = false;
+                
+                // Keep the current position without snapping
+                // No transition or snapping needed - stay where dragged
+            });
 
-                const diffX = startX - currentX;
-                const threshold = 50;
-
-                if (Math.abs(diffX) > threshold) {
-                    if (diffX > 0) {
-                        mobileCurrentSlide = (mobileCurrentSlide + 1) % 4;
-                    } else {
-                        mobileCurrentSlide = (mobileCurrentSlide - 1 + 4) % 4;
-                    }
-                    updateMobileSlide();
+            // Handle mouse leave to end drag if mouse goes outside container
+            mobileSlideContainer.addEventListener('mouseleave', (e) => {
+                if (isDragging && window.innerWidth <= 900) {
+                    isDragging = false;
+                    // Keep the current position without snapping
+                    // No transition or snapping needed - stay where dragged
                 }
             });
 
