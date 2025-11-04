@@ -640,8 +640,9 @@
         padding: 0 16px;
         box-sizing: border-box;
         align-items: center;
-        touch-action: pan-y pinch-zoom;
+        touch-action: pan-x;
         will-change: transform;
+        overflow: hidden;
       }
       
       .mobile-card {
@@ -1788,6 +1789,9 @@
                     baseTransform = currentTransform;
                     // Use shorter transition during drag for responsiveness
                     mobileSlideContainer.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    // Prevent any potential text selection or context menus
+                    e.preventDefault();
                 }
             });
 
@@ -1802,16 +1806,30 @@
                     const deltaX = Math.abs(currentX - startX);
                     const deltaY = Math.abs(currentY - startY);
                     
-                    // If horizontal movement is greater than vertical, treat as horizontal swipe
-                    if (deltaX > deltaY && deltaX > 10) {
+                    // More forgiving horizontal swipe detection
+                    // Allow horizontal swipe if:
+                    // 1. Horizontal movement is greater than vertical AND horizontal > 5px, OR
+                    // 2. Horizontal movement > 8px even if vertical is slightly larger (up to 1.5x ratio)
+                    // 3. Both movements are small but horizontal is primary direction
+                    if ((deltaX > deltaY && deltaX > 5) || 
+                        (deltaX > 8 && deltaY < deltaX * 1.5) ||
+                        (deltaX > 3 && deltaY < 2)) {
                         isHorizontalSwipe = true;
                     }
                     hasMoved = true;
                 }
                 
-                // Only prevent default and handle swipe if it's a horizontal swipe
-                if (isHorizontalSwipe) {
+                // Prevent default if it's a horizontal swipe OR if horizontal movement is significant
+                const currentDeltaX = Math.abs(currentX - startX);
+                const currentDeltaY = Math.abs(currentY - startY);
+                
+                if (isHorizontalSwipe || (currentDeltaX > 5 && currentDeltaX >= currentDeltaY * 0.7)) {
                     e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                // Only handle transform if it's confirmed horizontal swipe
+                if (isHorizontalSwipe) {
                     // Calculate the drag distance and apply real-time transform
                     const deltaX = currentX - startX;
                     applyDragTransform(deltaX);

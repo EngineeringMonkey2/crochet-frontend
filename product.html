@@ -313,6 +313,8 @@
       padding: 0;
       width: 26px;
       height: 26px;
+      min-width: 26px;
+      min-height: 26px;
       border-radius: 50%;
       border: 2px solid #ddd;
       position: relative;
@@ -320,6 +322,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      box-sizing: border-box;
     }
 
     .option-choice.color-swatch:hover {
@@ -369,8 +372,10 @@
     /* Responsive color swatch sizes */
     @media (max-width: 768px) {
       .option-choice.color-swatch {
-        width: 25px;
-        height: 25px;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
         border-width: 2px;
       }
       
@@ -380,20 +385,22 @@
       }
       
       .option-choice.color-swatch.selected::before {
-        font-size: 11px;
+        font-size: 12px;
       }
       
       .option-choice.color-swatch .option-label {
-        font-size: 9px;
-        bottom: -22px;
+        font-size: 11px;
+        bottom: -24px;
       }
     }
 
     @media (max-width: 480px) {
       .option-choice.color-swatch {
-        width: 22px;
-        height: 22px;
-        border-width: 1px;
+        width: 26px;
+        height: 26px;
+        min-width: 26px;
+        min-height: 26px;
+        border-width: 2px;
       }
       
       .option-choice.color-swatch.selected {
@@ -402,12 +409,12 @@
       }
       
       .option-choice.color-swatch.selected::before {
-        font-size: 10px;
+        font-size: 11px;
       }
       
       .option-choice.color-swatch .option-label {
-        font-size: 8px;
-        bottom: -20px;
+        font-size: 10px;
+        bottom: -22px;
       }
     }
 
@@ -721,7 +728,7 @@
                 
                 const label = document.createElement('div');
                 label.className = 'option-label';
-                label.textContent = `${optionData.label}${optionData.required ? ' *' : ''}:`;
+                label.textContent = `${optionData.label}:`;
                 
                 const choices = document.createElement('div');
                 choices.className = 'option-choices';
