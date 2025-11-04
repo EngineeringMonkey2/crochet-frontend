@@ -24,9 +24,24 @@ function addToCart(item) {
     
     const isCustomItem = typeof item.id === 'string' && item.id.startsWith('custom-');
     
+    // Helper function to compare options
+    const optionsMatch = (options1, options2) => {
+        if (!options1 && !options2) return true;
+        if (!options1 || !options2) return false;
+        
+        const keys1 = Object.keys(options1);
+        const keys2 = Object.keys(options2);
+        
+        if (keys1.length !== keys2.length) return false;
+        
+        return keys1.every(key => options1[key] === options2[key]);
+    };
+    
     const existingItemIndex = isCustomItem
         ? -1 // Always treat custom items as unique
-        : cart.findIndex(cartItem => cartItem.id === item.id);
+        : cart.findIndex(cartItem => 
+            cartItem.id === item.id && optionsMatch(cartItem.options, item.options)
+          );
 
     if (existingItemIndex > -1) {
         cart[existingItemIndex].quantity += item.quantity;

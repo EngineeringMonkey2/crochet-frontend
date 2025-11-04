@@ -316,6 +316,16 @@ const products = [
         tags: ["Canvas", "Inspirational", "Pockets"],
         description: "High quality tote bag that comes with pockets on the inside. Very nice feel.",
         dimensions: "Width: 12 in. Height: 15 in. Thickness: 7 in.",
-        images: cdnProcessImages([root26 + "tote1.png", root26 + "tote2.png", root26 + "tote3.png", root26 + "tote4.png", root26 + "tote5.png"])
+        images: cdnProcessImages([root26 + "tote1.png", root26 + "tote2.png", root26 + "tote3.png", root26 + "tote4.png", root26 + "tote5.png"]),
+        options: {
+            color: {
+                label: "Color",
+                required: true,
+                choices: [
+                    { value: "black", label: "Black", color: "#000000", default: true },
+                    { value: "cream", label: "Cream", color: "#ffffffff" }
+                ]
+            }
+        }
     }
 ];

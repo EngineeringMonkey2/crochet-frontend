@@ -7,16 +7,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <style>
+    :root {
+      --page-gradient-base: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      --page-gradient-accent-one: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.08) 0%, transparent 50%);
+      --page-gradient-accent-two: radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.08) 0%, transparent 50%);
+      --page-gradient-accent-three: radial-gradient(circle at 40% 40%, rgba(220, 53, 69, 0.06) 0%, transparent 50%);
+    }
+
     /* General Body and Toolbar Styles (from your original file) */
     body {
       margin: 0;
       font-family: 'Helvetica', 'Arial', sans-serif;
       color: #333333;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      background-image: 
-          radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.08) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.08) 0%, transparent 50%),
-          radial-gradient(circle at 40% 40%, rgba(220, 53, 69, 0.06) 0%, transparent 50%);
+      background-color: #f8f9fa;
+      background-image:
+          var(--page-gradient-accent-one),
+          var(--page-gradient-accent-two),
+          var(--page-gradient-accent-three),
+          var(--page-gradient-base);
+      background-repeat: no-repeat;
       position: relative;
       overflow-x: hidden;
     }
@@ -103,7 +112,7 @@
 
     /* Main Product Section */
     .product-detail {
-	  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      background: none;
       padding: 120px 20px 80px;
       width: 100%;
       box-sizing: border-box;
@@ -251,6 +260,181 @@
       border: 1px solid #cccccc;
       border-radius: 5px;
       text-align: center;
+    }
+
+    /* Product Options Styles */
+    .product-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .option-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333333;
+    }
+
+    .option-choices {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .option-choice {
+      padding: 10px 20px;
+      border: 2px solid #cccccc;
+      border-radius: 5px;
+      background-color: white;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .option-choice:hover {
+      border-color: #795548;
+    }
+
+    .option-choice.selected {
+      border-color: #3e2723;
+      background-color: #f5f5f5;
+    }
+
+    /* Color swatch styles */
+    .option-choice.color-swatch {
+      padding: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      position: relative;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .option-choice.color-swatch:hover {
+      border-color: #795548;
+      transform: scale(1.05);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    .option-choice.color-swatch:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+
+    .option-choice.color-swatch.selected {
+      border-color: #3e2723;
+      border-width: 3px;
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(62, 39, 35, 0.3);
+      position: relative;
+    }
+
+    .option-choice.color-swatch.selected::before {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(62, 39, 35, 0.8);
+      font-weight: bold;
+      font-size: 14px;
+      text-shadow: 0 0 2px rgba(255,255,255,0.8);
+      z-index: 10;
+    }
+
+    .option-choice.color-swatch.selected .option-label {
+      font-weight: bold;
+      color: #3e2723;
+    }
+
+    /* Better checkmark visibility for light colors */
+    .option-choice.color-swatch[data-light-color="true"].selected::before {
+      color: #3e2723;
+      text-shadow: 0 0 3px rgba(255,255,255,0.9), 0 0 1px rgba(62, 39, 35, 0.8);
+      font-weight: 900;
+    }
+
+    /* Responsive color swatch sizes */
+    @media (max-width: 768px) {
+      .option-choice.color-swatch {
+        width: 25px;
+        height: 25px;
+        border-width: 2px;
+      }
+      
+      .option-choice.color-swatch.selected {
+        border-width: 2px;
+        transform: scale(1.06);
+      }
+      
+      .option-choice.color-swatch.selected::before {
+        font-size: 11px;
+      }
+      
+      .option-choice.color-swatch .option-label {
+        font-size: 9px;
+        bottom: -22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .option-choice.color-swatch {
+        width: 22px;
+        height: 22px;
+        border-width: 1px;
+      }
+      
+      .option-choice.color-swatch.selected {
+        border-width: 2px;
+        transform: scale(1.05);
+      }
+      
+      .option-choice.color-swatch.selected::before {
+        font-size: 10px;
+      }
+      
+      .option-choice.color-swatch .option-label {
+        font-size: 8px;
+        bottom: -20px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .option-choice.color-swatch {
+        width: 35px;
+        height: 35px;
+      }
+    }
+
+    .color-swatch-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+    }
+
+    .option-choice.color-swatch .option-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 500;
+      color: #333;
+      white-space: nowrap;
     }
     
     .action-buttons {
@@ -416,6 +600,10 @@
         <p class="description" id="product-description"></p>
         <p class="dimensions" id="product-dimensions"></p>
 
+        <div class="product-options" id="product-options">
+          <!-- Product options will be injected here by JavaScript -->
+        </div>
+
         <div class="quantity-selector">
           <label for="quantity">Quantity:</label>
           <input type="number" id="quantity" name="quantity" min="1" value="1">
@@ -514,6 +702,108 @@
              setActiveImage(0);
         }
 
+        // --- Handle Product Options ---
+        const selectedOptions = {};
+        
+        function renderProductOptions() {
+            const optionsContainer = document.getElementById('product-options');
+            
+            if (!product.options) {
+                optionsContainer.style.display = 'none';
+                return;
+            }
+            
+            optionsContainer.innerHTML = '';
+            
+            Object.entries(product.options).forEach(([optionKey, optionData]) => {
+                const optionGroup = document.createElement('div');
+                optionGroup.className = 'option-group';
+                
+                const label = document.createElement('div');
+                label.className = 'option-label';
+                label.textContent = `${optionData.label}${optionData.required ? ' *' : ''}:`;
+                
+                const choices = document.createElement('div');
+                choices.className = 'option-choices';
+                
+                optionData.choices.forEach((choice) => {
+                    const choiceElement = document.createElement('div');
+                    choiceElement.dataset.value = choice.value;
+                    
+                    // Check if this choice has a color property (hex code)
+                    if (choice.color) {
+                        // Create color swatch
+                        choiceElement.className = 'option-choice color-swatch';
+                        
+                        const swatchInner = document.createElement('div');
+                        swatchInner.className = 'color-swatch-inner';
+                        swatchInner.style.backgroundColor = choice.color;
+                        
+                        const label = document.createElement('div');
+                        label.className = 'option-label';
+                        label.textContent = choice.label;
+                        
+                        // Add data attribute for light colors (for better checkmark visibility)
+                        const isLightColor = isColorLight(choice.color);
+                        if (isLightColor) {
+                            choiceElement.setAttribute('data-light-color', 'true');
+                        }
+                        
+                        choiceElement.appendChild(swatchInner);
+                        choiceElement.appendChild(label);
+                    } else {
+                        // Create regular text choice
+                        choiceElement.className = 'option-choice';
+                        choiceElement.textContent = choice.label;
+                    }
+                    
+                    // Set default selection
+                    if (choice.default) {
+                        choiceElement.classList.add('selected');
+                        selectedOptions[optionKey] = choice.value;
+                    }
+                    
+                    choiceElement.addEventListener('click', () => {
+                        // Remove selection from other choices in this group
+                        choices.querySelectorAll('.option-choice').forEach(c => c.classList.remove('selected'));
+                        // Select this choice
+                        choiceElement.classList.add('selected');
+                        selectedOptions[optionKey] = choice.value;
+                    });
+                    
+                    choices.appendChild(choiceElement);
+                });
+                
+                optionGroup.appendChild(label);
+                optionGroup.appendChild(choices);
+                optionsContainer.appendChild(optionGroup);
+            });
+        }
+        
+        function validateOptions() {
+            if (!product.options) return true;
+            
+            for (const [optionKey, optionData] of Object.entries(product.options)) {
+                if (optionData.required && !selectedOptions[optionKey]) {
+                    alert(`Please select ${optionData.label.toLowerCase()}`);
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // Helper function to determine if a color is light
+        function isColorLight(hexColor) {
+            const hex = hexColor.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return brightness > 155;
+        }
+        
+        renderProductOptions();
+
         function setActiveImage(index) {
             productImageEl.src = productImages[index];
             currentImageIndex = index;
@@ -528,26 +818,32 @@
 
         const addToCartBtn = document.querySelector('.add-to-cart');
         addToCartBtn.addEventListener('click', () => {
+            if (!validateOptions()) return;
+            
             const quantity = parseInt(document.getElementById('quantity').value);
             const item = {
                 id: product.id,
                 name: product.name,
                 price: product.price,
                 image: product.image || (product.images && product.images[0]),
-                quantity: quantity
+                quantity: quantity,
+                options: Object.keys(selectedOptions).length > 0 ? { ...selectedOptions } : undefined
             };
             addToCart(item);
         });
         
         const buyNowBtn = document.querySelector('.buy-now');
         buyNowBtn.addEventListener('click', () => {
+            if (!validateOptions()) return;
+            
             const quantity = parseInt(document.getElementById('quantity').value);
             const item = {
                 id: product.id,
                 name: product.name,
                 price: product.price,
                 image: product.image || (product.images && product.images[0]),
-                quantity: quantity
+                quantity: quantity,
+                options: Object.keys(selectedOptions).length > 0 ? { ...selectedOptions } : undefined
             };
             addToCart(item); 
             window.location.href = 'cart.html';
