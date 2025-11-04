@@ -635,12 +635,13 @@
         display: flex;
         width: 300%;
         height: 100%;
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         transform: translateX(0);
         padding: 0 16px;
         box-sizing: border-box;
         align-items: center;
         touch-action: pan-y pinch-zoom;
+        will-change: transform;
       }
       
       .mobile-card {
@@ -1720,7 +1721,7 @@
                 const deltaPercent = (deltaX / containerWidth) * 100;
                 
                 // Apply drag sensitivity multiplier for more responsive movement
-                const sensitivity = 2.5; // Increase this value for more drag distance
+                const sensitivity = 2.5; // Keep high sensitivity for fast response
                 const amplifiedDelta = deltaPercent * sensitivity;
                 
                 // Apply drag delta to base position
@@ -1730,14 +1731,23 @@
                 const minTransform = -75; // -25% * 3 (last slide)
                 const maxTransform = 0; // first slide
                 
-                // Allow slight overscroll for visual feedback
-                const overscrollAmount = 10; // 10% overscroll
-                const constrainedTransform = Math.max(
-                    minTransform - overscrollAmount, 
-                    Math.min(maxTransform + overscrollAmount, currentTransform)
-                );
+                // Allow slight overscroll for visual feedback with rubber band effect
+                const overscrollAmount = 8; // Reduced overscroll for smoother feel
+                let constrainedTransform = currentTransform;
                 
-                mobileSlideContainer.style.transform = `translateX(${constrainedTransform}%)`;
+                // Apply rubber band effect for overscroll
+                if (currentTransform > maxTransform) {
+                    const overscroll = currentTransform - maxTransform;
+                    constrainedTransform = maxTransform + (overscroll * 0.3); // Dampen overscroll
+                } else if (currentTransform < minTransform) {
+                    const overscroll = minTransform - currentTransform;
+                    constrainedTransform = minTransform - (overscroll * 0.3); // Dampen overscroll
+                }
+                
+                // Use requestAnimationFrame for smoother updates
+                requestAnimationFrame(() => {
+                    mobileSlideContainer.style.transform = `translateX(${constrainedTransform}%)`;
+                });
             }
         }
 
@@ -1776,8 +1786,8 @@
                     isHorizontalSwipe = false;
                     // Update base position to current position at start of new drag
                     baseTransform = currentTransform;
-                    // Remove any transition during drag
-                    mobileSlideContainer.style.transition = 'none';
+                    // Use shorter transition during drag for responsiveness
+                    mobileSlideContainer.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 }
             });
 
@@ -1813,8 +1823,26 @@
                 
                 // Only handle end logic if it was a horizontal swipe
                 if (isHorizontalSwipe) {
-                    // Keep the current position without snapping
-                    // No transition or snapping needed - stay where dragged
+                    // Restore smooth transition for momentum
+                    mobileSlideContainer.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    // Calculate velocity for momentum scrolling
+                    const deltaX = currentX - startX;
+                    const velocity = Math.abs(deltaX);
+                    
+                    // If significant velocity, add momentum
+                    if (velocity > 50) {
+                        const momentum = deltaX * 0.3; // Reduce momentum for control
+                        const finalTransform = currentTransform + (momentum / mobileSlideContainer.offsetWidth * 100);
+                        
+                        // Apply constraints
+                        const constrainedFinal = Math.max(-75, Math.min(0, finalTransform));
+                        currentTransform = constrainedFinal;
+                        
+                        requestAnimationFrame(() => {
+                            mobileSlideContainer.style.transform = `translateX(${constrainedFinal}%)`;
+                        });
+                    }
                 }
                 
                 isDragging = false;
@@ -1829,7 +1857,8 @@
                     isDragging = true;
                     // Update base position to current position at start of new drag
                     baseTransform = currentTransform;
-                    mobileSlideContainer.style.transition = 'none';
+                    // Use shorter transition during drag for responsiveness
+                    mobileSlideContainer.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                     e.preventDefault();
                 }
             });
@@ -1848,16 +1877,34 @@
                 if (!isDragging || window.innerWidth > 900) return;
                 isDragging = false;
                 
-                // Keep the current position without snapping
-                // No transition or snapping needed - stay where dragged
+                // Restore smooth transition
+                mobileSlideContainer.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                // Calculate velocity for momentum scrolling (for mouse as well)
+                const deltaX = currentX - startX;
+                const velocity = Math.abs(deltaX);
+                
+                // If significant velocity, add momentum
+                if (velocity > 30) {
+                    const momentum = deltaX * 0.2; // Slightly less momentum for mouse
+                    const finalTransform = currentTransform + (momentum / mobileSlideContainer.offsetWidth * 100);
+                    
+                    // Apply constraints
+                    const constrainedFinal = Math.max(-75, Math.min(0, finalTransform));
+                    currentTransform = constrainedFinal;
+                    
+                    requestAnimationFrame(() => {
+                        mobileSlideContainer.style.transform = `translateX(${constrainedFinal}%)`;
+                    });
+                }
             });
 
             // Handle mouse leave to end drag if mouse goes outside container
             mobileSlideContainer.addEventListener('mouseleave', (e) => {
                 if (isDragging && window.innerWidth <= 900) {
                     isDragging = false;
-                    // Keep the current position without snapping
-                    // No transition or snapping needed - stay where dragged
+                    // Restore smooth transition when mouse leaves
+                    mobileSlideContainer.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 }
             });
 
