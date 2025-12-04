@@ -25,6 +25,8 @@ const root23 = "images/RealChrochet/mug/";
 const root24 = "images/RealChrochet/mug2/";
 const root25 = "images/RealChrochet/glasstumbler/";
 const root26 = "images/RealChrochet/fstb/";
+const root27 = "images/RealChrochet/penguin2/";
+const root28 = "images/RealChrochet/gingerbreadmug2/";
 
 const cdnProcessImages = (paths) => (typeof window !== 'undefined' && window.resolveImagePaths
     ? window.resolveImagePaths(paths)
@@ -327,5 +329,34 @@ const products = [
                 ]
             }
         }
+    },
+	
+	
+    {
+        id: 27,
+        name: "Penguin",
+        price: "$19.99",
+        category: "Crochet",
+        subcategory: "Winter",
+        tags: ["Christmas", "Winter", "Animal", "Penguin"],
+        description: "Christmas Plushie Hand Made Penguin",
+        dimensions: "Height: 6 in. Width: 4 in.",
+        images: cdnProcessImages([root27 + "penguin1.png", root27 + "penguin2.png", root27 + "penguin3.png", root27 + "penguin4.png", root27 + "penguin5.png"])
+    },
+	
+    {
+        id: 28,
+        name: "GingerBread Man In Mug",
+        price: "$19.99",
+        category: "Crochet",
+        subcategory: "Winter",
+        tags: ["Christmas", "Winter", "Animal", "Mug"],
+        description: "Christmas Plushie Hand Made Gingerbread man with hand crafted mug.",
+        dimensions: "Height: 6 in. Width: 4 in.",
+        images: cdnProcessImages([root28 + "gingerbread1.png", root28 + "gingerbread2.png", root28 + "gingerbread3.png", root28 + "gingerbread4.png", root28 + "gingerbread5.png", root28 + "gingerbread6.png"])
     }
+	
+		
+	
+	
 ];
