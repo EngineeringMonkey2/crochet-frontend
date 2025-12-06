@@ -27,6 +27,9 @@ const root25 = "images/RealChrochet/glasstumbler/";
 const root26 = "images/RealChrochet/fstb/";
 const root27 = "images/RealChrochet/penguin2/";
 const root28 = "images/RealChrochet/gingerbreadmug2/";
+const root29 = "images/RealChrochet/grinchmug3/";
+const root30 = "images/RealChrochet/snowmanmug3/";
+const root31 = "images/RealChrochet/christmastumbler3/";
 
 const cdnProcessImages = (paths) => (typeof window !== 'undefined' && window.resolveImagePaths
     ? window.resolveImagePaths(paths)
@@ -346,17 +349,55 @@ const products = [
 	
     {
         id: 28,
-        name: "GingerBread Man In Mug",
+        name: "GingerBread Man In a Mug",
         price: "$19.99",
         category: "Crochet",
-        subcategory: "Winter",
+        subcategory: "Drinkware",
         tags: ["Christmas", "Winter", "Animal", "Mug"],
-        description: "Christmas Plushie Hand Made Gingerbread man with hand crafted mug.",
-        dimensions: "Height: 6 in. Width: 4 in.",
+        description: "Christmas Plushie Hand Made Gingerbread man with a hand crafted mug. Mug comes with spoon and lid!",
+        dimensions: "Plushie: Height: 7 in. Width: 4 in. Mug: Height: 4 in. Diameter: 3.15 in.",
         images: cdnProcessImages([root28 + "gingerbread1.png", root28 + "gingerbread2.png", root28 + "gingerbread3.png", root28 + "gingerbread4.png", root28 + "gingerbread5.png", root28 + "gingerbread6.png"])
-    }
+    },
 	
 		
+    {
+        id: 29,
+        name: "The Mean Green Mug Bundle",
+        price: "$19.99",
+        category: "Crochet",
+        subcategory: "Drinkware",
+        tags: ["Christmas", "Winter", "Animal", "Mug"],
+        description: "Christmas Plushie Hand Made Mean Green Plush with a hand crafted mug. Mug comes with spoon and lid!",
+        dimensions: "Plushie: Height: 8 in. Width: 4 in. Mug: Height: 4 in. Diameter: 3.15 in. ",
+        images: cdnProcessImages([root29 + "grinch1.png", root29 + "grinch2.png", root29 + "grinch3.png", root29 + "grinch4.png", root29 + "grinch5.png", root29 + "grinch6.png"])
+    },
+		
+    {
+        id: 30,
+        name: "Snow Plushie in a Mug",
+        price: "$19.99",
+        category: "Crochet",
+        subcategory: "Drinkware",
+        tags: ["Christmas", "Winter", "Animal", "Mug"],
+        description: "Christmas plushie snowman with a hand crafted mug. Mug comes with spoon and lid!",
+        dimensions: "Plushie: Height: 7 in. Width: 4 in. Mug: Height: 4 in. Diameter: 3.15 in. ",
+        images: cdnProcessImages([root30 + "snowman1.png", root30 + "snowman2.png", root30 + "snowman3.png", root30 + "snowman4.png", root30 + "snowman5.png", root30 + "snowman6.png"])
+    },
+	
+	
+    {
+        id: 31,
+        name: "Christmas Tumbler",
+        price: "$9.99",
+        category: "Drinkware",
+        subcategory: "Winter",
+        tags: ["Christmas", "Winter", "Animal", "Mug"],
+        description: "Hand crafted christmas tumbler",
+        dimensions: "Cup: 5.9 in. in height 3 in. in diameter Straw: 7.8 in.",
+        images: cdnProcessImages([root31 + "mug1.png", root31 + "mug2.png", root31 + "mug3.png", root31 + "mug4.png", root31 + "mug5.png"])
+    }
+		
+	
 	
 	
 ];
