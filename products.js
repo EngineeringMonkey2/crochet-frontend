@@ -30,10 +30,10 @@ const root28 = "images/RealChrochet/gingerbreadmug2/";
 const root29 = "images/RealChrochet/grinchmug3/";
 const root30 = "images/RealChrochet/snowmanmug3/";
 const root31 = "images/RealChrochet/christmastumbler3/";
-const root32 = "images/RealChrochet/crab/";
-const root33 = "images/RealChrochet/strawberryplushies/";
-const root34 = "images/RealChrochet/wifeyhubbytumblers/";
-const root35 = "images/RealChrochet/bowtumbler/";
+const root32 = "images/RealChrochet/ccrab/";
+const root33 = "images/RealChrochet/sstrawberryplushies/";
+const root34 = "images/RealChrochet/cursivewifeyhubbytumblers/";
+const root35 = "images/RealChrochet/bodaktumbler/";
 
 const cdnProcessImages = (paths) => (typeof window !== 'undefined' && window.resolveImagePaths
     ? window.resolveImagePaths(paths)
