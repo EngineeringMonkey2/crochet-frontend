@@ -30,6 +30,10 @@ const root28 = "images/RealChrochet/gingerbreadmug2/";
 const root29 = "images/RealChrochet/grinchmug3/";
 const root30 = "images/RealChrochet/snowmanmug3/";
 const root31 = "images/RealChrochet/christmastumbler3/";
+const root32 = "images/RealChrochet/crab/";
+const root33 = "images/RealChrochet/strawberryplushies/";
+const root34 = "images/RealChrochet/wifeyhubbytumblers/";
+const root35 = "images/RealChrochet/bowtumbler/";
 
 const cdnProcessImages = (paths) => (typeof window !== 'undefined' && window.resolveImagePaths
     ? window.resolveImagePaths(paths)
@@ -395,8 +399,56 @@ const products = [
         description: "Hand crafted christmas tumbler",
         dimensions: "Cup: 5.9 in. in height 3 in. in diameter Straw: 7.8 in.",
         images: cdnProcessImages([root31 + "mug1.png", root31 + "mug2.png", root31 + "mug3.png", root31 + "mug4.png", root31 + "mug5.png"])
+    },
+
+
+    {
+        id: 32,
+        name: "Crab",
+        price: "$19.99",
+        category: "Crochet",
+        subcategory: "Animals",
+        tags: ["Animals", "Plushies", "Valentine"],
+        description: "A cute handmade crocheted crab plushie, perfect for your collection.",
+        dimensions: "Dimensions: TBD",
+        images: cdnProcessImages([root32 + "crab1.png", root32 + "crab2.png", root32 + "crab3.png", root32 + "crab4.png", root32 + "crab5.png"])
+    },
+
+    {
+        id: 33,
+        name: "Strawberry Plushie",
+        price: "$19.99",
+        category: "Crochet",
+        subcategory: "Food",
+        tags: ["Food", "Plushies", "Valentine"],
+        description: "A cute handmade crocheted strawberry plushie, perfect for your collection.",
+        dimensions: "Dimensions: TBD",
+        images: cdnProcessImages([root33 + "strawberry1.png", root33 + "strawberry2.png", root33 + "strawberry3.png", root33 + "strawberry4.png", root33 + "strawberry5.png"])
+    },
+
+    {
+        id: 34,
+        name: "Wifey Hubby Tumbler Set",
+        price: "$19.99",
+        category: "Drinkware",
+        subcategory: "Tumblers",
+        tags: ["Tumblers", "Valentine", "Couples", "Glass"],
+        description: "A beautiful matching wifey and hubby tumbler set, perfect for couples!",
+        dimensions: "Cup: 5.9 in. in height 3 in. in diameter Straw: 7.8 in.",
+        images: cdnProcessImages([root34 + "tumbler1.png", root34 + "tumbler2.png", root34 + "tumbler3.png", root34 + "tumbler4.png", root34 + "tumbler5.png", root34 + "tumbler6.png"])
+    },
+
+    {
+        id: 35,
+        name: "Bow Tumbler",
+        price: "$9.99",
+        category: "Drinkware",
+        subcategory: "Tumblers",
+        tags: ["Tumblers", "Valentine", "Glass", "Bows"],
+        description: "A cute bow-themed glass tumbler, perfect for Valentine's Day!",
+        dimensions: "Cup: 5.9 in. in height 3 in. in diameter Straw: 7.8 in.",
+        images: cdnProcessImages([root35 + "tumbler1.png", root35 + "tumbler2.png", root35 + "tumbler3.png", root35 + "tumbler4.png", root35 + "tumbler5.png"])
     }
-		
 	
 	
 	
