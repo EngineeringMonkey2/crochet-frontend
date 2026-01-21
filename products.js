@@ -417,7 +417,7 @@ const products = [
     {
         id: 33,
         name: "Strawberry Plushie",
-        price: "$19.99",
+        price: "$12.99",
         category: "Crochet",
         subcategory: "Food",
         tags: ["Food", "Plushies", "Valentine"],
@@ -429,7 +429,7 @@ const products = [
     {
         id: 34,
         name: "Wifey Hubby Tumbler Set",
-        price: "$19.99",
+        price: "$14.99",
         category: "Drinkware",
         subcategory: "Tumblers",
         tags: ["Tumblers", "Valentine", "Couples", "Glass"],
